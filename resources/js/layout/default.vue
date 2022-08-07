@@ -11,8 +11,8 @@
 </template>
 
 <script>
-import Navbar from "./navbar";
-import HomeNavbar from "./home_nav";
+import Navbar from "../components/navbar";
+import HomeNavbar from "../components/homeNav";
 
 export default {
     props: ["user"],
@@ -25,7 +25,8 @@ export default {
     },
     methods: {},
     async created() {
-        await this.$store.commit("setUpdateUser", this.user);
+        console.log("auth", window.authUser);
+        await this.$store.commit("setUpdateUser", window.authUser);
     },
     // async created() {
     //     await this.$store.dispatch("setAuthUser", this.user);

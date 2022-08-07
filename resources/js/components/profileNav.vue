@@ -39,7 +39,6 @@
 <script>
 export default {
     name: "ProfileNav",
-
     components: {},
     data() {
         return {};
@@ -88,7 +87,7 @@ h5 {
     color: #deb992;
 }
 .text:hover {
-    color: #ffffff;
+    border-bottom: 1px solid #deb992 !important;
 }
 .text:active {
     color: #fab162;
@@ -102,6 +101,6 @@ h5 {
 }
 .router-link-exact-active {
     color: #fab162 !important;
-    border-left: 1px solid #fab162 !important;
+    border-bottom: 1px solid #fab162 !important;
 }
 </style>

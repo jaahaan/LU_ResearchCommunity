@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('department');
             $table->integer('department_id')->nullable();
             $table->string('designation');
-            $table->string('image')->nullable();
+            $table->string('image')->default('/images/download.jpg');
             $table->text('bio')->nullable();
             $table->text('skills')->nullable();
             $table->text('interests')->nullable();

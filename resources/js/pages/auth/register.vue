@@ -33,8 +33,8 @@
 </template>
 
 <script>
-import Teacher from "../pages/register_teacher";
-import Student from "../pages/register_student";
+import Teacher from "../../components/registerTeacher";
+import Student from "../../components/registerStudent";
 
 export default {
     components: {

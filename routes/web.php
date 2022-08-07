@@ -17,10 +17,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Middleware\AuthCheck;
 
-Route::prefix('/')->middleware([AuthCheck::class])->group(function () {
-    Route::get('logout', [HomeController::class, 'logout']);
-    Route::get('profile', [HomeController::class, 'profile']);
+Route::prefix('/api')->middleware([AuthCheck::class])->group(function () {
+    Route::get('/profile', [HomeController::class, 'profile']);
 });
+
+Route::get('/logout', [HomeController::class, 'logout']);
 Route::post('register_t', [HomeController::class, 'register_t']);
 Route::post('register_s', [HomeController::class, 'register_s']);
 Route::post('login', [HomeController::class, 'login']);
@@ -30,10 +31,10 @@ Route::get('/',  [HomeController::class, 'index']);
 Route::any('{slug}', [HomeController::class, 'index'])->where('slug', '([A-z\d\-\/_.]+)');
 // Route::prefix('api')->group(function () {
 // // Route::prefix('api/users')->group(function () {
-// 
+//
 //     Route::get('/categories/getAll',  [CategoryController::class, 'getAll']);
-// 
-// 
+//
+//
 //     // Auth Routes
 //     Route::post('/auth/registration',[UserController::class, 'register']);
 //     Route::post('/auth/login',[UserController::class, 'login']);
@@ -41,27 +42,27 @@ Route::any('{slug}', [HomeController::class, 'index'])->where('slug', '([A-z\d\-
 //     Route::post('/auth/activeAccount',[UserController::class, 'activeAccount']);
 //     Route::post('/auth/sendActivationCode',[UserController::class, 'sendActivationCode']);
 //     Route::get('/auth/getCustomer',[UserController::class, 'getCustomer']);
-// 
+//
 //     // Password Reset
 //     Route::post('/auth/sendResetMessage',[UserController::class, 'sendResetMessage']);
 //     Route::post('/auth/getResetMessage',[UserController::class, 'getResetMessage']);
 //     Route::post('/auth/reset-password',[UserController::class, 'resetPassword']);
-// 
-// 
+//
+//
 //     // Products
 //     Route::get('/product/variations/{id}',[ProductController::class, 'variations']);
 //     Route::get('/product/setupData/{id}',[ProductController::class, 'setupData']);
 //     Route::get('/product/similar/{id}',[ProductController::class, 'similar']);
-// 
+//
 //     //cart
 //     Route::get('/cart/getAll',[CartController::class, 'getAll'])->middleware('auth');
 //     Route::post('/cart/add',[CartController::class, 'add'])->middleware('auth');
 //     Route::post('/cart/remove',[CartController::class, 'remove'])->middleware('auth');
 //     Route::post('/cart/removeAll',[CartController::class, 'removeAll'])->middleware('auth');
-// 
+//
 //     // delivery-option
 //     Route::get('/delivery-option/getAll',[CartController::class, 'getDeliveryOptions']);
-// 
+//
 //     //cart
 //     Route::get('/addressbook/getAll',[AddressBookController::class, 'getAll'])->middleware('auth');
 //     Route::get('/addressbook/get/{id}',[AddressBookController::class, 'index'])->middleware('auth');

@@ -1,20 +1,20 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import login from '../layout/login';
-import profile from '../layout/profile_page';
-import register from '../layout/register';
-import followings from '../pages/following';
+
 import home from '../pages/home';
-import projects from '../pages/project';
-import student from '../pages/register_student';
-import teacher from '../pages/register_teacher';
-import research from '../pages/research';
-import role from '../pages/role';
-
-
-// import home from '../pages/home';
 import index from '../pages/index.vue';
+
+//Auth
+import student from '../components/registerStudent';
+import teacher from '../components/registerTeacher';
+import login from '../pages/auth/login';
+import register from '../pages/auth/register';
+
+import followings from '../pages/profile/following';
+import profile from '../pages/profile/index';
+import projects from '../pages/profile/project';
+import research from '../pages/profile/research';
 
 Vue.use(Router)
 
@@ -44,12 +44,12 @@ export default new Router({
       //   pageName: "Register"
       // }
     }, {
-      path: '/student',
+      path: '/register/student',
       name: 'student',
       component: student,
       
     }, {
-      path: '/teacher',
+      path: '/register/teacher',
       name: 'teacher',
       component: teacher,
       
@@ -57,10 +57,6 @@ export default new Router({
         path: '/login',
         name: 'login',
         component: login,
-    },{
-      path: '/role',
-      name: 'role',
-      component: role,
     },{
         path: '/home',
         name: 'home',

@@ -31,29 +31,27 @@
 </head>
 
 <body class="antialiased">
-    <!-- <script>
+     <script>
         (function() {
             window.Laravel = {
                 csrfToken: '{{ csrf_token() }}'
             };
-            var authUser = {
-                !!Auth::user() !!
-            }
+            var authUser = {!! Auth::user() !!}
+
+            window.authUser = authUser
+            console.log("in blade file", window.authUser);
+
             @if(Auth::check())
-            window.authUser = {
-                !!Auth::user() !!
-            }
+
+            window.authUser = authUser
+
             @else
             window.authUser = false
             @endif
         })();
-    </script> -->
+    </script>
     <div id="app">
-        @if(Auth::check())
-        <default :user="{{Auth::user()}}"></default>
-        @else
-        <default :user="false"></default>
-        @endif
+        <default ></default>
     </div>
     <script src="{{ mix('/js/app.js') }}"></script>
 </body>

@@ -76,10 +76,10 @@ class HomeController extends Controller
                 'designation' => 'required',
                 'department' => 'required',
 
-                // 'password' => ['required', 
+                // 'password' => ['required',
                 //    'min:8',
-                //    'max:20', 
-                //    'regex:/^.*((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&*<+_-])).*$/', 
+                //    'max:20',
+                //    'regex:/^.*((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&*<+_-])).*$/',
                 //    'confirmed'],
 
             ],
@@ -121,10 +121,10 @@ class HomeController extends Controller
                 'batch' => 'required',
                 'department' => 'required',
 
-                // 'password' => ['required', 
+                // 'password' => ['required',
                 //    'min:8',
-                //    'max:20', 
-                //    'regex:/^.*((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&*<+_-])).*$/', 
+                //    'max:20',
+                //    'regex:/^.*((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&*<+_-])).*$/',
                 //    'confirmed'],
 
             ],
@@ -156,7 +156,7 @@ class HomeController extends Controller
 
 
         //         if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
-        // 
+        //
         //             return response()->json([
         //                 'success' => false,
         //                 'admin' => 'not-found'
@@ -200,7 +200,7 @@ class HomeController extends Controller
     //         //     return view('welcome');
     //         // }
     //         return view('home');
-    // 
+    //
     //         // // you are already logged in... so check for if you are an admin user..
     //         // $user = Auth::user();
     //         // if ($user->userType == 'User') {

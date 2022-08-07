@@ -7,20 +7,16 @@
                 <div class="row justtify-content-center">
                     <div class="col-md-4 col-sm-12">
                         <img
-                            :src="'images/download.jpg'"
+                            :src="authUser.image"
                             alt="img"
                             class="img-fluid profile-img m-auto"
                         />
                     </div>
-                    <div
-                        class="col-md-5 my-auto justify-content-center"
-                        v-for="(user, i) in users"
-                        :key="i"
-                    >
-                        <h1>{{ user.name }}</h1>
-                        <h5>{{ user.email }}</h5>
-                        <h5>{{ user.designation }}</h5>
-                        <h5>Department of {{ user.department }}</h5>
+                    <div class="col-md-5 my-auto justify-content-center">
+                        <h1>{{ authUser.name }}</h1>
+                        <h5>{{ authUser.email }}</h5>
+                        <h5>{{ authUser.designation }}</h5>
+                        <h5>Department of {{ authUser.department }}</h5>
                     </div>
                 </div>
                 <div class="row">
@@ -28,12 +24,12 @@
                         <i class="fa-solid fa-plus"></i> Add Research
                     </button>
                     <button class="btn profile-btn col-5 m-2">
-                        <i class="fa-solid fa-plus"></i> Edit Info
+                        <i class="fa-solid fa-pen"></i></i> Edit Info
                     </button>
                 </div>
             </div>
 
-            <div class="row m-3">
+            <div class="row m-1">
                 <div
                     class="container-fluid card m-auto col-md-8 col-lg-6 navbg p-3"
                 >
@@ -44,7 +40,7 @@
     </div>
 </template>
 <script>
-import ProfileNav from "./profile_nav";
+import ProfileNav from "./profileNav";
 
 export default {
     name: "Profile",
@@ -76,7 +72,7 @@ body {
 }
 </style>
 
-<style scoped>
+<style>
 .profile-bg {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     background-color: #191919;
@@ -117,9 +113,5 @@ h5 {
 .logo {
     height: 10vh;
     width: 10vh;
-}
-.router-link-exact-active {
-    color: #fab162 !important;
-    border-left: 1px solid #fab162 !important;
 }
 </style>

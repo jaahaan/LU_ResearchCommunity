@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand navbg text">
         <div class="container-fluid">
             <a class="navbar-brand"
-                ><router-link class="nav-link active text" to="/home"
+                ><router-link class="nav-link active text" to="/"
                     ><img
                         :src="'images/logo.png'"
                         alt="logo"
@@ -12,11 +12,14 @@
                 </router-link></a
             >
 
-            <a class="navbar-brand d-flex"
-                ><router-link class="nav-link text" to="/profile"
-                    ><i class="fa-solid fa-user"></i
-                ></router-link>
-            </a>
+            <a class="navbar-item d-flex"
+                ><router-link class="nav-link text" to="/login"
+                    >Login</router-link
+                >
+                <router-link class="nav-link text" to="/register"
+                    >Register</router-link
+                ></a
+            >
         </div>
     </nav>
 </template>
@@ -27,7 +30,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 body {
     margin: 0;
     padding: 0;
@@ -40,7 +43,7 @@ body {
     color: #deb992;
 }
 .text:hover {
-    color: #ffffff;
+    border-left: 1px solid #deb992 !important;
 }
 .text:active {
     color: #fab162;
@@ -54,6 +57,6 @@ body {
 }
 .router-link-exact-active {
     color: #fab162 !important;
-    border-left: 1px solid #fab162 !important;
+    border-left: 2px solid #fab162 !important;
 }
 </style>
