@@ -28,7 +28,7 @@ class User extends Authenticatable
         'department_id',
         'designation',
         'image',
-        'bio',
+        'about',
         'skills',
         'interests',
         'honors_and_awards',

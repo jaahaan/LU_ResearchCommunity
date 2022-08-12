@@ -18,7 +18,13 @@ use App\Http\Controllers\HomeController;
 use App\Http\Middleware\AuthCheck;
 
 Route::prefix('/api')->middleware([AuthCheck::class])->group(function () {
-    Route::get('/profile', [HomeController::class, 'profile']);
+    Route::get('/get_profile_info/{id}', [HomeController::class, 'getProfileInfo']);
+    Route::post('/delete_image', [HomeController::class, 'deleteImage']);
+    Route::post('/upload', [HomeController::class, 'upload']);
+    Route::post('/edit_profile/{id}', [HomeController::class, 'editProfile']);
+    Route::post('/save_about/{id}', [HomeController::class, 'about']);
+    Route::post('/save_skills/{id}', [HomeController::class, 'skills']);
+
 });
 
 Route::get('/logout', [HomeController::class, 'logout']);

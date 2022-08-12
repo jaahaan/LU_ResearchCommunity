@@ -13,15 +13,15 @@
             >
 
             <a class="navbar-brand d-flex"
-                ><router-link class="nav-link text" to="/profile"
-                    >{{ authUser.name }} <i class="fa-solid fa-user"></i
+                ><router-link class="nav-link text" :to="`/profile/${authUser.id}`"
+                    ><i class="fa-solid fa-user"></i
                 ></router-link>
             </a>
         </div>
     </nav>
 </template>
 
-<script scoped>
+<script>
 export default {
     name: "Navbar",
 };

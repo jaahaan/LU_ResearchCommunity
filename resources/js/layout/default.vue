@@ -36,7 +36,42 @@ export default {
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
 body {
-    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+    position: relative;
+    font-family: 'Styrenea web', sans-serif;
+    font-size: 15px;
+    line-height: 24px;
+    background:#272727;
+}
+
+*,
+::after,
+::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.home__carousel {
+    position: relative;
+    padding: 100px 0;
+    margin-bottom: 100px;
+}
+section {
+    display: block;
+}
+
+div {
+    display: block;
+}
+
+@media (max-width: 767px) {
+    .home__carousel {
+        padding: 30px 0 30px 0;
+        margin: 50px 0 100px 0;
+    }
+    .title {
+        font-size: 4rem;
+    }
 }
 </style>

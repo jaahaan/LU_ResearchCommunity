@@ -1,16 +1,17 @@
 <template>
     <div>
         <profileHeder />
+        <hr class="mb-3" />
         <div
-            class="container-fluid card profile-bg m-auto col-md-8 col-lg-6 profile-bg justtify-content-center p-3"
+            class="container-fluid m-auto col-md-8 col-lg-6 justtify-content-center p-3"
         >
-            <h1>Projects</h1>
+            <h1>Following</h1>
         </div>
     </div>
 </template>
 
 <script>
-import profileHeder from "../../components/profileHeder.vue";
+import profileHeder from "../../../components/profileHeder";
 export default {
     components: {
         profileHeder,

@@ -51,6 +51,7 @@ Vue.mixin(common)
 
 Vue.config.productionTip = false
 Vue.component('default', require('./layout/default.vue').default);
+Vue.component('auth', require('./layout/auth.vue').default);
 
 const app = new Vue({
     el: '#app',

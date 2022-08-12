@@ -4,28 +4,30 @@
             <div>
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <router-link class="nav-link text" to="/profile"
+                        <router-link
+                            class="nav-link text"
+                            :to="`/profile/${this.$route.params.id}`"
                             >Profile
                         </router-link>
                     </li>
                     <li class="nav-item">
                         <router-link
                             class="nav-link text"
-                            to="/profile/research"
+                            :to="`/profile/${this.$route.params.id}/research`"
                             >Research</router-link
                         >
                     </li>
                     <li class="nav-item">
                         <router-link
                             class="nav-link text"
-                            to="/profile/projects"
+                            :to="`/profile/${this.$route.params.id}/projects`"
                             >Projects</router-link
                         >
                     </li>
                     <li class="nav-item">
                         <router-link
                             class="nav-link text"
-                            to="/profile/followings"
+                            :to="`/profile/${this.$route.params.id}/followings`"
                             >Followings</router-link
                         >
                     </li>
@@ -49,18 +51,10 @@ export default {
     },
 };
 </script>
-
-<style>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
-body {
-    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-}
-</style>
-
 <style scoped>
 .profile-bg {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    background-color: #191919;
+    background-color: #273326;
 }
 .profile-btn {
 }
@@ -80,7 +74,7 @@ h5 {
     font-size: 1rem;
 }
 .navbg {
-    background: #191919;
+    background: #273326;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .text {

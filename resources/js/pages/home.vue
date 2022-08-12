@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <img
-                            :src="'images/Scientific.png'"
+                            :src="'images/stop.png'"
                             alt="img"
                             class="img-fluid scientific"
                         />
@@ -20,51 +20,6 @@
                         <button class="btn px-5 m-3" @click.prevent="logout">
                             Logout
                         </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div class="container-fluid justify-content-center py-md-4">
-                <div class="row mt-3">
-                    <div
-                        class="col-12 col-md-6 my-md-auto text-center justify-content-center"
-                    >
-                        <h2>
-                            Science is a way of thinking much more than it is a
-                            body of knowledge.
-                        </h2>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="container-fluid mt-3">
-                            <h5 class="text-center">Research Topics</h5>
-                            <div class="row justify-content-center">
-                                <div
-                                    class="col-sm-4 col-md-4 m-2 card text-center rt"
-                                >
-                                    <a class="p-3 text">ENGINEERING</a>
-                                </div>
-
-                                <div
-                                    class="col-sm-4 col-md-4 m-2 card text-center rt"
-                                >
-                                    <a class="p-3 text">COMPUTER SCIENCE</a>
-                                </div>
-
-                                <div
-                                    class="col-sm-4 col-md-4 m-2 card text-center rt"
-                                >
-                                    <a class="p-3 text">METHMATICS</a>
-                                </div>
-
-                                <div
-                                    class="col-sm-4 col-md-4 m-2 card text-center rt"
-                                >
-                                    <a class="p-3 text">SOCIAL SCIENCE</a>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

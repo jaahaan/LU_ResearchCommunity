@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Welcome</title>
+    <title>Homepage</title>
 
 
     <!-- Bootstrpap css -->
@@ -45,7 +45,7 @@
 <body class="antialiased">
 
     <div id="app">
-        <default></default>
+        <auth></auth>
     </div>
     <script src="{{ mix('/js/app.js') }}"></script>
 </body>
