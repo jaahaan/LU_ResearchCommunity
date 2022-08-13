@@ -1,6 +1,6 @@
 <template>
     <div>
-        <profileHeder />
+        <profileHeader />
         <hr class="mb-3" />
         <div
             class="container-fluid m-auto col-md-8 col-lg-6 justtify-content-center p-3"
@@ -11,10 +11,10 @@
 </template>
 
 <script>
-import profileHeder from "../../../components/profileHeder";
+import profileHeader from "../../../components/profileHeader";
 export default {
     components: {
-        profileHeder,
+        profileHeader,
     },
     data() {
         return {};

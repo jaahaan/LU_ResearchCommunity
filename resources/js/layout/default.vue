@@ -39,10 +39,9 @@ export default {
 
 body {
     position: relative;
-    font-family: 'Styrenea web', sans-serif;
+    font-family: "Styrenea web", sans-serif;
     font-size: 15px;
     line-height: 24px;
-    background:#272727;
 }
 
 *,
@@ -64,7 +63,13 @@ section {
 div {
     display: block;
 }
-
+.btn-edit {
+    color: rgb(167, 167, 167);
+    border: none;
+}
+.btn-edit:hover {
+    color: #ffffff;
+}
 @media (max-width: 767px) {
     .home__carousel {
         padding: 30px 0 30px 0;

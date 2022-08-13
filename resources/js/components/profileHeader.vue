@@ -1,8 +1,9 @@
 <template>
     <div>
-        <div class="mt-3">
+        <div class="profile-bg">
             <div
                 class="container-fluid m-auto col-md-8 col-lg-6 justtify-content-center p-3"
+                v-if="profileInfo && isLoading == false"
             >
                 <div class="row justtify-content-center">
                     <div
@@ -26,7 +27,13 @@
                     </div>
                     <div class="col-md-5 my-auto justify-content-center">
                         <h1 class="pb-3">
-                            {{ profileInfo.name }}
+                            <span class="mr-2">{{ profileInfo.name }} </span
+                            ><button
+                                class="btn btn-edit ml-2"
+                                @click="showEditModal(profileInfo)"
+                            >
+                                <i class="fa-solid fa-pen" />
+                            </button>
                         </h1>
                         <h5>{{ profileInfo.email }}</h5>
                         <h5>{{ profileInfo.designation }}</h5>
@@ -35,29 +42,25 @@
                 </div>
                 <div class="row" v-if="authUser.id == this.$route.params.id">
                     <button
-                        class="btn profile-btn col-5 m-2"
-                        @click="showEditModal(profileInfo)"
-                    >
-                        <i class="fa-solid fa-pen" />
-                    </button>
-                    <button
-                        class="btn profile-btn col-5 m-2"
+                        class="btn profile-btn col-12 m-2"
                         @click="showSectionModal()"
                     >
                         <i class="fa-solid fa-plus"></i> Add Section
                     </button>
                 </div>
             </div>
-
+            <div
+                v-if="isLoading == true"
+                style="padding: 40px; text-align: center"
+            >
+                <h1>Content is Loading....</h1>
+            </div>
             <div class="row m-1">
                 <div class="container-fluid card m-auto navbg">
                     <ProfileNav />
                 </div>
             </div>
         </div>
-        <!-- <div v-if="isLoading == true" style="padding: 40px; text-align: center">
-            <h1>Content is Loading....</h1>
-        </div> -->
 
         <!-- profile edit modal -->
         <Modal
@@ -430,7 +433,7 @@ export default {
 
     data() {
         return {
-            // isLoading: true,
+            isLoading: true,
             data: {
                 image: "",
                 name: "",
@@ -711,7 +714,7 @@ export default {
         } else {
             this.swr();
         }
-        // this.isLoading = false;
+        this.isLoading = false;
     },
 };
 </script>
@@ -725,10 +728,10 @@ body {
 
 <style scoped>
 .profile-bg {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    background: #191919;
 }
-.profile-btn {
-}
+
 h5 {
     color: #fab162;
 }

@@ -4,7 +4,7 @@
             <a class="navbar-brand"
                 ><router-link class="nav-link active text" to="/home"
                     ><img
-                        :src="'images/logo.png'"
+                        :src="'/images/logo.png'"
                         alt="logo"
                         class="img-fluid logo"
                     />
@@ -13,7 +13,9 @@
             >
 
             <a class="navbar-brand d-flex"
-                ><router-link class="nav-link text" :to="`/profile/${authUser.id}`"
+                ><router-link
+                    class="nav-link text"
+                    :to="`/profile/${authUser.id}`"
                     ><i class="fa-solid fa-user"></i
                 ></router-link>
             </a>

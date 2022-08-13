@@ -10,12 +10,14 @@
 <script>
 import Navbar from "../components/navbar";
 import HomeNavbar from "../components/homeNav";
+import profileHeader from "../components/profileHeader";
 
 export default {
     props: ["user"],
     components: {
         Navbar,
         HomeNavbar,
+        profileHeader,
     },
     data() {
         return {};

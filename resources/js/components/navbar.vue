@@ -4,7 +4,7 @@
             <a class="navbar-brand"
                 ><router-link class="nav-link active text" to="/"
                     ><img
-                        :src="'images/logo.png'"
+                        :src="'/images/logo.png'"
                         alt="logo"
                         class="img-fluid logo"
                     />

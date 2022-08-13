@@ -1,6 +1,6 @@
 <template>
     <div>
-        <profileHeder />
+        <profileHeader />
         <hr class="m-1" />
         <!-- about-section -->
         <div
@@ -17,7 +17,20 @@
                         <i class="fa-solid fa-pen" />
                     </button>
                 </div>
+                <!-- <div class="d-flex">
+                <h1>Edit About</h1>
+                <div class="form-outline">
+                    <textarea
+                        class="form-control"
+                        id="textAreaExample1"
+                        v-model="editData.about"
+                        rows="4"
+                        placeholder="Write About You..."
+                    ></textarea>
+                </div>
+            </div> -->
             </div>
+
             <hr class="m-2" />
             <p>{{ profileInfo.about }}</p>
         </div>
@@ -43,6 +56,7 @@
             <hr class="m-2" />
             <p>{{ profileInfo.skills }}</p>
         </div>
+
         <div v-if="isLoading == true" style="padding: 40px; text-align: center">
             <h1>Content is Loading....</h1>
         </div>
@@ -50,10 +64,10 @@
 </template>
 
 <script>
-import profileHeder from "../../components/profileHeder.vue";
+import profileHeader from "../../components/profileHeader.vue";
 export default {
     components: {
-        profileHeder,
+        profileHeader,
     },
     data() {
         return {
