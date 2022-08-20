@@ -33,7 +33,7 @@ class CreateUsersTable extends Migration
             $table->string('userType')->default('user');
             $table->string('isVerifiedCode')->nullable();
             $table->string('isVerifiedByAdminCode')->nullable();
-            $table->string('passwordResetCode')->nullable();
+            $table->string('otp')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

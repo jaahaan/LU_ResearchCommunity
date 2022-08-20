@@ -26,23 +26,24 @@
                         /> -->
                     </div>
                     <div class="col-md-5 my-auto justify-content-center">
-                        <h1 class="pb-3">
+                        <h2 class="pb-3">
                             <span class="mr-2">{{ profileInfo.name }} </span
                             ><button
                                 class="btn btn-edit ml-2"
                                 @click="showEditModal(profileInfo)"
+                                v-if="authUser.id == this.$route.params.id"
                             >
                                 <i class="fa-solid fa-pen" />
                             </button>
-                        </h1>
-                        <h5>{{ profileInfo.email }}</h5>
-                        <h5>{{ profileInfo.designation }}</h5>
-                        <h5>Department of {{ profileInfo.department }}</h5>
+                        </h2>
+                        <p>{{ profileInfo.email }}</p>
+                        <p>{{ profileInfo.designation }}</p>
+                        <p>Department of {{ profileInfo.department }}</p>
                     </div>
                 </div>
                 <div class="row" v-if="authUser.id == this.$route.params.id">
                     <button
-                        class="btn profile-btn col-12 m-2"
+                        class="btn btn-design col-12 m-2"
                         @click="showSectionModal()"
                     >
                         <i class="fa-solid fa-plus"></i> Add Section
@@ -729,30 +730,18 @@ body {
 <style scoped>
 .profile-bg {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    background: #191919;
-}
-
-h5 {
-    color: #fab162;
-}
-.profile-btn {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    font-size: 1rem;
-    color: #fab162;
-    border: 1px solid #fab162;
-}
-.profile-btn:hover {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    color: #191919;
-    background-color: #fab162;
-    font-size: 1rem;
+    background: #c9af98;
 }
 .navbg {
-    background: #191919;
+    background: #3a4660;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
+h5 {
+    color: #1c2230;
+}
+
 .text {
-    color: #deb992;
+    color: #845007;
 }
 .text:hover {
     color: #ffffff;

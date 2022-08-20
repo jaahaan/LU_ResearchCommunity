@@ -43,7 +43,15 @@ body {
     font-size: 15px;
     line-height: 24px;
 }
-
+.bg {
+    background: linear-gradient(
+        90deg,
+        #ffffff 0%,
+        #ffffff 30%,
+        #c9af98 30%,
+        #c9af98 100%
+    );
+}
 *,
 ::after,
 ::before {
@@ -77,6 +85,15 @@ div {
     }
     .title {
         font-size: 4rem;
+    }
+    .bg {
+        background: linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #ffffff 30%,
+            #c9af98 30%,
+            #c9af98 100%
+        );
     }
 }
 </style>

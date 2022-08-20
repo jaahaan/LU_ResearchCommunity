@@ -157,7 +157,7 @@
             class="container-fluid text-center justify-content-center col-md-8 pb-5 about"
         >
             <div>
-                <h2 class="title">About Us</h2>
+                <h2 class="about-title">About Us</h2>
                 <h6
                     class="m-3 _card col-9 m-auto text-center justify-content-center"
                 >
@@ -222,62 +222,52 @@ export default {
     margin: -3px auto;
     padding: 60px 50px;
     justify-content: center;
-    background: #fed3ad;
-    background-image: url("../../../public/images/bg-noisy.jpg");
+    background: #3a4660;
     box-shadow: 14px 14px 0 0 rgb(39 51 38 / 30%);
-    color: #fed3ad;
+    color: #c9af98;
 }
 
 .about {
-    background-color: #62b16f;
+    background-color: #af9177;
     width: 100%;
-    color: #faf3d3;
+    color: #c9af98;
+    border: 1px solid #845007;
 }
 .about-title {
-    font-size: 3rem;
-    font-weight: 900;
+    font-size: 5rem;
+    font-weight: 600;
     line-height: 1rem;
-    color: rgba(250, 243, 211, 0.05);
+    padding: 50px;
+    color: rgba(132, 80, 7, 0.5);
 }
 .bg-card {
     background: url("../../../public/images/white_bg.jpg");
 }
 h1 {
-    color: #faf3d3;
+    color: #3a4660;
+    font-weight: 700;
 }
-.bg {
-    background: linear-gradient(
-        90deg,
-        #ffffff 0%,
-        #ffffff 30%,
-        #181818 30%,
-        #181818 100%
-    );
-}
-h2,
-h5 {
-    color: #273326;
-}
+
 .btn-design {
     font-size: 1rem;
     border: 1px solid;
-    color: #fab162;
-    background-color: #273326;
+    background: #3a4660;
+    color: #c9af98;
 }
 .btn-design-change {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     font-size: 1rem;
     color: #273326;
-    background-color: #fab162;
+    background-color: #c9af98;
 }
 .btn-design:hover {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    color: #273326;
-    background-color: #deb992;
+    color: #c9af98;
+    background-color: #2f394e;
     font-size: 1rem;
 }
 .text-c {
-    color: #fab162;
+    color: #ed8a63;
 }
 .text-c:hover {
     color: #ffffff;
@@ -286,35 +276,26 @@ h5 {
     font-size: 5rem;
     font-weight: 600;
     line-height: 1rem;
-    color: #44714a;
+    color: #c9af98;
     padding: 50px;
 }
 .rt-title {
     font-size: 3rem;
     font-weight: 900;
     line-height: 3rem;
-    color: rgba(68, 113, 74, 0.5);
+    color: rgba(132, 80, 7, 0.5);
     margin: 20px;
 }
 .rt {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     text-decoration: none;
-    background-color: #273326;
-    border: 1px solid;
-    color: #fab162;
+    background-color: #3a4660;
+    border: 1px solid #845007;
+    color: #c9af98;
     font-size: 13px;
 }
 
 @media (max-width: 768px) {
-    .bg {
-        background: linear-gradient(
-            180deg,
-            #ffffff 0%,
-            #ffffff 30%,
-            #181818 30%,
-            #181818 100%
-        );
-    }
     .scientific {
         height: 60vh;
         margin-bottom: 20px;

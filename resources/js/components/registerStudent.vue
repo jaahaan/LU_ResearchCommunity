@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid card rt col-10 p-5">
         <div class="alert alert-dark" v-if="msg">{{ msg }}</div>
-        <h1 class="text-center p-3">Register As Student</h1>
+        <h2 class="text-center p-3">Register As Student</h2>
         <div class="mb-2">
             <Input type="text" v-model="data.name" placeholder="Name" />
         </div>
@@ -94,7 +94,7 @@ export default {
             if (this.data.department.trim() == "")
                 return this.e("Department is required");
             this.isLoading = true;
-            const res = await this.callApi("post", "register_s", this.data);
+            const res = await this.callApi("post", "/register_s", this.data);
             if (res.status === 201) {
                 this.msg =
                     "Registered successfully. Check your email and verify link.";

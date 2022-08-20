@@ -15,26 +15,34 @@ use Illuminate\Support\Facades\Auth;
 */
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AuthCheck;
 
 Route::prefix('/api')->middleware([AuthCheck::class])->group(function () {
-    Route::get('/get_profile_info/{id}', [HomeController::class, 'getProfileInfo']);
-    Route::post('/delete_image', [HomeController::class, 'deleteImage']);
-    Route::post('/upload', [HomeController::class, 'upload']);
-    Route::post('/edit_profile/{id}', [HomeController::class, 'editProfile']);
-    Route::post('/save_about/{id}', [HomeController::class, 'about']);
-    Route::post('/save_skills/{id}', [HomeController::class, 'skills']);
+    Route::get('/get_profile_info/{id}', [ProfileController::class, 'getProfileInfo']);
+    Route::post('/delete_image', [ProfileController::class, 'deleteImage']);
+    Route::post('/upload', [ProfileController::class, 'upload']);
+    Route::post('/edit_profile/{id}', [ProfileController::class, 'editProfile']);
+    Route::post('/save_about/{id}', [ProfileController::class, 'about']);
+    Route::post('/save_skills/{id}', [ProfileController::class, 'skills']);
 
 });
 
-Route::get('/logout', [HomeController::class, 'logout']);
-Route::post('register_t', [HomeController::class, 'register_t']);
-Route::post('register_s', [HomeController::class, 'register_s']);
-Route::post('login', [HomeController::class, 'login']);
+Route::get('/logout', [AuthController::class, 'logout']);
+Route::post('/register_t', [AuthController::class, 'register_t']);
+Route::post('/register_s', [AuthController::class, 'register_s']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/verify_email', [AuthController::class, 'verifyEmail']);
 
-Route::get('/',  [HomeController::class, 'index']);
+Route::post('/send_otp', [AuthController::class, 'sendOtp']);
+Route::get('/reset_password', [AuthController::class, 'showResetForm']);
+Route::post('/submit_otp', [AuthController::class, 'submitOtp']);
+Route::post('/reset_password', [AuthController::class, 'resetPassword']);
 
-Route::any('{slug}', [HomeController::class, 'index'])->where('slug', '([A-z\d\-\/_.]+)');
+Route::get('/',  [AuthController::class, 'index']);
+
+Route::any('{slug}', [AuthController::class, 'index'])->where('slug', '([A-z\d\-\/_.]+)');
 // Route::prefix('api')->group(function () {
 // // Route::prefix('api/users')->group(function () {
 //
@@ -79,7 +87,7 @@ Route::any('{slug}', [HomeController::class, 'index'])->where('slug', '([A-z\d\-
 //     Route::post('/addressbook/removeAll',[AddressBookController::class, 'removeAll'])->middleware('auth');
 // });
 
-// Route::post('/home/upload/images',  [HomeController::class, 'uploadImages']);
+// Route::post('/home/upload/images',  [AuthController::class, 'uploadImages']);
 
 // Route::get('/product/{slug}',  [ProductController::class, 'index']);
-// Route::get('/a007',  [HomeController::class, 'admin']);
+// Route::get('/a007',  [AuthController::class, 'admin']);

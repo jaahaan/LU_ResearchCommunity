@@ -7,8 +7,13 @@ import index from "../pages/index.vue";
 //Auth
 import student from "../components/registerStudent";
 import teacher from "../components/registerTeacher";
+import emailVerifyOtp from "../pages/auth/emailVerifyOtp";
+import forgot from "../pages/auth/forgot";
 import login from "../pages/auth/login";
+import otp from "../pages/auth/otp";
 import register from "../pages/auth/register";
+
+import reset from "../pages/auth/reset";
 
 import profile from "../pages/profile/index";
 import followings from "../pages/profile/_id/following";
@@ -28,7 +33,7 @@ export default new Router({
             component: index,
             meta: {
                 allowed: publicRoute,
-                title: "Home - Laravel Vue Template",
+                title: "Home|LURC",
                 pageName: "Home",
             },
         },
@@ -56,7 +61,54 @@ export default new Router({
             path: "/login",
             name: "login",
             component: login,
+            meta: {
+                allowed: publicRoute,
+                title: "Login|LURC",
+                pageName: "Login",
+            },
         },
+        {
+            path: "/forgot_password",
+            name: "forgot_password",
+            component: forgot,
+            meta: {
+                allowed: publicRoute,
+                title: "Forgot Password|LURC",
+                pageName: "Forgot Password",
+            },
+        },
+        {
+            path: "/reset_password",
+            name: "reset_password",
+            component: reset,
+            meta: {
+                allowed: publicRoute,
+                title: "Reset Your Password|LURC",
+                pageName: "Reset Password",
+            },
+        },
+        {
+            path: "/otp",
+            name: "otp",
+            component: otp,
+            meta: {
+                allowed: publicRoute,
+                title: "Enter Your OTP|LURC",
+                pageName: "OTP",
+            },
+        },
+
+        {
+            path: "/emailVerifyOtp",
+            name: "email verify otp",
+            component: emailVerifyOtp,
+            meta: {
+                allowed: publicRoute,
+                title: "Enter Your OTP|LURC",
+                pageName: "OTP",
+            },
+        },
+
         {
             path: "/home",
             name: "home",

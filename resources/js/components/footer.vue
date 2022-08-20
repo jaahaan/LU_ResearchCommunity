@@ -72,23 +72,23 @@ export default {
 footer {
     position: relative;
     padding: 15px;
-    background: #273326;
+    background: #3a4660;
     text-align: center;
 }
 .footer_text {
     font-size: 13px;
     line-height: 15px;
-    color: #44714a;
+    color: #ed8a63;
 }
 
-a{
-    color: #62b16f;
+a {
+    color: #c9af98;
     text-decoration: none;
 }
-a:hover{
+a:hover {
     color: #eeecea;
 }
-address{
+address {
     color: #faf3d3;
 }
 .icon {
@@ -96,6 +96,6 @@ address{
     color: #faf3d3;
 }
 .icon:hover {
-    color: #62b16f;
+    color: #845007;
 }
 </style>

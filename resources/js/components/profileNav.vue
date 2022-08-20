@@ -54,12 +54,12 @@ export default {
 <style scoped>
 .profile-bg {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    background-color: #273326;
+    background-color: #c9af98;
 }
 .profile-btn {
 }
 h5 {
-    color: #fab162;
+    color: #2f394e;
 }
 .profile-btn {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -73,28 +73,21 @@ h5 {
     background-color: #fab162;
     font-size: 1rem;
 }
-.navbg {
-    background: #273326;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
+
 .text {
-    color: #deb992;
+    color: #a7a7a7;
 }
 .text:hover {
-    border-bottom: 1px solid #deb992 !important;
+    color: #deb992;
+    border-left: 1px solid #a7a7a7 !important;
 }
-.text:active {
-    color: #fab162;
-}
-.text:after {
-    color: #fab162;
-}
+
 .logo {
     height: 10vh;
     width: 10vh;
 }
 .router-link-exact-active {
-    color: #fab162 !important;
-    border-bottom: 1px solid #fab162 !important;
+    color: #c9af98 !important;
+    border-left: 2px solid #c9af98 !important;
 }
 </style>

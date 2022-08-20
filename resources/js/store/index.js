@@ -1,45 +1,50 @@
-import Vue from 'vue'
+import Vue from "vue";
 
-import Vuex from 'vuex'
-Vue.use(Vuex)
+import Vuex from "vuex";
+Vue.use(Vuex);
 const store = new Vuex.Store({
-  state: {
-
-    authUser: window.authUser,
-    user: false,
-  },
-
-  /*All getters*/
-  getters: {
-    isLoggedIn(state){
-      if(_.isEmpty(state.authUser)){
-        return false
-      }else{
-        return true
-      }
-
+    state: {
+        authUser: window.authUser,
+        user: false,
+        passwordReset: { email: "" },
     },
-    authUser(state){
-      return state.authUser
-    },
-  },
 
-  /*all mutations*/
-  mutations: {
-    authUser(state,user){
-      state.authUser=user
+    /*All getters*/
+    getters: {
+        isLoggedIn(state) {
+            if (_.isEmpty(state.authUser)) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+        authUser(state) {
+            return state.authUser;
+        },
+        passwordReset(state) {
+            return state.passwordReset;
+        },
     },
-    setUpdateUser(state, data){
-      state.user = data
-  },
-  },
 
- /*all actions*/
-  actions: {
-    setAuthUser({commit},user){
-      commit('authUser',user)
+    /*all mutations*/
+    mutations: {
+        authUser(state, user) {
+            state.authUser = user;
+        },
+        setUpdateUser(state, data) {
+            state.user = data;
+        },
+        setPasswordReset(state, data) {
+            state.passwordReset = data;
+        },
     },
-  }
-})
 
-export default store
+    /*all actions*/
+    actions: {
+        setAuthUser({ commit }, user) {
+            commit("authUser", user);
+        },
+    },
+});
+
+export default store;

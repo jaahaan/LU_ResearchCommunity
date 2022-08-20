@@ -32,7 +32,11 @@ class User extends Authenticatable
         'skills',
         'interests',
         'honors_and_awards',
-        'userType'
+        'isVerifiedCode',
+        'isEmailVerified',
+        'isVerifiedByAdmin',
+        'userType',
+        'otp'
     ];
     public function setPasswordAttribute($password)
     {

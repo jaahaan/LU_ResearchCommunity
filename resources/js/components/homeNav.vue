@@ -35,14 +35,15 @@ body {
     padding: 0;
 }
 .navbg {
-    background: #191919;
+    background: #3a4660;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .text {
-    color: #deb992;
+    color: #c9af98;
 }
 .text:hover {
-    border-left: 1px solid #deb992 !important;
+    color: #a7a7a7;
+    border-left: 1px solid #a7a7a7 !important;
 }
 .text:active {
     color: #fab162;
