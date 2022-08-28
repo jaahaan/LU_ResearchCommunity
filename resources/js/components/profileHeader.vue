@@ -19,14 +19,9 @@
                                 <i class="fa-solid fa-camera"></i>
                             </div>
                         </div>
-                        <!-- <img
-                            :src="authUser.image"
-                            alt="img"
-                            class="img-fluid profile-img m-auto"
-                        /> -->
                     </div>
                     <div class="col-md-5 my-auto justify-content-center">
-                        <h2 class="pb-3">
+                        <h3 class="pb-3">
                             <span class="mr-2">{{ profileInfo.name }} </span
                             ><button
                                 class="btn btn-edit ml-2"
@@ -35,7 +30,7 @@
                             >
                                 <i class="fa-solid fa-pen" />
                             </button>
-                        </h2>
+                        </h3>
                         <p>{{ profileInfo.email }}</p>
                         <p>{{ profileInfo.designation }}</p>
                         <p>Department of {{ profileInfo.department }}</p>
@@ -56,10 +51,10 @@
             >
                 <h1>Content is Loading....</h1>
             </div>
-            <div class="row m-1">
-                <div class="container-fluid card m-auto navbg">
-                    <ProfileNav />
-                </div>
+        </div>
+        <div class="row m-1">
+            <div class="container-fluid m-auto">
+                <ProfileNav />
             </div>
         </div>
 
@@ -174,12 +169,13 @@
                     class="list-group-item list-group-item-action list-group-item-dark"
                     >Add Skills</a
                 >
-                <!--
+
                 <a
-                    @click="showInterestsModal"
+                    @click="showInterestsModal(profileInfo)"
                     class="list-group-item list-group-item-action list-group-item-dark"
                     >Add Interests</a
                 >
+                <!--
                 <a
                     @click="showPublicationsModal"
                     class="list-group-item list-group-item-action list-group-item-dark"
@@ -424,6 +420,34 @@
                 >
             </div>
         </Modal>
+
+        <!-- Interests modal -->
+        <Modal
+            v-model="interestsModal"
+            title="Add Interests"
+            :mask-closable="false"
+            :closable="true"
+        >
+            <div class="form-outline">
+                <textarea
+                    class="form-control"
+                    id="textAreaExample1"
+                    v-model="editData.interests"
+                    rows="4"
+                    placeholder="Write Your Skills..."
+                ></textarea>
+            </div>
+
+            <div slot="footer">
+                <Button
+                    type="primary"
+                    @click="saveInterests"
+                    :disabled="isAdding"
+                    :loading="isAdding"
+                    >{{ isAdding ? "Saving.." : "Save" }}</Button
+                >
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
@@ -468,6 +492,7 @@ export default {
                 department: "",
                 about: "",
                 skills: "",
+                interests: "",
             },
             index: -1,
             user_id: -1,
@@ -610,7 +635,9 @@ export default {
                 this.editData
             );
             if (res.status === 200) {
-                this.profileInfo.bio = this.editData.about;
+                this.profileInfo.about = this.editData.about;
+                // this.profileInfo = res.data;
+                this.reset();
                 this.s("About has been updated successfully!");
                 this.aboutModal = false;
             } else {
@@ -687,7 +714,8 @@ export default {
                 this.editData
             );
             if (res.status === 200) {
-                this.profileInfo.bio = this.editData.skills;
+                this.profileInfo.skills = this.editData.skills;
+                this.reset();
                 this.s("Skills has been updated successfully!");
                 this.skillsModal = false;
             } else {
@@ -700,6 +728,59 @@ export default {
                 }
             }
         },
+
+        showInterestsModal(profileInfo) {
+            // let obj = {
+            // 	id : tag.id,
+            // 	tagName : tag.tagName
+            // }
+            this.editData = profileInfo;
+            this.interestsModal = true;
+            this.isEditingItem = true;
+            this.sectionModal = false;
+        },
+
+        async saveInterests() {
+            if (this.editData.interests.trim() == "") return this.e("required");
+            this.user_id = this.$route.params.id;
+            const res = await this.callApi(
+                "post",
+                `/api/save_interests/${this.user_id}`,
+                this.editData
+            );
+            if (res.status === 200) {
+                this.profileInfo.interests = this.editData.interests;
+                this.reset();
+
+                this.s("Interest has been updated successfully!");
+                this.interestsModal = false;
+            } else {
+                if (res.status == 422) {
+                    if (res.data.errors.interests) {
+                        this.e(res.data.errors.interests[0]);
+                    }
+                } else {
+                    this.swr();
+                }
+            }
+        },
+
+        async reset() {
+            this.token = window.Laravel.csrfToken;
+
+            this.user_id = this.$route.params.id;
+            const res = await this.callApi(
+                "get",
+                `/api/get_profile_info/${this.user_id}`
+            );
+
+            if (res.status == 200) {
+                this.profileInfo = res.data;
+            } else {
+                this.swr();
+            }
+            this.isLoading = false;
+        },
     },
     async created() {
         this.token = window.Laravel.csrfToken;
@@ -709,7 +790,6 @@ export default {
             "get",
             `/api/get_profile_info/${this.user_id}`
         );
-
         if (res.status == 200) {
             this.profileInfo = res.data;
         } else {
@@ -730,12 +810,8 @@ body {
 <style scoped>
 .profile-bg {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    background: #c9af98;
 }
-.navbg {
-    background: #3a4660;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
+
 h5 {
     color: #1c2230;
 }

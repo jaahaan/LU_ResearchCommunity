@@ -26,14 +26,16 @@ Route::prefix('/api')->middleware([AuthCheck::class])->group(function () {
     Route::post('/edit_profile/{id}', [ProfileController::class, 'editProfile']);
     Route::post('/save_about/{id}', [ProfileController::class, 'about']);
     Route::post('/save_skills/{id}', [ProfileController::class, 'skills']);
-
+    Route::post('/save_interests/{id}', [ProfileController::class, 'interests']);
 });
 
 Route::get('/logout', [AuthController::class, 'logout']);
 Route::post('/register_t', [AuthController::class, 'register_t']);
 Route::post('/register_s', [AuthController::class, 'register_s']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/submit_twoFactor_otp', [AuthController::class, 'submitTwoFactorCode']);
 Route::post('/verify_email', [AuthController::class, 'verifyEmail']);
+Route::get('/get_info/{email}', [ProfileController::class, 'getInfo']);
 
 Route::post('/send_otp', [AuthController::class, 'sendOtp']);
 Route::get('/reset_password', [AuthController::class, 'showResetForm']);

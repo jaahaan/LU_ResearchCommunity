@@ -34,6 +34,7 @@ class CreateUsersTable extends Migration
             $table->string('isVerifiedCode')->nullable();
             $table->string('isVerifiedByAdminCode')->nullable();
             $table->string('otp')->nullable();
+            $table->string('twoFactorCode')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -48,8 +48,8 @@ body {
         90deg,
         #ffffff 0%,
         #ffffff 30%,
-        #c9af98 30%,
-        #c9af98 100%
+        #3a4660 30%,
+        #3a4660 100%
     );
 }
 *,
@@ -76,7 +76,7 @@ div {
     border: none;
 }
 .btn-edit:hover {
-    color: #ffffff;
+    color: #000000;
 }
 @media (max-width: 767px) {
     .home__carousel {
@@ -87,12 +87,13 @@ div {
         font-size: 4rem;
     }
     .bg {
+        height: 100vh;
         background: linear-gradient(
             180deg,
             #ffffff 0%,
             #ffffff 30%,
-            #c9af98 30%,
-            #c9af98 100%
+            #3a4660 30%,
+            #3a4660 100%
         );
     }
 }

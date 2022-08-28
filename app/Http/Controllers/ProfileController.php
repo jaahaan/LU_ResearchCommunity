@@ -86,6 +86,19 @@ class ProfileController extends Controller
         
     }
 
+    public function interests(Request $request, $id)
+    {
+        //validate request
+        $this->validate($request, [
+            'id' => 'required',
+            'interests' => 'required',
+        ]);
+        
+        return User::where('id', $id)->update([
+            'interests' => $request->interests,
+        ]);    
+    }
+
     public function upload(Request $request)
     {
         $this->validate($request, [

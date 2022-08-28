@@ -1,8 +1,21 @@
 <template>
     <div>
         <div v-if="$store.state.user">
-            <HomeNavbar />
-            <router-view></router-view>
+            <div
+                v-if="
+                    $route.name == 'profile' ||
+                    $route.name == 'research' ||
+                    $route.name == 'projects' ||
+                    $route.name == 'followings'
+                "
+            >
+                <HomeNavbar />
+                <profileHeader />
+            </div>
+            <div v-else>
+                <HomeNavbar />
+            </div>
+            <router-view />
         </div>
     </div>
 </template>

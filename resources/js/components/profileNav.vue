@@ -1,6 +1,6 @@
 <template>
     <div>
-        <nav class="navbar navbar-expand justify-content-center">
+        <nav class="navbar navbar-expand justify-content-center navbg">
             <div>
                 <ul class="navbar-nav">
                     <li class="nav-item active">
@@ -34,8 +34,6 @@
                 </ul>
             </div>
         </nav>
-
-        <router-view />
     </div>
 </template>
 <script>
@@ -52,9 +50,9 @@ export default {
 };
 </script>
 <style scoped>
-.profile-bg {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    background-color: #c9af98;
+.navbg {
+    background: #3a4660;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .profile-btn {
 }

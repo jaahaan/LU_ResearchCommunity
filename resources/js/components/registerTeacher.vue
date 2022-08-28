@@ -4,9 +4,15 @@
         <h2 class="text-center p-3">Register As Teacher</h2>
         <div class="mb-2">
             <Input type="text" v-model="data.name" placeholder="Name" />
+            <span class="text-danger" v-if="errors.name">{{
+                errors.name[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <Input type="email" v-model="data.email" placeholder="Email" />
+            <span class="text-danger" v-if="errors.email">{{
+                errors.email[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <Input
@@ -14,6 +20,9 @@
                 v-model="data.password"
                 placeholder="Password"
             />
+            <span class="text-danger" v-if="errors.password">{{
+                errors.password[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <Input
@@ -21,6 +30,9 @@
                 v-model="data.password_confirmation"
                 placeholder="Comfirm Password"
             />
+            <span class="text-danger" v-if="errors.password_confirmation">{{
+                errors.password_confirmation[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <Select v-model="data.designation" placeholder="Designation">
@@ -30,6 +42,9 @@
                 <Option value="Assistant Professor">Assistant Professor</Option>
                 <Option value="Lecturer">Lecturer</Option>
             </Select>
+            <span class="text-danger" v-if="errors.designation">{{
+                errors.designation[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <Select v-model="data.department" placeholder="Department">
@@ -40,6 +55,9 @@
                 <Option value="BuA">BuA</Option>
                 <Option value="ENG">ENG</Option>
             </Select>
+            <span class="text-danger" v-if="errors.department">{{
+                errors.department[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <button
@@ -79,26 +97,27 @@ export default {
             },
             isLoading: false,
             msg: "",
+            errors: [],
         };
     },
     methods: {
         async register() {
-            if (this.data.name.trim() == "") return this.e("Name is required");
-            if (this.data.email.trim() == "")
-                return this.e("Email is required");
-            if (this.data.password.trim() == "")
-                return this.e("Password is required");
-            if (this.data.password_confirmation.trim() == "")
-                return this.e("Confirm Password is required");
-            if (
-                this.data.password.trim() !==
-                this.data.password_confirmation.trim()
-            )
-                return this.e("Password Mismatch!!");
-            if (this.data.designation.trim() == "")
-                return this.e("Designation is required");
-            if (this.data.department.trim() == "")
-                return this.e("Department is required");
+            // if (this.data.name.trim() == "") return this.e("Name is required");
+            // if (this.data.email.trim() == "")
+            //     return this.e("Email is required");
+            // if (this.data.password.trim() == "")
+            //     return this.e("Password is required");
+            // if (this.data.password_confirmation.trim() == "")
+            //     return this.e("Confirm Password is required");
+            // if (
+            //     this.data.password.trim() !==
+            //     this.data.password_confirmation.trim()
+            // )
+            //     return this.e("Password Mismatch!!");
+            // if (this.data.designation.trim() == "")
+            //     return this.e("Designation is required");
+            // if (this.data.department.trim() == "")
+            //     return this.e("Department is required");
             this.isLoading = true;
             const res = await this.callApi("post", "/register_t", this.data);
 
@@ -115,23 +134,9 @@ export default {
                 this.data.department = "";
             } else {
                 if (res.status == 422) {
-                    if (res.data.errors.name) {
-                        this.e(res.data.errors.name[0]);
-                    }
-                    if (res.data.errors.email) {
-                        this.e(res.data.errors.email[0]);
-                    }
-                    if (res.data.errors.password) {
-                        this.e(res.data.errors.password[0]);
-                    }
-                    if (res.data.errors.password_confirmation) {
-                        this.e(res.data.errors.password_confirmation[0]);
-                    }
-                    if (res.data.errors.designation) {
-                        this.e(res.data.errors.designation[0]);
-                    }
-                    if (res.data.errors.department) {
-                        this.e(res.data.errors.department[0]);
+                    for (let i in res.data.errors) {
+                        this.errors = res.data.errors;
+                        // this.e(res.data.errors[i][0]);
                     }
                 } else {
                     this.swr();

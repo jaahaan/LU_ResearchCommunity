@@ -66,7 +66,7 @@
                     >
                         <h1>
                             Enrich your knowledge with us and learn about the
-                            research interest of our teachers.
+                            research interests of our teachers.
                         </h1>
 
                         <router-link
@@ -108,7 +108,7 @@
                         class="col-12 col-md-6 my-md-auto text-center justify-content-center pb-3"
                     >
                         <h5 class="text-center rt-title">
-                            Find your Research Interests
+                            Find Your Research Interests
                         </h5>
                     </div>
 
@@ -162,8 +162,8 @@
                     class="m-3 _card col-9 m-auto text-center justify-content-center"
                 >
                     Our mission is to help the students gather knowledge about
-                    research field and find the research work of our honourable
-                    teachers which can guide them to find out their own research
+                    research field and find the research works of our honourable
+                    teachers that can guide them to find out their own research
                     interest.
                 </h6>
             </div>
@@ -238,13 +238,13 @@ export default {
     font-weight: 600;
     line-height: 1rem;
     padding: 50px;
-    color: rgba(132, 80, 7, 0.5);
+    color: #845007;
 }
 .bg-card {
     background: url("../../../public/images/white_bg.jpg");
 }
 h1 {
-    color: #3a4660;
+    color: #ffffff;
     font-weight: 700;
 }
 
@@ -283,14 +283,14 @@ h1 {
     font-size: 3rem;
     font-weight: 900;
     line-height: 3rem;
-    color: rgba(132, 80, 7, 0.5);
+    color: #845007;
     margin: 20px;
 }
 .rt {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     text-decoration: none;
     background-color: #3a4660;
-    border: 1px solid #845007;
+    border: 1px solid #c9af98;
     color: #c9af98;
     font-size: 13px;
 }

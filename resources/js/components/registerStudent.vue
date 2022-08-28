@@ -4,9 +4,15 @@
         <h2 class="text-center p-3">Register As Student</h2>
         <div class="mb-2">
             <Input type="text" v-model="data.name" placeholder="Name" />
+            <span class="text-danger" v-if="errors.name">{{
+                errors.name[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <Input type="email" v-model="data.email" placeholder="Email" />
+            <span class="text-danger" v-if="errors.email">{{
+                errors.email[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <Input
@@ -14,6 +20,9 @@
                 v-model="data.password"
                 placeholder="Password"
             />
+            <span class="text-danger" v-if="errors.password">{{
+                errors.password[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <Input
@@ -21,9 +30,15 @@
                 v-model="data.password_confirmation"
                 placeholder="Comfirm Password"
             />
+            <span class="text-danger" v-if="errors.password_confirmation">{{
+                errors.password_confirmation[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <Input type="number" v-model="data.batch" placeholder="Batch" />
+            <span class="text-danger" v-if="errors.batch">{{
+                errors.batch[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <Select v-model="data.department" placeholder="Department">
@@ -34,6 +49,9 @@
                 <Option value="BuA">BuA</Option>
                 <Option value="ENG">ENG</Option>
             </Select>
+            <span class="text-danger" v-if="errors.department">{{
+                errors.department[0]
+            }}</span>
         </div>
         <div class="mb-2">
             <button
@@ -73,6 +91,7 @@ export default {
             },
             isLoading: false,
             msg: "",
+            errors: [],
         };
     },
     methods: {
@@ -96,8 +115,9 @@ export default {
             this.isLoading = true;
             const res = await this.callApi("post", "/register_s", this.data);
             if (res.status === 201) {
-                this.msg =
-                    "Registered successfully. Check your email and verify link.";
+                this.msg = res.data.msg;
+                this.$router.push(`/emailVerifyOtp?email=${this.data.email}`);
+
                 this.data.name = "";
                 this.data.email = "";
                 this.data.password = "";
@@ -106,23 +126,9 @@ export default {
                 this.data.department = "";
             } else {
                 if (res.status == 422) {
-                    if (res.data.errors.name) {
-                        this.e(res.data.errors.name[0]);
-                    }
-                    if (res.data.errors.email) {
-                        this.e(res.data.errors.email[0]);
-                    }
-                    if (res.data.errors.password) {
-                        this.e(res.data.errors.password[0]);
-                    }
-                    if (res.data.errors.password_confirmation) {
-                        this.e(res.data.errors.password_confirmation[0]);
-                    }
-                    if (res.data.errors.designation) {
-                        this.e(res.data.errors.designation[0]);
-                    }
-                    if (res.data.errors.department) {
-                        this.e(res.data.errors.department[0]);
+                    for (let i in res.data.errors) {
+                        this.errors = res.data.errors;
+                        // this.e(res.data.errors[i][0]);
                     }
                 } else {
                     this.swr();

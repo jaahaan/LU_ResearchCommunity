@@ -8,7 +8,7 @@
                         alt="logo"
                         class="img-fluid logo"
                     />
-                    Research Community
+                    ResearchCommunity
                 </router-link></a
             >
 
@@ -39,10 +39,10 @@ body {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .text {
-    color: #c9af98;
+    color: #a7a7a7;
 }
 .text:hover {
-    color: #a7a7a7;
+    color: #deb992;
     border-left: 1px solid #a7a7a7 !important;
 }
 .text:active {
@@ -56,7 +56,7 @@ body {
     width: 10vh;
 }
 .router-link-exact-active {
-    color: #fab162 !important;
-    border-left: 1px solid #fab162 !important;
+    color: #c9af98 !important;
+    border-left: 2px solid #c9af98 !important;
 }
 </style>

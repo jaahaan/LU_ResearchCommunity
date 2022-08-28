@@ -36,7 +36,8 @@ class User extends Authenticatable
         'isEmailVerified',
         'isVerifiedByAdmin',
         'userType',
-        'otp'
+        'otp',
+        'twoFactorCode',
     ];
     public function setPasswordAttribute($password)
     {

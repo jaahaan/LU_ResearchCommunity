@@ -11,18 +11,19 @@
                         class="img-fluid scientific"
                     />
                 </div>
-                <div
-                    class="col-md-6 my-md-auto text-center justify-content-center"
-                >
+
+                <div class="col-md-6 my-md-auto justify-content-center">
                     <div class="container-fluid">
-                        <button
-                            class="btn btn-design m-auto cext-center col-5"
-                            v-for="tab in tabs"
-                            :key="tab"
-                            @click="component = tab"
-                        >
-                            {{ tab }}
-                        </button>
+                        <div class="text-center">
+                            <button
+                                class="btn btn-design m-auto cext-center col-5"
+                                v-for="tab in tabs"
+                                :key="tab"
+                                @click="component = tab"
+                            >
+                                {{ tab }}
+                            </button>
+                        </div>
                         <component :is="component" />
                     </div>
                 </div>
@@ -49,4 +50,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+.tab-exact-active {
+    color: #c9af98 !important;
+    background: #c9af98;
+    border-left: 2px solid #c9af98 !important;
+}
+</style>
