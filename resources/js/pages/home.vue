@@ -87,7 +87,7 @@ export default {
 
     methods: {
         async logout() {
-            const res = await this.callApi("get", "logout");
+            const res = await this.callApi("get", "/logout");
 
             if (res.status == 200) {
                 window.location = "/";

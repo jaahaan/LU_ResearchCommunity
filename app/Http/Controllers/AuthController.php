@@ -221,14 +221,14 @@ class AuthController extends Controller
 
         // return $data;
         $checkUser = Hash::check($input['password'] , $data->password);
-        return $checkUser;
         if($checkUser){
             $check = User::where('email', $request->email)->where('isEmailVerified', 1)->count();
             if ($check==1) {
                     $twoFactorCode = rand( 100000 , 999999 );
-    
+                    $expires_at = now()->addMinutes(10);
                     User::where('email', $request->email)->update([
                         'twoFactorCode' => $twoFactorCode,
+                        'expires_at' => $expires_at,
                     ]);
                     $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Two factor authentication is: '. $twoFactorCode;
     
@@ -314,24 +314,36 @@ class AuthController extends Controller
             'otp' => 'required',
         ]);
 
-        $check = User::where('email', $request->email)->where('twoFactorCode', $request->otp)->count();
-        \Log::info('check');
-        \Log::info($check);
-        if($check == 1){
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                return response()->json([
-                    'success' => true,
-                    'msg' => 'You are logged in',
-                ], 200);
+        // if(User::where('email', $request->email)->where('expires_at', lt(now()))){
+        //     User::where('email', $request->email)->update([
+        //         'twoFactorCode' => null,
+        //         'expires_at' => null,
+        //     ]);
+        //     return response()->json([
+        //         'success' => false,
+        //         'msg' => 'Failed!!'
+        //     ], 401);
+        // } else{
+            $check = User::where('email', $request->email)->where('twoFactorCode', $request->otp)->count();
+            \Log::info('check');
+            \Log::info($check);
+            if($check == 1){
+                if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                    return response()->json([
+                        'success' => true,
+                        'msg' => 'You are logged in',
+                    ], 200);
+                } else{
+                    return response()->json([
+                        'success' => false,
+                        'msg' => 'Failed!!'
+                    ], 402);
+                } 
             } else{
-                return response()->json([
-                    'success' => false,
-                    'msg' => 'Failed!!'
-                ], 401);
-            } 
-        } else{
-            return response()->json(['msg'=>'Invalid OTP','status'=>'error'], 401);
-        }
+                return response()->json(['msg'=>'Invalid OTP','status'=>'error'], 402);
+            }
+        // }
+        
     }
 
     //For forgot password
@@ -373,9 +385,7 @@ class AuthController extends Controller
             return response()->json(['msg'=>'Success','status'=>'success'], 200);
         } else{
             return response()->json(['msg'=>'Invalid OTP','status'=>'error'], 401);
-        }
-
-        
+        }      
     }
 
     public function resetPassword(Request $request)

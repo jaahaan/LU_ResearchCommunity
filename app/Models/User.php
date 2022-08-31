@@ -38,6 +38,7 @@ class User extends Authenticatable
         'userType',
         'otp',
         'twoFactorCode',
+        'expires_at',
     ];
     public function setPasswordAttribute($password)
     {

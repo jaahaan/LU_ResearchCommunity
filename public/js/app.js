@@ -5398,6 +5398,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Navbar"
 });
@@ -7559,6 +7562,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "login",
   data: function data() {
@@ -7568,6 +7574,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         password: "",
         otp: ""
       },
+      msg: "",
       isLoggingBlock: true,
       isLogging: false,
       errors: [],
@@ -7597,8 +7604,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 res = _context.sent;
 
                 if (res.status == 200) {
-                  _this.s(res.data.msg); // window.location = "/";
-
+                  _this.msg = res.data.msg; // window.location = "/";
 
                   _this.isLoggingBlock = false;
                 } else {
@@ -7607,14 +7613,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   } else if (res.status == 422) {
                     for (i in res.data.errors) {
                       _this.errors = res.data.errors; // this.e(res.data.errors[i][0]);
-                    } // } else if (res.status == 402) {
-                    //     this.e(res.data.msg);
-                    //     this.$router.push(
-                    //         `/emailVerifyOtp?email=${this.data.email}`
-                    //     );
-                    // } else {
+                    }
+                  } else if (res.status == 402) {
+                    _this.e(res.data.msg);
 
-
+                    _this.$router.push("/emailVerifyOtp?email=".concat(_this.data.email));
+                  } else {
                     _this.swr();
                   }
                 }
@@ -7654,10 +7658,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 res = _context2.sent;
 
                 if (res.status == 200) {
-                  _this2.msg = res.data.msg;
+                  _this2.s(res.data.msg);
+
                   window.location = "/"; //this.data.otp = "";
                 } else {
                   if (res.status == 401) {
+                    _this2.msg = res.data.msg; // window.location = "/";
+
+                    _this2.isLoggingBlock = true;
+                  }
+
+                  if (res.status == 402) {
                     _this2.e(res.data.msg);
                   } else if (res.status == 422) {
                     for (i in res.data.errors) {
@@ -8239,7 +8250,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return _this.callApi("get", "logout");
+                return _this.callApi("get", "/logout");
 
               case 2:
                 res = _context.sent;
@@ -14564,7 +14575,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\nbody[data-v-77bdc96e] {\r\n    margin: 0;\r\n    padding: 0;\n}\n.navbg[data-v-77bdc96e] {\r\n    background: #3a4660;\r\n    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);\n}\n.text[data-v-77bdc96e] {\r\n    color: #a7a7a7;\n}\n.text[data-v-77bdc96e]:hover {\r\n    color: #deb992;\r\n    border-left: 1px solid #a7a7a7 !important;\n}\n.text[data-v-77bdc96e]:active {\r\n    color: #fab162;\n}\n.text[data-v-77bdc96e]:after {\r\n    color: #fab162;\n}\n.logo[data-v-77bdc96e] {\r\n    height: 10vh;\r\n    width: 10vh;\n}\n.router-link-exact-active[data-v-77bdc96e] {\r\n    color: #c9af98 !important;\r\n    border-left: 2px solid #c9af98 !important;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\nbody[data-v-77bdc96e] {\r\n    margin: 0;\r\n    padding: 0;\n}\n.profile-img[data-v-77bdc96e] {\r\n    border-radius: 50%;\r\n    width: 40px;\r\n    height: 40px;\n}\n.navbg[data-v-77bdc96e] {\r\n    background: #3a4660;\r\n    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);\n}\n.text[data-v-77bdc96e] {\r\n    color: #a7a7a7;\n}\n.text[data-v-77bdc96e]:hover {\r\n    color: #deb992;\r\n    border-left: 1px solid #a7a7a7 !important;\n}\n.text[data-v-77bdc96e]:active {\r\n    color: #fab162;\n}\n.text[data-v-77bdc96e]:after {\r\n    color: #fab162;\n}\n.logo[data-v-77bdc96e] {\r\n    height: 10vh;\r\n    width: 10vh;\n}\n.router-link-exact-active[data-v-77bdc96e] {\r\n    color: #c9af98 !important;\r\n    border-left: 2px solid #c9af98 !important;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -77662,7 +77673,12 @@ var render = function () {
               staticClass: "nav-link text",
               attrs: { to: "/profile/" + _vm.authUser.id },
             },
-            [_c("i", { staticClass: "fa-solid fa-user" })]
+            [
+              _c("img", {
+                staticClass: "img-fluid profile-img m-auto",
+                attrs: { src: _vm.authUser.image, alt: "img" },
+              }),
+            ]
           ),
         ],
         1
@@ -79920,7 +79936,15 @@ var render = function () {
                           ),
                         ]),
                         _vm._v(" "),
-                        _vm._m(0),
+                        _vm.msg
+                          ? _c("div", { staticClass: "alert alert-dark" }, [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(_vm.msg) +
+                                  "\n                        "
+                              ),
+                            ])
+                          : _vm._e(),
                         _vm._v(" "),
                         _c("div", { staticClass: "mb-2" }, [
                           _vm._v(
@@ -80002,6 +80026,16 @@ var render = function () {
                         _c("h2", { staticClass: "p-3 text-center" }, [
                           _vm._v("Login"),
                         ]),
+                        _vm._v(" "),
+                        _vm.msg
+                          ? _c("div", { staticClass: "alert alert-dark" }, [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(_vm.msg) +
+                                  "\n                        "
+                              ),
+                            ])
+                          : _vm._e(),
                         _vm._v(" "),
                         _c(
                           "div",
@@ -80112,16 +80146,7 @@ var render = function () {
     ),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "alert alert-dark" }, [
-      _c("p", [_vm._v("We have sent an OTP to your email.")]),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

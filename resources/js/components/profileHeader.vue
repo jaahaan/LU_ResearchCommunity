@@ -464,9 +464,7 @@ export default {
                 name: "",
                 designation: "",
                 department: "",
-
                 about: "",
-
                 //education
                 institute: "",
 

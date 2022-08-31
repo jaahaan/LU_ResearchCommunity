@@ -16,8 +16,11 @@
                 ><router-link
                     class="nav-link text"
                     :to="`/profile/${authUser.id}`"
-                    ><i class="fa-solid fa-user"></i
-                ></router-link>
+                    ><img
+                        :src="authUser.image"
+                        alt="img"
+                        class="img-fluid profile-img m-auto"
+                /></router-link>
             </a>
         </div>
     </nav>
@@ -33,6 +36,11 @@ export default {
 body {
     margin: 0;
     padding: 0;
+}
+.profile-img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
 }
 .navbg {
     background: #3a4660;
