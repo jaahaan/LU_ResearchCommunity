@@ -11,6 +11,7 @@
             >
                 <HomeNavbar />
                 <profileHeader />
+                <ProfileNav />
             </div>
             <div v-else>
                 <HomeNavbar />
@@ -24,6 +25,7 @@
 import Navbar from "../components/navbar";
 import HomeNavbar from "../components/homeNav";
 import profileHeader from "../components/profileHeader";
+import ProfileNav from "../components/profileNav";
 
 export default {
     props: ["user"],
@@ -31,6 +33,7 @@ export default {
         Navbar,
         HomeNavbar,
         profileHeader,
+        ProfileNav,
     },
     data() {
         return {};

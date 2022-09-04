@@ -3,19 +3,19 @@
         <div class="alert alert-dark" v-if="msg">{{ msg }}</div>
         <h2 class="text-center p-3">Register As Student</h2>
         <div class="mb-2">
-            <Input type="text" v-model="data.name" placeholder="Name" />
+            <input type="text" v-model="data.name" placeholder="Name" />
             <span class="text-danger" v-if="errors.name">{{
                 errors.name[0]
             }}</span>
         </div>
         <div class="mb-2">
-            <Input type="email" v-model="data.email" placeholder="Email" />
+            <input type="email" v-model="data.email" placeholder="Email" />
             <span class="text-danger" v-if="errors.email">{{
                 errors.email[0]
             }}</span>
         </div>
         <div class="mb-2">
-            <Input
+            <input
                 type="password"
                 v-model="data.password"
                 placeholder="Password"
@@ -25,7 +25,7 @@
             }}</span>
         </div>
         <div class="mb-2">
-            <Input
+            <input
                 type="password"
                 v-model="data.password_confirmation"
                 placeholder="Comfirm Password"
@@ -35,7 +35,7 @@
             }}</span>
         </div>
         <div class="mb-2">
-            <Input type="number" v-model="data.batch" placeholder="Batch" />
+            <input type="number" v-model="data.batch" placeholder="Batch" />
             <span class="text-danger" v-if="errors.batch">{{
                 errors.batch[0]
             }}</span>
@@ -139,3 +139,14 @@ export default {
     },
 };
 </script>
+<style scoped>
+input {
+    display: block;
+    padding: 4px;
+    width: 100%;
+    box-sizing: none;
+    border: 1px solid #845007;
+    border-radius: 5px;
+    color: #555;
+}
+</style>

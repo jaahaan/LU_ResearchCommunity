@@ -1,13 +1,13 @@
 <template>
     <div>
         <div class="space" />
-
         <!-- about-section -->
         <template v-if="about_id">
             <div
                 class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
             >
-                <h1>Edit About</h1>
+                <h5>Edit About</h5>
+                <div class="space" />
                 <textarea
                     class="form-control"
                     v-model="editData.about"
@@ -33,7 +33,7 @@
                 v-if="profileInfo.about && isLoading == false"
             >
                 <div class="d-flex">
-                    <h1>About</h1>
+                    <h5>About</h5>
                     <div
                         class="d-flex float-right"
                         v-if="authUser.id == this.$route.params.id"
@@ -53,12 +53,75 @@
             </div>
         </template>
         <div class="space" />
+
+        <!-- education-section -->
+        <!-- <template v-if="about_id">
+            <div
+                class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
+            >
+                <h5>Edit About</h5>
+                <div class="space" />
+                <textarea
+                    class="form-control"
+                    v-model="editData.about"
+                    rows="4"
+                    placeholder="Write About You..."
+                ></textarea>
+                <div class="d-flex">
+                    <button
+                        @click="updateAbout()"
+                        class="btn btn-sm text-success"
+                    >
+                        <i class="fa-solid fa-square-check"></i>
+                    </button>
+                    <button class="btn btn-sm text-danger" @click="reset()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+        </template> -->
+        <template>
+            <div
+                class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
+                v-if="educationInfo != '' && isLoading == false"
+            >
+                <div class="d-flex">
+                    <h5>Education</h5>
+                    <div
+                        class="d-flex float-right"
+                        v-if="authUser.id == this.$route.params.id"
+                    >
+                        <button
+                            class="btn btn-edit mx-2"
+                            @click="editEducation(profileInfo)"
+                        >
+                            <i class="fa-solid fa-pen" />
+                        </button>
+                    </div>
+                </div>
+
+                <div v-for="(education, index) in educationInfo" :key="index">
+                    <hr class="mt-2 mb-2" />
+                    <h6>{{ education.institute }}</h6>
+                    <div class="space" />
+                    <p>{{ education.degree }}, {{ education.fieldOfStudy }}</p>
+                    <p v-if="education.endDate">
+                        {{ education.startDate }} - {{ education.endDate }}
+                    </p>
+                    <p v-else>{{ education.startDate }} - Present</p>
+                </div>
+            </div>
+        </template>
+        <div class="space" />
+
         <!-- Skills-section -->
         <template v-if="skills_id">
             <div
                 class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
             >
-                <h1>Edit Skills</h1>
+                <h5>Edit Skills</h5>
+                <div class="space" />
+
                 <textarea
                     class="form-control"
                     v-model="editData.skills"
@@ -84,7 +147,7 @@
                 v-if="profileInfo.skills && isLoading == false"
             >
                 <div class="d-flex">
-                    <h1>Skills</h1>
+                    <h5>Skills</h5>
                     <div
                         class="d-flex float-right"
                         v-if="authUser.id == this.$route.params.id"
@@ -108,12 +171,13 @@
             <div
                 class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
             >
-                <h1>Edit Interests</h1>
+                <h5>Edit Interests</h5>
+                <div class="space" />
                 <textarea
                     class="form-control"
                     v-model="editData.interests"
                     rows="4"
-                    placeholder="Write Your Skills..."
+                    placeholder="Write Your Interests..."
                 ></textarea>
                 <div class="d-flex">
                     <button
@@ -134,14 +198,14 @@
                 v-if="profileInfo.interests && isLoading == false"
             >
                 <div class="d-flex">
-                    <h1>Interests</h1>
+                    <h5>Interests</h5>
                     <div
                         class="d-flex float-right"
                         v-if="authUser.id == this.$route.params.id"
                     >
                         <button
                             class="btn btn-edit mx-2"
-                            @click="editInterests()"
+                            @click="editInterests(profileInfo)"
                         >
                             <i class="fa-solid fa-pen" />
                         </button>
@@ -155,7 +219,7 @@
         <div class="space" />
 
         <div v-if="isLoading == true" style="padding: 40px; text-align: center">
-            <h1>Content is Loading....</h1>
+            <h5>Content is Loading....</h5>
         </div>
     </div>
 </template>
@@ -166,6 +230,7 @@ export default {
         return {
             isLoading: true,
             profileInfo: "",
+            educationInfo: "",
             editData: {
                 image: "",
                 name: "",
@@ -185,11 +250,12 @@ export default {
 
     methods: {
         editAbout(profileInfo) {
+            this.reset();
             this.editData.about = profileInfo.about;
             this.editData.id = profileInfo.id;
             this.about_id = profileInfo.id;
-            this.editData.skills = "";
-            this.editData.interests = "";
+            // this.editData.skills = "";
+            // this.editData.interests = "";
 
             // if (this.profileInfo) {
             //     this.$nextTick(() => {
@@ -223,6 +289,7 @@ export default {
         },
 
         editSkills(profileInfo) {
+            this.reset();
             this.editData.skills = profileInfo.skills;
             this.editData.id = profileInfo.id;
             this.skills_id = profileInfo.id;
@@ -261,6 +328,7 @@ export default {
         },
 
         editInterests(profileInfo) {
+            this.reset();
             this.editData.interests = profileInfo.interests;
             this.editData.id = profileInfo.id;
             this.interests_id = profileInfo.id;
@@ -309,34 +377,54 @@ export default {
             this.token = window.Laravel.csrfToken;
 
             this.user_id = this.$route.params.id;
-            const res = await this.callApi(
+            const resU = await this.callApi(
                 "get",
                 `/api/get_profile_info/${this.user_id}`
             );
-
-            if (res.status == 200) {
-                this.profileInfo = res.data;
+            const resE = await this.callApi(
+                "get",
+                `/api/get_education/${this.user_id}`
+            );
+            if (resU.status == 200) {
+                this.profileInfo = resU.data;
+            }
+            if (resE.status == 200) {
+                this.educationInfo = resE.data;
             } else {
                 this.swr();
             }
             this.isLoading = false;
         },
     },
-
+    watch: {
+        "$route.params"(oldValue, newValue) {
+            if (oldValue != newValue) {
+                console.log("route is changing!");
+                this.reset();
+            }
+        },
+    },
     async created() {
         this.token = window.Laravel.csrfToken;
 
         this.user_id = this.$route.params.id;
-        const res = await this.callApi(
+        const resU = await this.callApi(
             "get",
             `/api/get_profile_info/${this.user_id}`
         );
-
-        if (res.status == 200) {
-            this.profileInfo = res.data;
+        const resE = await this.callApi(
+            "get",
+            `/api/get_education/${this.user_id}`
+        );
+        if (resU.status == 200) {
+            this.profileInfo = resU.data;
+        }
+        if (resE.status == 200) {
+            this.educationInfo = resE.data;
         } else {
             this.swr();
         }
+
         this.isLoading = false;
     },
 };
@@ -353,11 +441,9 @@ hr {
     background: #3a4660;
     color: #3a4660;
 }
-h1 {
-    color: #000000;
-}
+
 p {
-    color: rgb(39, 51, 38);
+    color: #333;
 }
 .btn-edit {
     color: rgb(167, 167, 167);

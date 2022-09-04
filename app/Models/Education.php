@@ -7,5 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Education extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'institute',
+        'degree',
+        'fieldOfStudy',
+        'startDate',
+        'endDate',
+        'grade',
+        'activities',
+    ];
     use HasFactory;
 }

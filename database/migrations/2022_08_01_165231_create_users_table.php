@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('designation');
             $table->string('image')->default('/profileImages/download.jpg');
             $table->text('about')->nullable();
+            $table->json('education')->nullable();
             $table->text('skills')->nullable();
             $table->text('interests')->nullable();
             $table->text('honors_and_awards')->nullable();

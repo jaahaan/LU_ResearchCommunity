@@ -13,6 +13,28 @@
             >
 
             <a class="navbar-brand d-flex"
+                ><div>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input
+                            class="form-control mr-sm-2"
+                            type="search"
+                            v-model="keyword"
+                            placeholder="Search..."
+                        />
+                        <ul v-if="Users.length > 0 && keyword.length > 0">
+                            <li
+                                v-for="user in Users"
+                                v-if="authUser.id != user.id"
+                                :key="user.id"
+                                v-text="user.name"
+                                @click="getSearchedUser(user)"
+                            ></li>
+                        </ul>
+                    </form>
+                </div>
+            </a>
+
+            <a class="navbar-brand d-flex"
                 ><router-link
                     class="nav-link text"
                     :to="`/profile/${authUser.id}`"
@@ -28,7 +50,35 @@
 
 <script>
 export default {
-    name: "Navbar",
+    data() {
+        return {
+            keyword: null,
+            Users: [],
+            user_id: -1,
+        };
+    },
+    watch: {
+        keyword(after, before) {
+            this.getResults();
+        },
+    },
+    methods: {
+        getSearchedUser(user) {
+            //     const res = await this.callApi(
+            //     "get",
+            //     `/api/get_profile_info/${this.user_id}`
+            // );
+            this.user_id = user.id;
+            this.$router.push(`/profile/${this.user_id}`);
+            this.keyword = "";
+        },
+        getResults() {
+            axios
+                .get("/api/search", { params: { keyword: this.keyword } })
+                .then((res) => (this.Users = res.data))
+                .catch((error) => {});
+        },
+    },
 };
 </script>
 
@@ -36,6 +86,10 @@ export default {
 body {
     margin: 0;
     padding: 0;
+}
+ul {
+    list-style-type: none;
+    display: relative;
 }
 .profile-img {
     border-radius: 50%;
@@ -65,6 +119,6 @@ body {
 }
 .router-link-exact-active {
     color: #c9af98 !important;
-    border-left: 2px solid #c9af98 !important;
+    border-left: 1px solid #c9af98 !important;
 }
 </style>

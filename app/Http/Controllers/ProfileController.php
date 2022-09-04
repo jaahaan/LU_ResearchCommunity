@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Education;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -11,6 +13,10 @@ class ProfileController extends Controller
     public function getProfileInfo($id)
     {
         return User::where('id', $id)->first();
+    }
+    public function getEducation($id)
+    {
+        return Education::where('user_id', $id)->get();
     }
 
     public function deleteImage(Request $request)
@@ -70,6 +76,32 @@ class ProfileController extends Controller
             'about' => $request->about,
         ]);
         
+    }
+
+    public function education(Request $request, $id)
+    {
+    
+        //validate request
+        $this->validate($request, [
+            'id' => 'required',
+            'institute' => 'required',
+            'degree' => 'required',
+            'fieldOfStudy' => 'required',
+            'startMonth' => 'required',
+            'startYear' => 'required',
+        ]);
+        $education = Education::create([
+            'user_id' => $id,
+            'institute' => $request->institute,
+            'degree' => $request->degree,
+            'fieldOfStudy' => $request->fieldOfStudy,
+            'startDate' => $request->startMonth .' '. $request->startYear,
+            'endDate' => $request->endMonth .' '. $request->endYear,
+            'grade' => $request->grade,
+            'activities' => $request->activities,
+        ]);    
+
+        return response()->json(['msg' => 'Education Added Successfully.', 'status' => $education], 201);
     }
 
     public function skills(Request $request, $id)

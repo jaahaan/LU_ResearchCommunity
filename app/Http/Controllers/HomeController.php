@@ -9,7 +9,10 @@ use Illuminate\Support\Facades\Auth;
 class HomeController extends Controller
 {
 
-    
+    public function search(Request $request){
+        $users = User::where('name', 'LIKE','%'.$request->keyword.'%')->get();
+        return response()->json($users);
+    }
 
     
 

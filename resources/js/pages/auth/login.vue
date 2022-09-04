@@ -11,6 +11,8 @@
                         class="img-fluid scientific"
                     />
                 </div>
+
+                <!-- Two Factor Form -->
                 <div
                     class="col-md-6 my-md-auto justify-content-center"
                     v-if="!isLoggingBlock"
@@ -58,6 +60,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Login Form -->
                 <div
                     class="col-md-6 my-md-auto justify-content-center"
                     v-else-if="isLoggingBlock"
@@ -71,7 +75,7 @@
 
                             <div class="mb-2">
                                 Email
-                                <Input
+                                <input
                                     type="email"
                                     v-model="data.email"
                                     placeholder="Email"
@@ -83,7 +87,7 @@
 
                             <div class="mb-2">
                                 Password
-                                <Input
+                                <input
                                     type="password"
                                     v-model="data.password"
                                     placeholder="Password"
@@ -135,9 +139,8 @@ export default {
             msg: "",
             isLoggingBlock: true,
             isLogging: false,
-            errors: [],
-            submitted: false,
             isSubmitting: false,
+            errors: [],
         };
     },
     methods: {
@@ -156,7 +159,8 @@ export default {
                 this.isLoggingBlock = false;
             } else {
                 if (res.status == 401) {
-                    this.e(res.data.msg);
+                    this.msg = res.data.msg;
+                    // this.e(res.data.msg);
                 } else if (res.status == 422) {
                     for (let i in res.data.errors) {
                         this.errors = res.data.errors;
@@ -186,7 +190,6 @@ export default {
             if (res.status == 200) {
                 this.s(res.data.msg);
                 window.location = "/";
-
                 //this.data.otp = "";
             } else {
                 if (res.status == 401) {
@@ -210,3 +213,14 @@ export default {
     },
 };
 </script>
+<style scoped>
+input {
+    display: block;
+    padding: 4px;
+    width: 100%;
+    box-sizing: none;
+    border: 1px solid #845007;
+    border-radius: 5px;
+    color: #555;
+}
+</style>

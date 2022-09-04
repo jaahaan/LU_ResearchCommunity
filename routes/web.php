@@ -21,12 +21,18 @@ use App\Http\Middleware\AuthCheck;
 
 Route::prefix('/api')->middleware([AuthCheck::class])->group(function () {
     Route::get('/get_profile_info/{id}', [ProfileController::class, 'getProfileInfo']);
+    Route::get('/get_education/{id}', [ProfileController::class, 'getEducation']);
+
     Route::post('/delete_image', [ProfileController::class, 'deleteImage']);
     Route::post('/upload', [ProfileController::class, 'upload']);
     Route::post('/edit_profile/{id}', [ProfileController::class, 'editProfile']);
     Route::post('/save_about/{id}', [ProfileController::class, 'about']);
+    Route::post('/save_education/{id}', [ProfileController::class, 'education']);
     Route::post('/save_skills/{id}', [ProfileController::class, 'skills']);
     Route::post('/save_interests/{id}', [ProfileController::class, 'interests']);
+
+    Route::get('/search', [HomeController::class, 'search']);
+
 });
 
 Route::get('/logout', [AuthController::class, 'logout']);

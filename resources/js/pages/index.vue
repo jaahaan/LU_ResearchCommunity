@@ -292,7 +292,8 @@ h1 {
     background-color: #3a4660;
     border: 1px solid #c9af98;
     color: #c9af98;
-    font-size: 13px;
+    box-sizing: border-box;
+    border-radius: 60.5px;
 }
 
 @media (max-width: 768px) {

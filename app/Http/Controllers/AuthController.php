@@ -17,7 +17,6 @@ class AuthController extends Controller
         }
 
         if (!Auth::check() && $request->path() == '/') {
-
             return view('welcome');
         }
         if (Auth::check() && ($request->path() == 'login' || $request->path() == 'register' || $request->path() == '/')) {
@@ -89,17 +88,18 @@ class AuthController extends Controller
                 'password.regex' => '1 upper, 1 lower, 1 digit'
             ]
         );
-        $isVerifiedCode = rand( 100000 , 999999 );
+        $isVerifiedCode = rand(100000, 999999);
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
             'department' => $request->department,
             'designation' => $request->designation,
-            'isVerifiedCode' => $isVerifiedCode, 
+            'userType' => 'teacher',
+            'isVerifiedCode' => $isVerifiedCode,
         ]);
 
-        $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: '. $isVerifiedCode;
+        $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $isVerifiedCode;
 
         \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
             $message->to($request->email)
@@ -107,8 +107,7 @@ class AuthController extends Controller
                 ->subject('Email Verification');
         });
 
-        return response()->json(['msg'=>'Registered successfully. We have sent an OTP to your email. Submit your OTP to verify your account. To login, wait for the approval of admin.','status'=>$user], 201);
-
+        return response()->json(['msg' => 'Registered successfully. We have sent an OTP to your email. Submit your OTP to verify your account. To login, wait for the approval of admin.', 'status' => $user], 201);
     }
 
     //create new student in db
@@ -128,7 +127,7 @@ class AuthController extends Controller
                 ],
                 'password' => 'bail|required|confirmed|min:2|max:20',
                 'password_confirmation' => 'required',
-                'batch' => 'required',
+                // 'batch' => 'required',
                 'department' => 'required',
 
                 // 'password' => ['required',
@@ -144,17 +143,18 @@ class AuthController extends Controller
                 'password.regex' => '1 upper, 1 lower, 1 digit'
             ]
         );
-        $isVerifiedCode = rand( 100000 , 999999 );
+        $isVerifiedCode = rand(100000, 999999);
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
             'department' => $request->department,
-            'designation' => $request->batch,
-            'isVerifiedCode' => $isVerifiedCode, 
+            'designation' => 'Student',
+            'userType' => 'student',
+            'isVerifiedCode' => $isVerifiedCode,
         ]);
 
-        $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: '. $isVerifiedCode;
+        $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $isVerifiedCode;
 
         \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
             $message->to($request->email)
@@ -162,41 +162,41 @@ class AuthController extends Controller
                 ->subject('Email Verification');
         });
 
-        return response()->json(['msg'=>'Registered successfully. We have sent an OTP to your email. Submit your OTP to verify your account.','status'=>$user], 201);
+        return response()->json(['msg' => 'Registered successfully. We have sent an OTP to your email. Submit your OTP to verify your account.', 'status' => $user], 201);
         return $user;
     }
     public function getInfo($email)
     {
         return User::where('email', $email)->first();
     }
-// 
-//     public function login(Request $request)
-//     {
-//         $request->validate([
-//             'email' => 'bail|required|email|exists:users,email',
-//             'password' => 'bail|required|min:2|max:20',
-//         ], ['email.exists' => 'No account found for this email']);
-// 
-//         // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
-//         // 
-//         //             return response()->json([
-//         //                 'success' => false,
-//         //                 'admin' => 'not-found'
-//         //             ], 401);
-//         //         }
-// 
-//         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-//             return response()->json([
-//                 'success' => true,
-//                 'msg' => 'You are logged in',
-//             ], 200);
-//         } else {
-//             return response()->json([
-//                 'msg' => 'Incorrect Password!!',
-//                 'success' => false
-//             ], 401);
-//         }
-//     }
+    // 
+    //     public function login(Request $request)
+    //     {
+    //         $request->validate([
+    //             'email' => 'bail|required|email|exists:users,email',
+    //             'password' => 'bail|required|min:2|max:20',
+    //         ], ['email.exists' => 'No account found for this email']);
+    // 
+    //         // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
+    //         // 
+    //         //             return response()->json([
+    //         //                 'success' => false,
+    //         //                 'admin' => 'not-found'
+    //         //             ], 401);
+    //         //         }
+    // 
+    //         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+    //             return response()->json([
+    //                 'success' => true,
+    //                 'msg' => 'You are logged in',
+    //             ], 200);
+    //         } else {
+    //             return response()->json([
+    //                 'msg' => 'Incorrect Password!!',
+    //                 'success' => false
+    //             ], 401);
+    //         }
+    //     }
 
     public function login(Request $request)
     {
@@ -220,29 +220,29 @@ class AuthController extends Controller
         $data->makeVisible('password')->toArray();
 
         // return $data;
-        $checkUser = Hash::check($input['password'] , $data->password);
-        if($checkUser){
+        $checkUser = Hash::check($input['password'], $data->password);
+        if ($checkUser) {
             $check = User::where('email', $request->email)->where('isEmailVerified', 1)->count();
-            if ($check==1) {
-                    $twoFactorCode = rand( 100000 , 999999 );
-                    $expires_at = now()->addMinutes(10);
-                    User::where('email', $request->email)->update([
-                        'twoFactorCode' => $twoFactorCode,
-                        'expires_at' => $expires_at,
-                    ]);
-                    $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Two factor authentication is: '. $twoFactorCode;
-    
-                    \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
-                        $message->to($request->email)
-                            ->from('noreply@example.com', 'LURC')
-                            ->subject('Two Factor Authentication');
-                    });
-                    
-                    return response()->json([
-                        'success' => true,
-                        'msg' => 'We have sent a two factor authentication code to your email.'
-                    ], 200);
-                
+            if ($check == 1) {
+                $twoFactorCode = rand(100000, 999999);
+                $expires_at = now()->addMinutes(5);
+                User::where('email', $request->email)->update([
+                    'twoFactorCode' => $twoFactorCode,
+                    'expires_at' => $expires_at,
+                ]);
+                $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Two factor authentication is: ' . $twoFactorCode;
+
+                \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
+                    $message->to($request->email)
+                        ->from('noreply@example.com', 'LURC')
+                        ->subject('Two Factor Authentication');
+                });
+
+                return response()->json([
+                    'success' => true,
+                    'msg' => 'We have sent a two factor authentication code to your email.'
+                ], 200);
+
                 // if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 //     return response()->json([
                 //         'success' => true,
@@ -254,31 +254,30 @@ class AuthController extends Controller
                 //         'msg' => 'Your email is not verified!!'
                 //     ], 401);
                 // } 
-            } else{
-                    $isVerifiedCode = rand( 100000 , 999999 );
-                    User::where('email', $request->email)->update([
-                        'isVerifiedCode' => $isVerifiedCode,
-                    ]);
-                    $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: '. $isVerifiedCode;
-    
-                    \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
-                        $message->to($request->email)
-                            ->from('noreply@example.com', 'LURC')
-                            ->subject('Email Verification');
-                    });
-                    
-                    return response()->json([
-                        'success' => false,
-                        'msg' => 'Your email is not verified!!  We have sent an OTP to your email. Submit your OTP to verify your account.'
-                    ], 402);
+            } else {
+                $isVerifiedCode = rand(100000, 999999);
+                User::where('email', $request->email)->update([
+                    'isVerifiedCode' => $isVerifiedCode,
+                ]);
+                $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $isVerifiedCode;
+
+                \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
+                    $message->to($request->email)
+                        ->from('noreply@example.com', 'LURC')
+                        ->subject('Email Verification');
+                });
+
+                return response()->json([
+                    'success' => false,
+                    'msg' => 'Your email is not verified!!  We have sent an OTP to your email. Submit your OTP to verify your account.'
+                ], 402);
             }
-        } else{
+        } else {
             return response()->json([
                 'success' => false,
                 'msg' => 'Incorrect Password',
             ], 401);
         }
-        
     }
 
     public function verifyEmail(Request $request)
@@ -290,13 +289,13 @@ class AuthController extends Controller
         $check = User::where('email', $request->email)->where('isVerifiedCode', $request->otp)->count();
         \Log::info('check');
         \Log::info($check);
-        if($check == 1){
+        if ($check == 1) {
             User::where('email', $request->email)->update([
                 'isEmailVerified' => 1,
             ]);
-            return response()->json(['msg'=>'Email verified successfully!!','status'=>'success'], 200);
-        } else{
-            return response()->json(['msg'=>'Invalid OTP','status'=>'error'], 401);
+            return response()->json(['msg' => 'Email verified successfully!!', 'status' => 'success'], 200);
+        } else {
+            return response()->json(['msg' => 'Invalid OTP', 'status' => 'error'], 401);
         }
     }
 
@@ -324,26 +323,26 @@ class AuthController extends Controller
         //         'msg' => 'Failed!!'
         //     ], 401);
         // } else{
-            $check = User::where('email', $request->email)->where('twoFactorCode', $request->otp)->count();
-            \Log::info('check');
-            \Log::info($check);
-            if($check == 1){
-                if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                    return response()->json([
-                        'success' => true,
-                        'msg' => 'You are logged in',
-                    ], 200);
-                } else{
-                    return response()->json([
-                        'success' => false,
-                        'msg' => 'Failed!!'
-                    ], 402);
-                } 
-            } else{
-                return response()->json(['msg'=>'Invalid OTP','status'=>'error'], 402);
+        $check = User::where('email', $request->email)->where('twoFactorCode', $request->otp)->count();
+        \Log::info('check');
+        \Log::info($check);
+        if ($check == 1) {
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                return response()->json([
+                    'success' => true,
+                    'msg' => 'You are logged in',
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'msg' => 'Failed!!'
+                ], 402);
             }
+        } else {
+            return response()->json(['msg' => 'Invalid OTP', 'status' => 'error'], 402);
+        }
         // }
-        
+
     }
 
     //For forgot password
@@ -353,14 +352,14 @@ class AuthController extends Controller
             'email' => 'required|email|exists:users,email',
         ]);
 
-        $otp = rand( 100000 , 999999 );
+        $otp = rand(100000, 999999);
         User::where('email', $request->email)->update([
             'otp' => $otp,
         ]);
 
         //$action_link = redirect('/reset')->route( ['token' => $token, 'email' => $request->email]);
 
-        $body = 'We have received a request to reset the password for <b>LURC<b> account associated with ' . $request->email . '. Your OTP for reset password: '. $otp;
+        $body = 'We have received a request to reset the password for <b>LURC<b> account associated with ' . $request->email . '. Your OTP for reset password: ' . $otp;
 
         \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
             $message->to($request->email)
@@ -369,7 +368,7 @@ class AuthController extends Controller
         });
 
         // return back()->with('success', 'We have e-mailed your password reset link!');
-        return response()->json(['msg'=>'We have sent an OTP to your email.','status'=>$request->email], 200);
+        return response()->json(['msg' => 'We have sent an OTP to your email.', 'status' => $request->email], 200);
     }
 
     public function submitOtp(Request $request)
@@ -381,29 +380,29 @@ class AuthController extends Controller
         $check = User::where('email', $request->email)->where('otp', $request->otp)->count();
         \Log::info('check');
         \Log::info($check);
-        if($check == 1){
-            return response()->json(['msg'=>'Success','status'=>'success'], 200);
-        } else{
-            return response()->json(['msg'=>'Invalid OTP','status'=>'error'], 401);
-        }      
+        if ($check == 1) {
+            return response()->json(['msg' => 'Success', 'status' => 'success'], 200);
+        } else {
+            return response()->json(['msg' => 'Invalid OTP', 'status' => 'error'], 401);
+        }
     }
 
     public function resetPassword(Request $request)
     {
-        
+
         $request->validate([
             'email' => 'required|email|exists:users,email',
             'password' => 'required|confirmed|min:2|max:20',
             'password_confirmation' => 'required',
         ]);
         $check = User::where('email', $request->email)->where('otp', $request->otp)->count();
-        if($check == 1){
-        User::where('email', $request->email)->update([
-            'password' => \Hash::make($request->password),
-        ]);
-        return response()->json(['msg'=>'Password updated successfully','status'=>'success'], 200);
-        } else{
-            return response()->json(['msg'=>'Invalid OTP','status'=>'error'], 401);
+        if ($check == 1) {
+            User::where('email', $request->email)->update([
+                'password' => \Hash::make($request->password),
+            ]);
+            return response()->json(['msg' => 'Password updated successfully', 'status' => 'success'], 200);
+        } else {
+            return response()->json(['msg' => 'Invalid OTP', 'status' => 'error'], 401);
         }
     }
 }

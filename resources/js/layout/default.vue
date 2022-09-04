@@ -39,9 +39,10 @@ export default {
 
 body {
     position: relative;
-    font-family: "Styrenea web", sans-serif;
+    font-family: var(--artdeco-reset-typography-font-family-sans);
     font-size: 15px;
     line-height: 24px;
+    color: #111112;
 }
 .bg {
     background: linear-gradient(

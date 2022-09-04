@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand navbg text">
+    <nav class="navbar navbar-expand navbg">
         <div class="container-fluid">
             <a class="navbar-brand"
                 ><router-link class="nav-link active text" to="/"
@@ -24,7 +24,7 @@
     </nav>
 </template>
 
-<script>
+<script scoped>
 export default {
     name: "Navbar",
 };
@@ -38,6 +38,8 @@ body {
 .navbg {
     background: #3a4660;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    position: sticky;
+    border-bottom: 1px solid #ddd;
 }
 .text {
     color: #a7a7a7;
@@ -58,6 +60,6 @@ body {
 }
 .router-link-exact-active {
     color: #c9af98 !important;
-    border-left: 2px solid #c9af98 !important;
+    border-left: 1px solid #c9af98 !important;
 }
 </style>
