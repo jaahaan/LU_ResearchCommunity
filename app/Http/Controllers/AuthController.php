@@ -242,18 +242,6 @@ class AuthController extends Controller
                     'success' => true,
                     'msg' => 'We have sent a two factor authentication code to your email.'
                 ], 200);
-
-                // if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                //     return response()->json([
-                //         'success' => true,
-                //         'msg' => 'You are logged in',
-                //     ], 200);
-                // } else{
-                //     return response()->json([
-                //         'success' => false,
-                //         'msg' => 'Your email is not verified!!'
-                //     ], 401);
-                // } 
             } else {
                 $isVerifiedCode = rand(100000, 999999);
                 User::where('email', $request->email)->update([
@@ -310,7 +298,7 @@ class AuthController extends Controller
     public function submitTwoFactorCode(Request $request)
     {
         $request->validate([
-            'otp' => 'required',
+            'twoFactorCode' => 'required',
         ]);
 
         // if(User::where('email', $request->email)->where('expires_at', lt(now()))){
@@ -323,7 +311,7 @@ class AuthController extends Controller
         //         'msg' => 'Failed!!'
         //     ], 401);
         // } else{
-        $check = User::where('email', $request->email)->where('twoFactorCode', $request->otp)->count();
+        $check = User::where('email', $request->email)->where('twoFactorCode', $request->twoFactorCode)->count();
         \Log::info('check');
         \Log::info($check);
         if ($check == 1) {
@@ -336,10 +324,10 @@ class AuthController extends Controller
                 return response()->json([
                     'success' => false,
                     'msg' => 'Failed!!'
-                ], 402);
+                ], 401);
             }
         } else {
-            return response()->json(['msg' => 'Invalid OTP', 'status' => 'error'], 402);
+            return response()->json(['msg' => 'Invalid OTP', 'status' => 'failed'], 402);
         }
         // }
 

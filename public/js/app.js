@@ -7703,6 +7703,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "login",
   data: function data() {
@@ -7710,7 +7712,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       data: {
         email: "",
         password: "",
-        otp: ""
+        twoFactorCode: ""
       },
       msg: "",
       isLoggingBlock: true,
@@ -7779,19 +7781,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                if (!(_this2.data.otp.trim() == "")) {
-                  _context2.next = 2;
-                  break;
-                }
-
-                return _context2.abrupt("return", _this2.e("OTP is required"));
-
-              case 2:
+                // if (this.data.otp.trim() == "") return this.e("OTP is required");
                 _this2.isSubmitting = true;
-                _context2.next = 5;
+                _context2.next = 3;
                 return _this2.callApi("post", "/submit_twoFactor_otp", _this2.data);
 
-              case 5:
+              case 3:
                 res = _context2.sent;
 
                 if (res.status == 200) {
@@ -7803,9 +7798,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     _this2.msg = res.data.msg; // window.location = "/";
 
                     _this2.isLoggingBlock = true;
-                  }
-
-                  if (res.status == 402) {
+                  } else if (res.status == 402) {
                     _this2.e(res.data.msg);
                   } else if (res.status == 422) {
                     for (i in res.data.errors) {
@@ -7818,7 +7811,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 _this2.isSubmitting = false;
 
-              case 8:
+              case 6:
               case "end":
                 return _context2.stop();
             }
@@ -80495,26 +80488,30 @@ var render = function () {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.data.otp,
-                                expression: "data.otp",
+                                value: _vm.data.twoFactorCode,
+                                expression: "data.twoFactorCode",
                               },
                             ],
                             staticClass: "form-control",
                             attrs: { type: "number" },
-                            domProps: { value: _vm.data.otp },
+                            domProps: { value: _vm.data.twoFactorCode },
                             on: {
                               input: function ($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.$set(_vm.data, "otp", $event.target.value)
+                                _vm.$set(
+                                  _vm.data,
+                                  "twoFactorCode",
+                                  $event.target.value
+                                )
                               },
                             },
                           }),
                           _vm._v(" "),
-                          _vm.errors.otp
+                          _vm.errors.twoFactorCode
                             ? _c("span", { staticClass: "text-danger" }, [
-                                _vm._v(_vm._s(_vm.errors.otp[0])),
+                                _vm._v(_vm._s(_vm.errors.twoFactorCode[0])),
                               ])
                             : _vm._e(),
                         ]),
@@ -80524,7 +80521,7 @@ var render = function () {
                             "button",
                             {
                               class: [
-                                _vm.data.otp
+                                _vm.data.twoFactorCode
                                   ? "btn btn-design-change col-12"
                                   : "btn btn-design col-12",
                                 "btn btn-design col-12",

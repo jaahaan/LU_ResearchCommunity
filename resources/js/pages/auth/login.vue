@@ -31,17 +31,19 @@
                                 <input
                                     type="number"
                                     class="form-control"
-                                    v-model="data.otp"
+                                    v-model="data.twoFactorCode"
                                 />
-                                <span class="text-danger" v-if="errors.otp">{{
-                                    errors.otp[0]
-                                }}</span>
+                                <span
+                                    class="text-danger"
+                                    v-if="errors.twoFactorCode"
+                                    >{{ errors.twoFactorCode[0] }}</span
+                                >
                             </div>
 
                             <div class="mb-2">
                                 <button
                                     :class="[
-                                        data.otp
+                                        data.twoFactorCode
                                             ? 'btn btn-design-change col-12'
                                             : 'btn btn-design col-12',
                                         'btn btn-design col-12',
@@ -134,7 +136,7 @@ export default {
             data: {
                 email: "",
                 password: "",
-                otp: "",
+                twoFactorCode: "",
             },
             msg: "",
             isLoggingBlock: true,
@@ -179,7 +181,7 @@ export default {
         },
 
         async submit() {
-            if (this.data.otp.trim() == "") return this.e("OTP is required");
+            // if (this.data.otp.trim() == "") return this.e("OTP is required");
             this.isSubmitting = true;
             const res = await this.callApi(
                 "post",
@@ -196,8 +198,7 @@ export default {
                     this.msg = res.data.msg;
                     // window.location = "/";
                     this.isLoggingBlock = true;
-                }
-                if (res.status == 402) {
+                } else if (res.status == 402) {
                     this.e(res.data.msg);
                 } else if (res.status == 422) {
                     for (let i in res.data.errors) {
