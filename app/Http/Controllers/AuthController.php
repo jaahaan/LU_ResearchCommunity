@@ -268,33 +268,6 @@ class AuthController extends Controller
         }
     }
 
-    public function verifyEmail(Request $request)
-    {
-        $request->validate([
-            'otp' => 'required',
-        ]);
-
-        $check = User::where('email', $request->email)->where('isVerifiedCode', $request->otp)->count();
-        \Log::info('check');
-        \Log::info($check);
-        if ($check == 1) {
-            User::where('email', $request->email)->update([
-                'isEmailVerified' => 1,
-            ]);
-            return response()->json(['msg' => 'Email verified successfully!!', 'status' => 'success'], 200);
-        } else {
-            return response()->json(['msg' => 'Invalid OTP', 'status' => 'error'], 401);
-        }
-    }
-
-    function logout()
-    {
-        Auth::logout();
-        // Session::flush();
-        // Session::forget('url.intented');
-        return redirect('/');
-    }
-
     public function submitTwoFactorCode(Request $request)
     {
         $request->validate([
@@ -333,6 +306,34 @@ class AuthController extends Controller
 
     }
 
+    public function verifyEmail(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required',
+        ]);
+
+        $check = User::where('email', $request->email)->where('isVerifiedCode', $request->otp)->count();
+        \Log::info('check');
+        \Log::info($check);
+        if ($check == 1) {
+            User::where('email', $request->email)->update([
+                'isEmailVerified' => 1,
+            ]);
+            return response()->json(['msg' => 'Email verified successfully!!', 'status' => 'success'], 200);
+        } else {
+            return response()->json(['msg' => 'Invalid OTP', 'status' => 'error'], 401);
+        }
+    }
+
+    function logout()
+    {
+        Auth::logout();
+        // Session::flush();
+        // Session::forget('url.intented');
+        return redirect('/');
+    }
+
+    
     //For forgot password
     public function sendOtp(Request $request)
     {
