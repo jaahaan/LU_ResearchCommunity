@@ -96,22 +96,22 @@ export default {
     },
     methods: {
         async register() {
-            if (this.data.name.trim() == "") return this.e("Name is required");
-            if (this.data.email.trim() == "")
-                return this.e("Email is required");
-            if (this.data.password.trim() == "")
-                return this.e("Password is required");
-            if (this.data.password_confirmation.trim() == "")
-                return this.e("Confirm Password is required");
-            if (
-                this.data.password.trim() !==
-                this.data.password_confirmation.trim()
-            )
-                return this.e("Password Mismatch!!");
-            if (this.data.batch.trim() == "")
-                return this.e("Batch is required");
-            if (this.data.department.trim() == "")
-                return this.e("Department is required");
+            // if (this.data.name.trim() == "") return this.e("Name is required");
+            // if (this.data.email.trim() == "")
+            //     return this.e("Email is required");
+            // if (this.data.password.trim() == "")
+            //     return this.e("Password is required");
+            // if (this.data.password_confirmation.trim() == "")
+            //     return this.e("Confirm Password is required");
+            // if (
+            //     this.data.password.trim() !==
+            //     this.data.password_confirmation.trim()
+            // )
+            //     return this.e("Password Mismatch!!");
+            // if (this.data.batch.trim() == "")
+            //     return this.e("Batch is required");
+            // if (this.data.department.trim() == "")
+            //     return this.e("Department is required");
             this.isLoading = true;
             const res = await this.callApi("post", "/register_s", this.data);
             if (res.status === 201) {

@@ -68,17 +68,17 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 footer {
     position: relative;
     padding: 15px;
-    background: #3a4660;
+    background: #474554;
     text-align: center;
 }
 .footer_text {
     font-size: 13px;
     line-height: 15px;
-    color: #ed8a63;
+    color: #fbf7ff;
 }
 
 a {
@@ -86,7 +86,7 @@ a {
     text-decoration: none;
 }
 a:hover {
-    color: #eeecea;
+    color: #98978b;
 }
 address {
     color: #faf3d3;
@@ -96,6 +96,6 @@ address {
     color: #faf3d3;
 }
 .icon:hover {
-    color: #845007;
+    color: #98978b;
 }
 </style>

@@ -47,29 +47,33 @@
         <Modal
             v-model="sectionModal"
             title="Add Section"
-            :mask-closable="false"
+            :mask-closable="true"
             :closable="true"
         >
-            <div class="list-group bg-dark">
+            <div class="list-group">
                 <a
                     @click="showAboutModal(profileInfo)"
-                    class="list-group-item list-group-item-action list-group-item-dark"
+                    class="list-group-item list-group-item-action"
+                    style="border-bottom: 1px solid #34c5d9"
                     >Add About</a
                 >
                 <a
                     @click="showEducationModal(profileInfo)"
-                    class="list-group-item list-group-item-action list-group-item-dark"
+                    class="list-group-item list-group-item-action"
+                    style="border-bottom: 1px solid #34c5d9"
                     >Add Education</a
                 >
                 <a
                     @click="showSkillsModal(profileInfo)"
-                    class="list-group-item list-group-item-action list-group-item-dark"
+                    class="list-group-item list-group-item-action"
+                    style="border-bottom: 1px solid #34c5d9"
                     >Add Skills</a
                 >
 
                 <a
                     @click="showInterestsModal(profileInfo)"
-                    class="list-group-item list-group-item-action list-group-item-dark"
+                    class="list-group-item list-group-item-action"
+                    style="border-bottom: 1px solid #34c5d9"
                     >Add Interests</a
                 >
                 <!--
@@ -94,7 +98,6 @@
                     >Add Volunteer Experience</a
                 > -->
             </div>
-            <div slot="footer"></div>
         </Modal>
 
         <!-- About modal -->
@@ -579,7 +582,7 @@ export default {
 </script>
 <style scoped>
 .navbg {
-    background: #3a4660;
+    background: #474554;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .profile-btn {
@@ -604,8 +607,8 @@ h5 {
     color: #a7a7a7;
 }
 .text:hover {
-    color: #deb992;
-    border-bottom: 1px solid #a7a7a7 !important;
+    color: #fbf7ff;
+    border-bottom: 1px solid #fbf7ff !important;
 }
 
 .logo {
@@ -613,7 +616,7 @@ h5 {
     width: 10vh;
 }
 .router-link-exact-active {
-    color: #c9af98 !important;
-    border-bottom: 1px solid #c9af98 !important;
+    color: #34c5d9 !important;
+    border-bottom: 1px solid #34c5d9 !important;
 }
 </style>

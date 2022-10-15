@@ -1,22 +1,31 @@
 body {
-    font-family: 'Styrenea web', sans-serif;
+    font-family: "Styrenea web", sans-serif;
     color: rgb(39, 51, 38);
     color: #a7a7a7;
     color: #fed3ad;
     color: rgb(68, 113, 74);
-
+    color: #c0c0c0;
     color: #1c2230;
 
+    color: #dadada;
     color: #3a4660;
+    color: #5a606d;
 
+
+    color: #F3ECFF;
+    color: #474554;
+    color: #444253;
+    color: #34C5D9;
+
+    
     color: #c9af98;
     color: #af9177;
-
 
     color: #ed8a63;
 
     color: #845007;
 
-    font-size: 15px;
-    line-height: 24px;
+    color: #3e3f3a;
+    color: #98978b;
+    color: #fbf7ff;
 }

@@ -6,7 +6,7 @@
                     class="col-md-6 my-md-auto text-center justify-content-center"
                 >
                     <img
-                        :src="'images/lurc.png'"
+                        :src="'/images/lurc.png'"
                         alt="img"
                         class="img-fluid scientific"
                     />
@@ -17,9 +17,10 @@
                         <div class="text-center">
                             <button
                                 class="btn btn-design m-auto cext-center col-5"
-                                v-for="tab in tabs"
+                                v-for="(tab, index) in tabs"
                                 :key="tab"
                                 @click="component = tab"
+                                :class="component === tab ? 'active' : ''"
                             >
                                 {{ tab }}
                             </button>
@@ -51,9 +52,9 @@ export default {
 </script>
 
 <style scoped>
-.tab-exact-active {
-    color: #c9af98 !important;
-    background: #c9af98;
-    border-left: 2px solid #c9af98 !important;
+.active {
+    color: #34c5d9 !important;
+    background: #474554;
+    border: 2px solid #34c5d9;
 }
 </style>

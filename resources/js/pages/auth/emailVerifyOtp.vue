@@ -78,14 +78,19 @@ export default {
             const res = await this.callApi("post", "/verify_email", this.data);
 
             if (res.status == 200) {
-                this.msg = res.data.msg;
+                this.s(res.data.msg);
                 // this.$store.commit("setVerifyEmail", this.data);
                 this.$router.push("/login");
                 //this.data.otp = "";
             } else {
                 if (res.status == 401) {
                     this.e(res.data.msg);
-                } else if (res.status == 422) {
+                }
+                if (res.status == 402) {
+                    this.msg = res.data.msg;
+                    this.$router.push("/register");
+                }
+                if (res.status == 422) {
                     for (let i in res.data.errors) {
                         this.errors = res.data.errors;
                         // this.e(res.data.errors[i][0]);

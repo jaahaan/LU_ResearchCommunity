@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!-- 1st row -->
         <div class="bg">
             <div
                 class="container-fluid d-flex flex-column justify-content-center align-items-center py-md-4 py-3"
@@ -15,23 +16,23 @@
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <img
-                                        :src="'images/laptop.jpg'"
+                                        :src="'/images/Coffee.png'"
                                         alt="img"
-                                        class="img-fluid scientific"
+                                        class="img-fluid slider"
                                     />
                                 </div>
                                 <div class="carousel-item">
                                     <img
-                                        :src="'images/code.jpg'"
+                                        :src="'/images/code.jpg'"
                                         alt="img"
-                                        class="img-fluid scientific"
+                                        class="img-fluid slider"
                                     />
                                 </div>
                                 <div class="carousel-item">
                                     <img
                                         :src="'/images/Dreams.png'"
                                         alt="img"
-                                        class="img-fluid scientific"
+                                        class="img-fluid slider"
                                     />
                                 </div>
                             </div>
@@ -70,7 +71,8 @@
                         </h1>
 
                         <router-link
-                            class="nav-link btn btn-design px-5 m-3"
+                            class="btn btn-design px-5 m-3"
+                            style="background: #474554"
                             to="/register"
                             >Join Us</router-link
                         >
@@ -78,6 +80,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- 2nd row -->
         <div class="p-5 bg-card">
             <div class="container-fluid justify-content-center">
                 <div class="row">
@@ -95,14 +99,16 @@
                         <img
                             :src="'images/pixel.png'"
                             alt="img"
-                            class="img-fluid scientific h-70"
+                            class="img-fluid slider h-70"
                         />
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- 3rd row -->
         <div class="p-5 bg-card">
-            <div class="container-fluid justify-content-center">
+            <div class="container-fluid justify-content-around">
                 <div class="row">
                     <div
                         class="col-12 col-md-6 my-md-auto text-center justify-content-center pb-3"
@@ -118,34 +124,34 @@
                                 <div
                                     class="col-sm-4 col-md-4 m-2 card text-center rt"
                                 >
-                                    <a class="p-3 text">ENGINEERING</a>
+                                    <a class="p-3">ENGINEERING</a>
                                 </div>
 
                                 <div
                                     class="col-sm-4 col-md-4 m-2 card text-center rt"
                                 >
-                                    <a class="p-3 text">SCIENCE</a>
+                                    <a class="p-3">SCIENCE</a>
                                 </div>
                                 <div
                                     class="col-sm-4 col-md-4 m-2 card text-center rt"
                                 >
-                                    <a class="p-3 text">Machine Learning</a>
+                                    <a class="p-3">Machine Learning</a>
                                 </div>
                                 <div
                                     class="col-sm-4 col-md-4 m-2 card text-center rt"
                                 >
-                                    <a class="p-3 text">Data Science</a>
+                                    <a class="p-3">Data Science</a>
                                 </div>
                                 <div
                                     class="col-sm-4 col-md-4 m-2 card text-center rt"
                                 >
-                                    <a class="p-3 text">AI</a>
+                                    <a class="p-3">AI</a>
                                 </div>
 
                                 <div
                                     class="col-sm-4 col-md-4 m-2 card text-center rt"
                                 >
-                                    <a class="p-3 text">ANN</a>
+                                    <a class="p-3">ANN</a>
                                 </div>
                             </div>
                         </div>
@@ -153,6 +159,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- 4th row -->
         <div
             class="container-fluid text-center justify-content-center col-md-8 pb-5 about"
         >
@@ -169,6 +177,7 @@
             </div>
         </div>
 
+        <!-- 5th row -->
         <div class="p-5 bg-card">
             <div class="container-fluid justify-content-center">
                 <div class="row">
@@ -188,12 +197,13 @@
                         <img
                             :src="'images/remote.png'"
                             alt="img"
-                            class="img-fluid scientific w-50"
+                            class="img-fluid slider w-50"
                         />
                     </div>
                 </div>
             </div>
         </div>
+
         <bottomContainer />
     </div>
 </template>
@@ -216,93 +226,46 @@ export default {
     created() {},
 };
 </script>
-<style>
+<style scoped>
 ._card {
     display: flex;
-    margin: -3px auto;
+    margin: auto;
     padding: 60px 50px;
     justify-content: center;
-    background: #3a4660;
-    box-shadow: 14px 14px 0 0 rgb(39 51 38 / 30%);
-    color: #c9af98;
+    background: #474554;
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    color: #fbf7ff;
 }
 
 .about {
-    background-color: #af9177;
+    background-color: #fbf7ff;
+    border-radius: 5px;
     width: 100%;
-    color: #c9af98;
-    border: 1px solid #845007;
+    color: #fbf7ff;
+    border: 1px solid #98978b;
 }
 .about-title {
     font-size: 5rem;
     font-weight: 600;
     line-height: 1rem;
     padding: 50px;
-    color: #845007;
+    color: #474554;
 }
+
 .bg-card {
     background: url("../../../public/images/white_bg.jpg");
 }
-h1 {
-    color: #ffffff;
-    font-weight: 700;
-}
 
-.btn-design {
-    font-size: 1rem;
-    border: 1px solid;
-    background: #3a4660;
-    color: #c9af98;
-}
-.btn-design-change {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    font-size: 1rem;
-    color: #273326;
-    background-color: #c9af98;
-}
-.btn-design:hover {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    color: #c9af98;
-    background-color: #2f394e;
-    font-size: 1rem;
-}
-.text-c {
-    color: #ed8a63;
-}
-.text-c:hover {
-    color: #ffffff;
-}
-.title {
-    font-size: 5rem;
-    font-weight: 600;
-    line-height: 1rem;
-    color: #c9af98;
-    padding: 50px;
-}
-.rt-title {
-    font-size: 3rem;
-    font-weight: 900;
-    line-height: 3rem;
-    color: #845007;
-    margin: 20px;
-}
-.rt {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    text-decoration: none;
-    background-color: #3a4660;
-    border: 1px solid #c9af98;
-    color: #c9af98;
-    box-sizing: border-box;
-    border-radius: 60.5px;
+h1 {
+    color: #474554;
+    font-size: 30px;
 }
 
 @media (max-width: 768px) {
-    .scientific {
-        height: 60vh;
+    .slider {
         margin-bottom: 20px;
-    }
-    .rt-title {
-        font-size: 2rem;
     }
 }
 </style>

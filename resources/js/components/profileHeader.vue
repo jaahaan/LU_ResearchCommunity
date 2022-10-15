@@ -1,99 +1,135 @@
 <template>
     <div>
-        <div class="profile-bg">
-            <div
-                class="container-fluid m-auto col-md-8 col-lg-6 justtify-content-center p-3"
-                v-if="profileInfo && isLoading == false"
-            >
-                <div class="row justtify-content-center">
-                    <div
-                        class="col-md-4 col-sm-12 my-auto justify-content-center"
-                    >
-                        <div class="demo-upload-list">
-                            <img
-                                :src="profileInfo.image"
-                                alt="img"
-                                class="img-fluid profile-img m-auto"
-                            />
-                            <div class="demo-upload-list-cover">
-                                <i class="fa-solid fa-camera"></i>
-                            </div>
+        <div
+            class="container m-auto col-md-8 col-lg-6 p-3"
+            v-if="profileInfo && isLoading == false"
+        >
+            <div class="row justtify-content-center">
+                <div class="col-md-4 col-sm-12 my-auto">
+                    <div class="profile-header">
+                        <img
+                            :src="profileInfo.image"
+                            alt="img"
+                            class="img-fluid m-auto"
+                        />
+                        <div
+                            class="profile-header-cover"
+                            @click="showEditModal(profileInfo)"
+                            v-if="authUser.id == this.$route.params.id"
+                        >
+                            <i class="fa-solid fa-camera"></i>
                         </div>
                     </div>
-                    <div class="col-md-5 my-auto justify-content-center">
-                        <h5 class="pb-3">
-                            <span class="mr-2">{{ profileInfo.name }} </span
-                            ><button
-                                class="btn btn-edit ml-2"
-                                @click="showEditModal(profileInfo)"
-                                v-if="authUser.id == this.$route.params.id"
-                            >
-                                <i class="fa-solid fa-pen" />
-                            </button>
-                        </h5>
-                        <p>{{ profileInfo.email }}</p>
-                        <p>{{ profileInfo.designation }}</p>
-                        <p>Department of {{ profileInfo.department }}</p>
-                    </div>
                 </div>
-            </div>
-            <div
-                v-if="isLoading == true"
-                style="padding: 40px; text-align: center"
-            >
-                <h1>Content is Loading....</h1>
+                <div class="col-md-8 my-auto">
+                    <div class="d-flex">
+                        <h4>
+                            {{ profileInfo.name }}
+                        </h4>
+                        <span
+                            v-if="authUser.id == this.$route.params.id"
+                            class="btn-edit mx-3 text-end"
+                            @click="showEditModal(profileInfo)"
+                        >
+                            <i class="fa-solid fa-pen" />
+                        </span>
+                    </div>
+                    <span class="card-text"
+                        >{{ profileInfo.designation }} .</span
+                    >
+                    <span class="card-text">
+                        {{ profileInfo.department }} .</span
+                    >
+                    <span class="card-text"> Leading University </span>
+
+                    <p>{{ profileInfo.email }}</p>
+                    <!-- <p>{{ profileInfo.designation }}</p>
+                        <p>Department of {{ profileInfo.department }}</p> -->
+                </div>
             </div>
         </div>
 
-        <!-- profile edit modal -->
+        <!-- loader -->
+        <div
+            v-if="isLoading == true"
+            class="container m-auto col-md-8 col-lg-6 p-3"
+        >
+            <div class="row justtify-content-center">
+                <div class="col-md-4 col-sm-12 my-auto">
+                    <div class="profile-header-skeleton">
+                        <img
+                            :src="'/public/profileImages/download.jpg'"
+                            alt="img"
+                            class="img-fluid m-auto"
+                        />
+                    </div>
+                </div>
+                <div class="col-md-8 my-auto profile-info-skeleton">
+                    <h4 />
+                    <p />
+                    <p />
+                </div>
+            </div>
+        </div>
+
+        <!-- profile edit modal for teacher -->
         <Modal
             v-model="editModal"
+            v-if="
+                profileInfo.userType == 'teacher' ||
+                profileInfo.userType == 'admin'
+            "
             title="Edit Profile"
             :mask-closable="false"
             :closable="true"
         >
             <div class="mb-2">
-                <Upload
-                    v-show="isIconImageNew"
-                    ref="editDataUploads"
-                    type="drag"
-                    :headers="{
-                        'x-csrf-token': token,
-                        'X-Requested-With': 'XMLHttpRequest',
-                    }"
-                    :on-success="handleSuccess"
-                    :on-error="handleError"
-                    :format="['jpg', 'jpeg', 'png']"
-                    :max-size="2048"
-                    :on-format-error="handleFormatError"
-                    :on-exceeded-size="handleMaxSize"
-                    action="/api/upload"
-                >
-                    <div style="padding: 20px 0">
-                        <Icon
-                            type="ios-cloud-upload"
-                            size="52"
-                            style="color: #3399ff"
-                        ></Icon>
-                        <p>Click or drag files here to upload</p>
-                    </div>
-                </Upload>
-                <div class="demo-upload-list m-auto" v-if="editData.image">
+                <div class="profile-header m-auto" v-if="editData.image">
                     <img
                         :src="`${editData.image}`"
                         class="img-fluid"
                         type="file"
                     />
-                    <div class="demo-upload-list-cover">
-                        <Icon
-                            type="ios-trash-outline"
-                            @click="deleteImage(false)"
-                        ></Icon>
+                </div>
+                <div class="row m-auto">
+                    <div class="upload-image col-6">
+                        <Upload
+                            ref="editDataUploads"
+                            type="drag"
+                            :headers="{
+                                'x-csrf-token': token,
+                                'X-Requested-With': 'XMLHttpRequest',
+                            }"
+                            :on-success="handleSuccess"
+                            :on-error="handleError"
+                            :format="['jpg', 'jpeg', 'png']"
+                            :max-size="2048"
+                            :on-format-error="handleFormatError"
+                            :on-exceeded-size="handleMaxSize"
+                            action="/api/upload"
+                        >
+                            <div>
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                Upload Image
+                            </div>
+                        </Upload>
+                    </div>
+                    <div
+                        class="upload-image text-center col-6"
+                        @click="deleteImage()"
+                    >
+                        <div>
+                            <i class="fa-solid fa-trash"></i>
+                            Delete Image
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="mb-2">
                 <Input type="text" v-model="editData.name" placeholder="Name" />
+                <span class="text-danger" v-if="errors.name">{{
+                    errors.name[0]
+                }}</span>
             </div>
             <div class="mb-2">
                 <Select
@@ -110,6 +146,9 @@
                     >
                     <Option value="Lecturer">Lecturer</Option>
                 </Select>
+                <span class="text-danger" v-if="errors.designation">{{
+                    errors.designation[0]
+                }}</span>
             </div>
             <div class="mb-2">
                 <Select v-model="editData.department" placeholder="Department">
@@ -120,6 +159,87 @@
                     <Option value="BuA">BuA</Option>
                     <Option value="ENG">ENG</Option>
                 </Select>
+                <span class="text-danger" v-if="errors.department">{{
+                    errors.department[0]
+                }}</span>
+            </div>
+            <div slot="footer">
+                <Button type="default" @click="closeEditModal">Close</Button>
+                <Button
+                    type="primary"
+                    @click="save"
+                    :disabled="isAdding"
+                    :loading="isAdding"
+                    >{{ isAdding ? "Saving.." : "Save" }}</Button
+                >
+            </div>
+        </Modal>
+
+        <!-- profile edit modal for student -->
+        <Modal
+            v-model="editModal"
+            v-if="profileInfo.userType == 'student'"
+            title="Edit Profile"
+            :mask-closable="false"
+            :closable="true"
+        >
+            <div class="mb-2">
+                <div class="profile-header m-auto" v-if="editData.image">
+                    <img
+                        :src="`${editData.image}`"
+                        class="img-fluid"
+                        type="file"
+                    />
+                </div>
+                <div class="row m-auto">
+                    <div class="upload-image col-6">
+                        <Upload
+                            ref="editDataUploads"
+                            type="drag"
+                            :headers="{
+                                'x-csrf-token': token,
+                                'X-Requested-With': 'XMLHttpRequest',
+                            }"
+                            :on-success="handleSuccess"
+                            :on-error="handleError"
+                            :format="['jpg', 'jpeg', 'png']"
+                            :max-size="2048"
+                            :on-format-error="handleFormatError"
+                            :on-exceeded-size="handleMaxSize"
+                            action="/api/upload"
+                        >
+                            <div>
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                Upload Image
+                            </div>
+                        </Upload>
+                    </div>
+                    <div class="upload-image text-center col-6">
+                        <div>
+                            <i class="fa-solid fa-trash"></i>
+                            Delete Image
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <Input type="text" v-model="editData.name" placeholder="Name" />
+                <span class="text-danger" v-if="errors.name">{{
+                    errors.name[0]
+                }}</span>
+            </div>
+            <div class="mb-2">
+                <Select v-model="editData.department" placeholder="Department">
+                    <Option value="CSE">CSE</Option>
+                    <Option value="EEE">EEE</Option>
+                    <Option value="ARCH">ARCH</Option>
+                    <Option value="CE">CE</Option>
+                    <Option value="BuA">BuA</Option>
+                    <Option value="ENG">ENG</Option>
+                </Select>
+                <span class="text-danger" v-if="errors.department">{{
+                    errors.department[0]
+                }}</span>
             </div>
             <div slot="footer">
                 <Button type="default" @click="closeEditModal">Close</Button>
@@ -172,6 +292,7 @@ export default {
             token: "",
             isIconImageNew: false,
             isEditingItem: false,
+            errors: [],
         };
     },
     components: {
@@ -179,12 +300,12 @@ export default {
     },
     methods: {
         async save() {
-            if (this.editData.name.trim() == "")
-                return this.e("Name is required");
-            if (this.editData.designation.trim() == "")
-                return this.e("Designation is required");
-            if (this.editData.department.trim() == "")
-                return this.e("Department is required");
+            // if (this.editData.name.trim() == "")
+            //     return this.e("Name is required");
+            // if (this.editData.designation.trim() == "")
+            //     return this.e("Designation is required");
+            // if (this.editData.department.trim() == "")
+            //     return this.e("Department is required");
             this.user_id = this.$route.params.id;
             const res = await this.callApi(
                 "post",
@@ -195,22 +316,16 @@ export default {
                 this.profileInfo.name = this.editData.name;
                 this.profileInfo.designation = this.editData.designation;
                 this.profileInfo.department = this.editData.department;
-                this.reset();
-                this.s("Profile has been edited successfully!");
+                // this.reset();
+                this.u("Profile has been updated successfully!");
                 this.editModal = false;
+                this.$router.go();
+                // window.location = `/profile/${this.profileInfo.id}`;
             } else {
                 if (res.status == 422) {
-                    if (res.data.errors.image) {
-                        this.e(res.data.errors.image[0]);
-                    }
-                    if (res.data.errors.name) {
-                        this.e(res.data.errors.name[0]);
-                    }
-                    if (res.data.errors.designation) {
-                        this.e(res.data.errors.designation[0]);
-                    }
-                    if (res.data.errors.department) {
-                        this.e(res.data.errors.department[0]);
+                    for (let i in res.data.errors) {
+                        this.errors = res.data.errors;
+                        // this.e(res.data.errors[i][0]);
                     }
                 } else {
                     this.swr();
@@ -264,16 +379,13 @@ export default {
                 desc: "File  " + file.name + " is too large, no more than 2M.",
             });
         },
-        async deleteImage(isAdd = true) {
+        async deleteImage() {
             let image;
-            if (!isAdd) {
-                // for editing....
-                this.isIconImageNew = true;
-                image = this.editData.image;
-                this.editData.image =
-                    "../../../public/profileImages/download.jpg";
-                this.$refs.editDataUploads.clearFiles();
-            }
+            // for editing....
+            // this.isIconImageNew = true;
+            image = this.editData.image;
+            this.editData.image = "/profileImages/download.jpg";
+            this.$refs.editDataUploads.clearFiles();
             const res = await this.callApi("post", "/api/delete_image", {
                 imageName: image,
             });
@@ -304,6 +416,8 @@ export default {
             this.isLoading = false;
         },
     },
+
+    // to perform "side effects" in reaction to state changes
     watch: {
         "$route.params"(oldValue, newValue) {
             if (oldValue != newValue) {
@@ -338,34 +452,7 @@ body {
 </style>
 
 <style scoped>
-.profile-bg {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-
-h5 {
-    color: #1c2230;
-}
-
-.text {
-    color: #845007;
-}
-.text:hover {
-    color: #ffffff;
-}
-.text:active {
-    color: #fab162;
-}
-.text:after {
-    color: #fab162;
-}
-.logo {
-    height: 10vh;
-    width: 10vh;
-}
-.image_thumb {
-    width: 240px;
-}
-.demo-upload-list {
+.profile-header {
     width: 150px;
     height: 150px;
     text-align: center;
@@ -378,11 +465,11 @@ h5 {
     margin-right: 4px;
     border-radius: 50%;
 }
-.demo-upload-list img {
+.profile-header img {
     width: 100%;
     height: 100%;
 }
-.demo-upload-list-cover {
+.profile-header-cover {
     display: none;
     position: absolute;
     top: 0;
@@ -391,13 +478,41 @@ h5 {
     right: 0;
     background: rgba(0, 0, 0, 0.6);
 }
-.demo-upload-list:hover .demo-upload-list-cover {
+.profile-header:hover .profile-header-cover {
     display: block;
 }
-.demo-upload-list-cover i {
+.profile-header-cover i {
     color: #fff;
     font-size: 40px;
     cursor: pointer;
     margin: auto;
+}
+.upload-image {
+    margin-top: 3px;
+    cursor: pointer;
+}
+.profile-header-skeleton {
+    width: 150px;
+    height: 150px;
+    text-align: center;
+    line-height: 100px;
+    border: 1px solid transparent;
+    overflow: hidden;
+    background: #a7a7a7;
+    margin-right: 2px;
+    border-radius: 50%;
+}
+.profile-info-skeleton h4 {
+    width: 80%;
+    height: 24px;
+    display: block;
+    background-color: #c0c0c0;
+    margin: 0.25rem;
+}
+.profile-info-skeleton p {
+    width: 70%;
+    height: 16px;
+    margin: 0.25rem;
+    background-color: #a7a7a7;
 }
 </style>

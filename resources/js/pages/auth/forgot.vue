@@ -77,7 +77,11 @@ export default {
             // if (this.data.email.trim() == "")
             //     return this.e("Email is required");
             this.isSending = true;
-            const res = await this.callApi("post", "/send_otp", this.data);
+            const res = await this.callApi(
+                "post",
+                "/send_reset_password_otp",
+                this.data
+            );
 
             if (res.status == 200) {
                 this.s(res.data.msg);

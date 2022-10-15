@@ -1,60 +1,78 @@
 <template>
-    <div>
-        <div class="space" />
-        <!-- about-section -->
+    <div class="mt-3">
+        <!-- about-section starts -->
+        <!-- about edit -->
         <template v-if="about_id">
-            <div
-                class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
-            >
-                <h5>Edit About</h5>
-                <div class="space" />
-                <textarea
-                    class="form-control"
-                    v-model="editData.about"
-                    rows="4"
-                    placeholder="Write About You..."
-                ></textarea>
-                <div class="d-flex">
-                    <button
-                        @click="updateAbout()"
-                        class="btn btn-sm text-success"
-                    >
-                        <i class="fa-solid fa-square-check"></i>
-                    </button>
-                    <button class="btn btn-sm text-danger" @click="reset()">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            </div>
-        </template>
-        <template v-else>
-            <div
-                class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
-                v-if="profileInfo.about && isLoading == false"
-            >
-                <div class="d-flex">
-                    <h5>About</h5>
-                    <div
-                        class="d-flex float-right"
-                        v-if="authUser.id == this.$route.params.id"
-                    >
-                        <button
-                            class="btn btn-edit mx-2"
-                            @click="editAbout(profileInfo)"
+            <div class="card m-auto col-md-8 col-lg-6 mb-3">
+                <div class="card-header p-3 card-header-border">
+                    <div class="d-block">
+                        <div class="float-start">
+                            <h5>Edit About</h5>
+                        </div>
+                        <div
+                            class="btn-edit text-danger mx-2 float-end"
+                            @click="reset()"
                         >
-                            <i class="fa-solid fa-pen" />
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <textarea
+                        class="form-control"
+                        v-model="editData.about"
+                        rows="4"
+                        placeholder="Write About You..."
+                    ></textarea>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="d-block">
+                        <button
+                            class="btn btn-design mx-2 float-end"
+                            @click="updateAbout()"
+                        >
+                            <i class="fa-solid fa-floppy-disk"></i> Save
+                        </button>
+                        <button
+                            class="btn btn-design mx-2 float-end"
+                            @click="deleteAbout(profileInfo)"
+                        >
+                            <i class="fa-solid fa-floppy-disk"></i> Delete
                         </button>
                     </div>
                 </div>
-
-                <hr class="mt-2 mb-2" />
-
-                <p>{{ profileInfo.about }}</p>
             </div>
         </template>
-        <div class="space" />
 
-        <!-- education-section -->
+        <!-- about -->
+        <template v-else>
+            <div
+                class="card m-auto col-md-8 col-lg-6 mb-3"
+                v-if="profileInfo.about && isLoading == false"
+            >
+                <div class="card-header card-header-border p-3">
+                    <div class="d-block">
+                        <div class="float-start">
+                            <h5>About</h5>
+                        </div>
+                        <div
+                            v-if="authUser.id == this.$route.params.id"
+                            class="btn-edit mx-2 float-end"
+                            @click="editAbout(profileInfo)"
+                        >
+                            <i class="fa-solid fa-pen" />
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    <p>{{ profileInfo.about }}</p>
+                </div>
+            </div>
+        </template>
+        <!-- about-section ends-->
+
+        <!-- education-section starts -->
+        <!-- education edit -->
         <!-- <template v-if="about_id">
             <div
                 class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
@@ -80,147 +98,207 @@
                 </div>
             </div>
         </template> -->
+
         <template>
             <div
-                class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
+                class="card m-auto col-md-8 col-lg-6 mb-3"
                 v-if="educationInfo != '' && isLoading == false"
             >
-                <div class="d-flex">
-                    <h5>Education</h5>
-                    <div
-                        class="d-flex float-right"
-                        v-if="authUser.id == this.$route.params.id"
-                    >
-                        <button
-                            class="btn btn-edit mx-2"
+                <div class="card-header card-header-border p-3">
+                    <div class="d-block">
+                        <div class="float-start">
+                            <h5>Education</h5>
+                        </div>
+                        <div
+                            v-if="authUser.id == this.$route.params.id"
+                            class="btn-edit mx-2 float-end"
                             @click="editEducation(profileInfo)"
                         >
                             <i class="fa-solid fa-pen" />
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    <div
+                        v-for="(education, index) in educationInfo"
+                        :key="index"
+                    >
+                        <h6>{{ education.institute }}</h6>
+                        <div class="space" />
+                        <p>
+                            {{ education.degree }}, {{ education.fieldOfStudy }}
+                        </p>
+                        <p v-if="education.endDate">
+                            {{ education.startDate }} - {{ education.endDate }}
+                        </p>
+                        <p v-else>{{ education.startDate }} - Present</p>
+                        <hr
+                            class="mt-2 mb-2"
+                            v-if="educationInfo.length - 1 > index"
+                        />
+                    </div>
+                </div>
+            </div>
+        </template>
+        <!-- education-section ends-->
+
+        <!-- Skills-section starts-->
+        <!-- skills edit -->
+        <template v-if="skills_id">
+            <div class="card m-auto col-md-8 col-lg-6 mb-3">
+                <div class="card-header card-header-border p-3">
+                    <div class="d-block">
+                        <div class="float-start">
+                            <h5>Edit Skills</h5>
+                        </div>
+                        <div
+                            class="btn-edit text-danger mx-2 float-end"
+                            @click="reset()"
+                        >
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <textarea
+                        class="form-control"
+                        v-model="editData.skills"
+                        rows="4"
+                        placeholder="Write Your Skills..."
+                    ></textarea>
+                </div>
+                <div class="card-footer text-muted p-3">
+                    <div class="d-block">
+                        <button
+                            class="btn btn-design mx-2 float-end"
+                            @click="updateSkills()"
+                        >
+                            <i class="fa-solid fa-floppy-disk"></i> Save
                         </button>
                     </div>
                 </div>
-
-                <div v-for="(education, index) in educationInfo" :key="index">
-                    <hr class="mt-2 mb-2" />
-                    <h6>{{ education.institute }}</h6>
-                    <div class="space" />
-                    <p>{{ education.degree }}, {{ education.fieldOfStudy }}</p>
-                    <p v-if="education.endDate">
-                        {{ education.startDate }} - {{ education.endDate }}
-                    </p>
-                    <p v-else>{{ education.startDate }} - Present</p>
-                </div>
             </div>
         </template>
-        <div class="space" />
 
-        <!-- Skills-section -->
-        <template v-if="skills_id">
-            <div
-                class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
-            >
-                <h5>Edit Skills</h5>
-                <div class="space" />
-
-                <textarea
-                    class="form-control"
-                    v-model="editData.skills"
-                    rows="4"
-                    placeholder="Write Your Skills..."
-                ></textarea>
-                <div class="d-flex">
-                    <button
-                        @click="updateSkills()"
-                        class="btn btn-sm text-success"
-                    >
-                        <i class="fa-solid fa-square-check"></i>
-                    </button>
-                    <button class="btn btn-sm text-danger" @click="reset()">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            </div>
-        </template>
+        <!-- skills -->
         <template v-else>
             <div
-                class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
+                class="card m-auto col-md-8 col-lg-6 mb-3"
                 v-if="profileInfo.skills && isLoading == false"
             >
-                <div class="d-flex">
-                    <h5>Skills</h5>
-                    <div
-                        class="d-flex float-right"
-                        v-if="authUser.id == this.$route.params.id"
-                    >
-                        <button
-                            class="btn btn-edit mx-2"
+                <div class="card-header card-header-border p-3">
+                    <div class="d-block">
+                        <div class="float-start">
+                            <h5>Skills</h5>
+                        </div>
+                        <div
+                            v-if="authUser.id == this.$route.params.id"
+                            class="btn-edit mx-2 float-end"
                             @click="editSkills(profileInfo)"
                         >
                             <i class="fa-solid fa-pen" />
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    <p>{{ profileInfo.skills }}</p>
+                </div>
+            </div>
+        </template>
+        <!-- Skills-section ends-->
+
+        <!-- interests-section starts-->
+        <!-- interests edit-->
+        <template v-if="interests_id">
+            <div class="card m-auto col-md-8 col-lg-6 mb-3">
+                <div class="card-header card-header-border p-3">
+                    <div class="d-block">
+                        <div class="float-start">
+                            <h5>Edit Interests</h5>
+                        </div>
+                        <div
+                            class="btn-edit text-danger mx-2 float-end"
+                            @click="reset()"
+                        >
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <textarea
+                        class="form-control"
+                        v-model="editData.interests"
+                        rows="4"
+                        placeholder="Write Your Interests..."
+                    ></textarea>
+                </div>
+                <div class="card-footer text-muted p-3">
+                    <div class="d-block">
+                        <button
+                            class="btn btn-design mx-2 float-end"
+                            @click="updateInterests()"
+                        >
+                            <i class="fa-solid fa-floppy-disk"></i> Save
                         </button>
                     </div>
                 </div>
-                <hr class="mt-2 mb-2" />
-                <p>{{ profileInfo.skills }}</p>
             </div>
         </template>
-        <div class="space" />
 
-        <!-- interests-section -->
-        <template v-if="interests_id">
-            <div
-                class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
-            >
-                <h5>Edit Interests</h5>
-                <div class="space" />
-                <textarea
-                    class="form-control"
-                    v-model="editData.interests"
-                    rows="4"
-                    placeholder="Write Your Interests..."
-                ></textarea>
-                <div class="d-flex">
-                    <button
-                        @click="updateInterests()"
-                        class="btn btn-sm text-success"
-                    >
-                        <i class="fa-solid fa-square-check"></i>
-                    </button>
-                    <button class="btn btn-sm text-danger" @click="reset()">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            </div>
-        </template>
+        <!-- interests-->
         <template v-else>
             <div
-                class="container-fluid card card-bg m-auto col-md-8 col-lg-6 justtify-content-center p-4 m-3"
+                class="card m-auto col-md-8 col-lg-6 mb-3"
                 v-if="profileInfo.interests && isLoading == false"
             >
-                <div class="d-flex">
-                    <h5>Interests</h5>
-                    <div
-                        class="d-flex float-right"
-                        v-if="authUser.id == this.$route.params.id"
-                    >
-                        <button
-                            class="btn btn-edit mx-2"
+                <div class="card-header card-header-borderp-3">
+                    <div class="d-block">
+                        <div class="float-start">
+                            <h5>Interests</h5>
+                        </div>
+                        <div
+                            v-if="authUser.id == this.$route.params.id"
+                            class="btn-edit mx-2 float-end"
                             @click="editInterests(profileInfo)"
                         >
                             <i class="fa-solid fa-pen" />
-                        </button>
+                        </div>
                     </div>
                 </div>
-                <hr class="mt-2 mb-2" />
 
-                <p>{{ profileInfo.interests }}</p>
+                <div class="card-body p-3">
+                    <p>{{ profileInfo.interests }}</p>
+                </div>
             </div>
         </template>
-        <div class="space" />
+        <!-- interests-section ends -->
 
-        <div v-if="isLoading == true" style="padding: 40px; text-align: center">
-            <h5>Content is Loading....</h5>
-        </div>
+        <!-- loader -->
+        <template v-if="isLoading == true">
+            <div class="card m-auto col-md-8 col-lg-6 mb-3">
+                <div class="card-header p-3">
+                    <div class="profile-info-skeleton">
+                        <h5 />
+                    </div>
+                </div>
+
+                <div class="card-body p-3 profile-info-skeleton">
+                    <p />
+                </div>
+            </div>
+
+            <div class="card m-auto col-md-8 col-lg-6 mb-3">
+                <div class="card-header p-3">
+                    <div class="profile-info-skeleton">
+                        <h5 />
+                    </div>
+                </div>
+
+                <div class="card-body p-3 profile-info-skeleton">
+                    <p />
+                </div>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -259,7 +337,7 @@ export default {
 
             // if (this.profileInfo) {
             //     this.$nextTick(() => {
-            //         if (this.$refs["todo" + this.todos[index].id]) {
+            //         if (this.$refs["todo" + th is.todos[index].id]) {
             //             this.$refs["todo" + this.todos[index].id][0].focus();
             //         }
             //     });
@@ -284,6 +362,24 @@ export default {
                     }
                 } else {
                     this.swr();
+                }
+            }
+        },
+
+        async deleteAbout(profileInfo) {
+            if (this.profileInfo.id) {
+                const res = await this.callApi(
+                    "post",
+                    `/api/delete_about/${this.profileInfo.id}`,
+                    this.editData
+                );
+
+                if (res.status === 200) {
+                    this.profileInfo.about = this.editData.about;
+                    this.reset();
+                    this.s("About has been deleted successfully!");
+                } else {
+                    this.swe();
                 }
             }
         },
@@ -434,21 +530,31 @@ export default {
 .card-bg {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.space {
-    margin: 5px;
+.card-header-border {
+    border-bottom: 1px solid #34c5d9;
 }
-hr {
-    background: #3a4660;
-    color: #3a4660;
-}
-
 p {
     color: #333;
 }
-.btn-edit {
-    color: rgb(167, 167, 167);
+
+.profile-info-skeleton h5 {
+    width: 60%;
+    height: 24px;
+    display: block;
+    background-color: #c0c0c0;
+    margin: 0.25rem;
 }
-.btn-edit:hover {
-    color: #000000;
+.profile-info-skeleton p {
+    width: 95%;
+    height: 16px;
+    margin: 0.25rem;
+    background-color: #c0c0c0;
+}
+.btn-design {
+    background-color: #34c5d9;
+    border: none;
+    color: #fbf7ff;
+    /*TB LR */
+    padding: 3px 8px;
 }
 </style>

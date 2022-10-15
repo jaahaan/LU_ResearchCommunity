@@ -1,18 +1,21 @@
 <template>
-    <nav class="navbar navbar-expand navbg">
+    <nav class="navbar navbar-expand navbg d-block">
         <div class="container-fluid">
-            <a class="navbar-brand"
-                ><router-link class="nav-link active text" to="/"
+            <a class="navbar-brand float-start d-flex active navbar-item">
+                <a class="nav-link" href="/"
                     ><img
                         :src="'/images/logo.png'"
                         alt="logo"
                         class="img-fluid logo"
                     />
-                    Research Community
-                </router-link></a
+                    <router-link class="lurc mt-5" to="/"
+                        ><span class="lurc1">RESEARCH</span
+                        ><span class="lurc2">COMMUNITY</span></router-link
+                    ></a
+                ></a
             >
 
-            <a class="navbar-item d-flex"
+            <a class="navbar-item d-flex float-end"
                 ><router-link class="nav-link text" to="/login"
                     >Login</router-link
                 >
@@ -36,30 +39,47 @@ body {
     padding: 0;
 }
 .navbg {
-    background: #3a4660;
+    background: #474554;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     position: sticky;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #393a35;
 }
 .text {
-    color: #a7a7a7;
+    color: #98978b;
 }
 .text:hover {
-    color: #deb992;
-    border-left: 1px solid #a7a7a7 !important;
-}
-.text:active {
-    color: #fab162;
-}
-.text:after {
-    color: #fab162;
+    color: #fbf7ff;
+    border-bottom: 1px solid #fbf7ff !important;
 }
 .logo {
     height: 10vh;
     width: 10vh;
 }
 .router-link-exact-active {
-    color: #c9af98 !important;
-    border-left: 1px solid #c9af98 !important;
+    color: #34c5d9 !important;
+    border-bottom: 1px solid #34c5d9 !important;
+}
+
+.lurc {
+    border: 1px solid #98978b !important;
+    padding: 10px;
+    height: 15vh;
+}
+.lurc:hover {
+    border: 1px solid #fbf7ff !important;
+}
+
+.lurc1 {
+    background: #fbf7ff;
+    padding: 5px;
+    color: #3e3f3a;
+}
+.lurc2 {
+    font-weight: 500px;
+    padding: 5px;
+    color: #98978b;
+}
+.lurc2:hover {
+    color: #fbf7ff;
 }
 </style>

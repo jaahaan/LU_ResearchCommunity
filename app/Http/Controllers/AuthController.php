@@ -6,19 +6,20 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Session;
 
 class AuthController extends Controller
 {
     public function index(Request $request)
     {
-
         if (!Auth::check() && $request->path() != '/') {
             return redirect('/');
         }
 
-        if (!Auth::check() && $request->path() == '/') {
+        if (!Auth::check()) {
             return view('welcome');
         }
+
         if (Auth::check() && ($request->path() == 'login' || $request->path() == 'register' || $request->path() == '/')) {
             return redirect('/home');
         }
@@ -69,17 +70,15 @@ class AuthController extends Controller
                     'exists:teachers,email',
                     'regex:/[a-z]+(_cse)?@lus\.ac\.bd/'
                 ],
-                'password' => 'bail|required|confirmed|min:2|max:20',
+                // 'password' => 'bail|required|confirmed|min:2|max:20',
+                'password' => ['required',
+                   'min:8',
+                   'max:20',
+                   'regex:/^.*((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&*<+_-])).*$/',
+                   'confirmed'],
                 'password_confirmation' => 'required',
                 'designation' => 'required',
                 'department' => 'required',
-
-                // 'password' => ['required',
-                //    'min:8',
-                //    'max:20',
-                //    'regex:/^.*((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&*<+_-])).*$/',
-                //    'confirmed'],
-
             ],
             [
                 'name.regex' => 'Only Characters are allowed!!',
@@ -88,7 +87,10 @@ class AuthController extends Controller
                 'password.regex' => '1 upper, 1 lower, 1 digit'
             ]
         );
+
         $isVerifiedCode = rand(100000, 999999);
+        $expires_at = now();
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -97,13 +99,14 @@ class AuthController extends Controller
             'designation' => $request->designation,
             'userType' => 'teacher',
             'isVerifiedCode' => $isVerifiedCode,
+            'expires_at' => $expires_at,
         ]);
 
         $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $isVerifiedCode;
 
         \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
             $message->to($request->email)
-                ->from('noreply@example.com', 'LURC')
+                ->from('noreply@lurc.com', 'LURC')
                 ->subject('Email Verification');
         });
 
@@ -125,17 +128,15 @@ class AuthController extends Controller
                     'unique:users,email',
                     'regex:/(cse|eee|ce|arch|law|bba|eng|bng)_\d{10}@lus\.ac\.bd/'
                 ],
-                'password' => 'bail|required|confirmed|min:2|max:20',
+                // 'password' => 'bail|required|confirmed|min:2|max:20',
+                'password' => ['required',
+                   'min:8',
+                   'max:20',
+                   'regex:/^.*((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&*<+_-])).*$/',
+                   'confirmed'],
                 'password_confirmation' => 'required',
-                // 'batch' => 'required',
-                'department' => 'required',
-
-                // 'password' => ['required',
-                //    'min:8',
-                //    'max:20',
-                //    'regex:/^.*((?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%&*<+_-])).*$/',
-                //    'confirmed'],
-
+                'batch' => 'required',
+                'department' => 'required',  
             ],
             [
                 'name.regex' => 'Only Characters are allowed!!',
@@ -143,7 +144,9 @@ class AuthController extends Controller
                 'password.regex' => '1 upper, 1 lower, 1 digit'
             ]
         );
+        
         $isVerifiedCode = rand(100000, 999999);
+        $expires_at = now();
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -152,51 +155,92 @@ class AuthController extends Controller
             'designation' => 'Student',
             'userType' => 'student',
             'isVerifiedCode' => $isVerifiedCode,
+            'expires_at' => $expires_at,
         ]);
 
         $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $isVerifiedCode;
 
         \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
             $message->to($request->email)
-                ->from('noreply@example.com', 'LURC')
+                ->from('noreply@lurc.com', 'LURC')
                 ->subject('Email Verification');
         });
 
         return response()->json(['msg' => 'Registered successfully. We have sent an OTP to your email. Submit your OTP to verify your account.', 'status' => $user], 201);
         return $user;
     }
-    public function getInfo($email)
+
+    //email verification 
+    public function verifyEmail(Request $request)
     {
-        return User::where('email', $email)->first();
+        $request->validate([
+            'otp' => 'required',
+        ]);
+        $time_now = now();
+        \Log::info('Time Now');
+        \Log::info($time_now);  
+        
+        $previous_time = now()->subMinutes(5);
+        \Log::info($previous_time);
+
+        if(User::where('email', $request->email)->where('isVerifiedCode', $request->otp)->count()==0){
+            User::where('email', $request->email)->update([
+                'isVerifiedCode' => null,
+                'expires_at' => null,
+            ]);
+            return response()->json([
+                'success' => false,
+                'msg' => 'Invalid Token!!'
+            ], 401);
+        }
+        if(User::where('email', $request->email)->whereBetween('expires_at', [$previous_time, $time_now])->count()==0){
+            User::where('email', $request->email)->update([
+                'isVerifiedCode' => null,
+                'expires_at' => null,
+            ]);
+            return response()->json([
+                'success' => false,
+                'msg' => 'Token Expired!!'
+            ], 402);
+        }             
+        
+        else {
+            User::where('email', $request->email)->update([
+                'isEmailVerified' => 1,
+                'isVerifiedCode' => null,
+            ]);
+            return response()->json(['msg' => 'Email verified successfully!!', 'status' => 'success'], 200);
+        }
     }
-    // 
-    //     public function login(Request $request)
-    //     {
-    //         $request->validate([
-    //             'email' => 'bail|required|email|exists:users,email',
-    //             'password' => 'bail|required|min:2|max:20',
-    //         ], ['email.exists' => 'No account found for this email']);
-    // 
-    //         // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
-    //         // 
-    //         //             return response()->json([
-    //         //                 'success' => false,
-    //         //                 'admin' => 'not-found'
-    //         //             ], 401);
-    //         //         }
-    // 
-    //         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-    //             return response()->json([
-    //                 'success' => true,
-    //                 'msg' => 'You are logged in',
-    //             ], 200);
-    //         } else {
-    //             return response()->json([
-    //                 'msg' => 'Incorrect Password!!',
-    //                 'success' => false
-    //             ], 401);
-    //         }
-    //     }
+
+    
+        // public function login(Request $request)
+        // {
+        //     $request->validate([
+        //         'email' => 'bail|required|email|exists:users,email',
+        //         'password' => 'bail|required|min:2|max:20',
+        //     ], ['email.exists' => 'No account found for this email']);
+    
+        //     // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
+        //     // 
+        //     //             return response()->json([
+        //     //                 'success' => false,
+        //     //                 'admin' => 'not-found'
+        //     //             ], 401);
+        //     //         }
+    
+        //     if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        //         return response()->json([
+        //             'success' => true,
+        //             'msg' => 'You are logged in',
+        //         ], 200);
+        //     } else {
+        //         return response()->json([
+        //             'msg' => 'Incorrect Password!!',
+        //             'success' => false
+        //         ], 401);
+        //     }
+        // }
 
     public function login(Request $request)
     {
@@ -217,6 +261,8 @@ class AuthController extends Controller
         $input = $request->all();
         $data = User::select('id', 'email', 'password')->where('email', $input['email'])->first();
         // \Log::info($data);
+
+        //The makeVisible method returns the model instance
         $data->makeVisible('password')->toArray();
 
         // return $data;
@@ -225,7 +271,8 @@ class AuthController extends Controller
             $check = User::where('email', $request->email)->where('isEmailVerified', 1)->count();
             if ($check == 1) {
                 $twoFactorCode = rand(100000, 999999);
-                $expires_at = now()->addMinutes(5);
+                $expires_at = now();
+                \Log::info($expires_at);
                 User::where('email', $request->email)->update([
                     'twoFactorCode' => $twoFactorCode,
                     'expires_at' => $expires_at,
@@ -234,7 +281,7 @@ class AuthController extends Controller
 
                 \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
                     $message->to($request->email)
-                        ->from('noreply@example.com', 'LURC')
+                        ->from('noreply@lurc.com', 'LURC')
                         ->subject('Two Factor Authentication');
                 });
 
@@ -251,7 +298,7 @@ class AuthController extends Controller
 
                 \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
                     $message->to($request->email)
-                        ->from('noreply@example.com', 'LURC')
+                        ->from('noreply@lurc.com', 'LURC')
                         ->subject('Email Verification');
                 });
 
@@ -274,76 +321,61 @@ class AuthController extends Controller
             'twoFactorCode' => 'required',
         ]);
 
-        // if(User::where('email', $request->email)->where('expires_at', lt(now()))){
-        //     User::where('email', $request->email)->update([
-        //         'twoFactorCode' => null,
-        //         'expires_at' => null,
-        //     ]);
-        //     return response()->json([
-        //         'success' => false,
-        //         'msg' => 'Failed!!'
-        //     ], 401);
-        // } else{
-        $check = User::where('email', $request->email)->where('twoFactorCode', $request->twoFactorCode)->count();
-        \Log::info('check');
-        \Log::info($check);
-        if ($check == 1) {
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                return response()->json([
-                    'success' => true,
-                    'msg' => 'You are logged in',
-                ], 200);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'msg' => 'Failed!!'
-                ], 401);
-            }
-        } else {
-            return response()->json(['msg' => 'Invalid OTP', 'status' => 'failed'], 402);
+        $time_now = now();
+        \Log::info('Time Now');
+        \Log::info($time_now);  
+        
+        $previous_time = now()->subMinutes(5);
+        \Log::info($previous_time);
+
+        if(User::where('email', $request->email)->where('twoFactorCode', $request->twoFactorCode)->count()==0){
+            
+            return response()->json([
+                'success' => false,
+                'msg' => 'Invalid Token!!'
+            ], 401);
         }
-        // }
-
-    }
-
-    public function verifyEmail(Request $request)
-    {
-        $request->validate([
-            'otp' => 'required',
-        ]);
-
-        $check = User::where('email', $request->email)->where('isVerifiedCode', $request->otp)->count();
-        \Log::info('check');
-        \Log::info($check);
-        if ($check == 1) {
+        if(User::where('email', $request->email)->whereBetween('expires_at', [$previous_time, $time_now])->count()==0){
             User::where('email', $request->email)->update([
-                'isEmailVerified' => 1,
+                'twoFactorCode' => null,
+                'expires_at' => null,
             ]);
-            return response()->json(['msg' => 'Email verified successfully!!', 'status' => 'success'], 200);
+            return response()->json([
+                'success' => false,
+                'msg' => 'Token Expired!!'
+            ], 402);
+        }             
+        
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            User::where('email', $request->email)->update([
+                'twoFactorCode' => null,
+                'expires_at' => null,
+            ]);
+            return response()->json([
+                'success' => true,
+                'msg' => 'You are logged in',
+            ], 200); 
         } else {
-            return response()->json(['msg' => 'Invalid OTP', 'status' => 'error'], 401);
-        }
+            return response()->json([
+                'success' => false,
+                'msg' => 'Failed!!'
+            ], 401);
+        
+        } 
     }
 
-    function logout()
-    {
-        Auth::logout();
-        // Session::flush();
-        // Session::forget('url.intented');
-        return redirect('/');
-    }
-
-    
-    //For forgot password
-    public function sendOtp(Request $request)
+    //For Reset password
+    public function sendResetPassOtp(Request $request)
     {
         $request->validate([
             'email' => 'required|email|exists:users,email',
         ]);
 
         $otp = rand(100000, 999999);
+        $expires_at = now();
         User::where('email', $request->email)->update([
-            'otp' => $otp,
+            'reset_pass_otp' => $otp,
+            'expires_at' => $expires_at,
         ]);
 
         //$action_link = redirect('/reset')->route( ['token' => $token, 'email' => $request->email]);
@@ -356,42 +388,75 @@ class AuthController extends Controller
                 ->subject('Reset Password');
         });
 
-        // return back()->with('success', 'We have e-mailed your password reset link!');
         return response()->json(['msg' => 'We have sent an OTP to your email.', 'status' => $request->email], 200);
     }
 
-    public function submitOtp(Request $request)
+    public function submitResetPassOtp(Request $request)
     {
         $request->validate([
             'otp' => 'required',
         ]);
 
-        $check = User::where('email', $request->email)->where('otp', $request->otp)->count();
-        \Log::info('check');
-        \Log::info($check);
-        if ($check == 1) {
-            return response()->json(['msg' => 'Success', 'status' => 'success'], 200);
-        } else {
-            return response()->json(['msg' => 'Invalid OTP', 'status' => 'error'], 401);
+        $time_now = now();
+        \Log::info('Time Now');
+        \Log::info($time_now);  
+        
+        $previous_time = now()->subMinutes(5);
+        \Log::info($previous_time);
+
+        if(User::where('email', $request->email)->where('reset_pass_otp', $request->otp)->count()==0){
+            User::where('email', $request->email)->update([
+                'reset_pass_otp' => null,
+                'expires_at' => null,
+            ]);
+            return response()->json([
+                'success' => false,
+                'msg' => 'Invalid Token!!'
+            ], 401);
         }
+        if(User::where('email', $request->email)->whereBetween('expires_at', [$previous_time, $time_now])->count()==0){
+            User::where('email', $request->email)->update([
+                'reset_pass_otp' => null,
+                'expires_at' => null,
+            ]);
+            return response()->json([
+                'success' => false,
+                'msg' => 'Token Expired!!'
+            ], 402);
+        }   
+        else {
+            return response()->json(['msg' => 'Success!!', 'status' => 'success'], 200);
+        } 
     }
 
     public function resetPassword(Request $request)
     {
-
         $request->validate([
             'email' => 'required|email|exists:users,email',
             'password' => 'required|confirmed|min:2|max:20',
             'password_confirmation' => 'required',
         ]);
-        $check = User::where('email', $request->email)->where('otp', $request->otp)->count();
+        $check = User::where('email', $request->email)->where('reset_pass_otp', $request->otp)->count();
         if ($check == 1) {
             User::where('email', $request->email)->update([
                 'password' => \Hash::make($request->password),
+                'reset_pass_otp' => null,
+                'expires_at' => null,
             ]);
             return response()->json(['msg' => 'Password updated successfully', 'status' => 'success'], 200);
         } else {
             return response()->json(['msg' => 'Invalid OTP', 'status' => 'error'], 401);
         }
+    }
+
+    function logout()
+    {
+        Auth::logout();
+        Session::flush();
+        Session::forget('url.intented');
+        return response()->json([
+            'success' => true,
+            'msg' => 'You are Logged Out',
+        ], 200);
     }
 }

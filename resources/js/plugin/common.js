@@ -6,7 +6,10 @@ export default {
 
         }
     },
+
+    //A computed property will only re-evaluate when some of its reactive dependencies have changed.
     computed: {
+        //The mapGetters helper simply maps store getters to local computed properties:
         ...mapGetters({
 
             authUser:'authUser',
@@ -14,6 +17,8 @@ export default {
 
         }),
     },
+
+    //a method invocation will always run the function whenever a re-render happens.
     methods: {
         async callApi(method, url, dataObj ){
             try {

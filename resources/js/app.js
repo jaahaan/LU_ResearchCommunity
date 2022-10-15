@@ -14,41 +14,41 @@ import store from './store';
 Vue.use(iView, { locale : locale });
 
 import common from './plugin/common';
+
+//Mixins are a flexible way to distribute reusable functionalities for Vue components.
 Vue.mixin(common)
 
-// 
-// let authUser = window.authUser;
-// 
-// router.beforeEach((to, from, next) => {
-//     document.title = to.meta.title
-//     if(to.meta){
-//         let allowed = to.meta.allowed
-//         if(allowed == 1){
-//             next()
-//         }
-//         else if(allowed == 2){
-//             if(authUser){
-//                 next()
-//             }
-//             else{
-//                 next({name: 'login'})
-//             }
-//         }
-//         else if(allowed == 3){
-//             if(authUser){
-//                 next({name: 'index'})
-//             }
-//             else{
-//                 next()
-//             }
-//         }
-//     }
-//     return
-// 
-// 
-// });
+let authUser = window.authUser
 
+router.beforeEach((to, from, next) => {
+    document.title = to.meta.title
 
+    if(to.meta){
+        let allowed = to.meta.allowed
+
+        if(allowed == 1){
+            return next();
+        }
+        
+        else if(allowed == 2){
+            if(authUser){
+                return next()
+            }
+            else{
+                return next({name: 'login'})
+            }
+        }
+        else if(allowed == 3){
+            if(!authUser){
+                return next()
+            }
+            
+        }
+    }
+});
+
+//Vue.config is an object containing Vue’s global configurations.
+//Set this to false to prevent the production tip on Vue startup.
 Vue.config.productionTip = false
 Vue.component('default', require('./layout/default.vue').default);
 Vue.component('auth', require('./layout/auth.vue').default);

@@ -1,6 +1,8 @@
 <template>
     <div>
         <div v-if="$store.state.user">
+            <HomeNavbar />
+
             <div
                 v-if="
                     $route.name == 'profile' ||
@@ -9,13 +11,10 @@
                     $route.name == 'followings'
                 "
             >
-                <HomeNavbar />
                 <profileHeader />
                 <ProfileNav />
             </div>
-            <div v-else>
-                <HomeNavbar />
-            </div>
+
             <router-view />
         </div>
     </div>

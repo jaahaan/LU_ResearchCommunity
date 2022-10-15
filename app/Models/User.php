@@ -36,7 +36,7 @@ class User extends Authenticatable
         'isEmailVerified',
         'isVerifiedByAdmin',
         'userType',
-        'otp',
+        'reset_pass_otp',
         'twoFactorCode',
         'expires_at',
     ];
@@ -72,6 +72,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'education' => 'array',
+        'skills' => 'array',
     ];
 
 

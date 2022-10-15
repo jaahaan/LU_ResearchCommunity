@@ -26,7 +26,10 @@
                                     class="form-control"
                                     v-model="data.otp"
                                 />
-                                <span class="text-danger" v-if="errors.otp">{{
+                                <span class="alert-danger" v-if="errors.otp">{{
+                                    errors.otp[0]
+                                }}</span>
+                                <span class="alert-danger" v-if="errors.otp">{{
                                     errors.otp[0]
                                 }}</span>
                             </div>
@@ -60,7 +63,6 @@
 
 <script>
 export default {
-    name: "forgot",
     data() {
         return {
             data: {
@@ -69,13 +71,18 @@ export default {
             },
             isSubmitting: false,
             errors: [],
+            msg: "",
         };
     },
     methods: {
         async submit() {
             if (this.data.otp.trim() == "") return this.e("OTP is required");
             this.isSubmitting = true;
-            const res = await this.callApi("post", "/submit_otp", this.data);
+            const res = await this.callApi(
+                "post",
+                "/submit_reset_password_otp",
+                this.data
+            );
 
             if (res.status == 200) {
                 this.msg = res.data.msg;
@@ -84,7 +91,11 @@ export default {
                 //this.data.otp = "";
             } else {
                 if (res.status == 401) {
-                    this.e(res.data.msg);
+                    this.msg = res.data.msg;
+                }
+                if (res.status == 402) {
+                    this.msg = res.data.msg;
+                    this.$router.push("/forgot");
                 } else if (res.status == 422) {
                     for (let i in res.data.errors) {
                         this.errors = res.data.errors;

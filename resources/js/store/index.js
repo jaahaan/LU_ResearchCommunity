@@ -9,6 +9,7 @@ const store = new Vuex.Store({
         passwordReset: { email: "" },
     },
 
+    //Sometimes we may need to compute derived state based on store state,
     /*All getters*/
     getters: {
         isLoggedIn(state) {
@@ -26,6 +27,7 @@ const store = new Vuex.Store({
         },
     },
 
+    //The only way to actually change state in a Vuex store is by committing a mutation.
     /*all mutations*/
     mutations: {
         authUser(state, user) {

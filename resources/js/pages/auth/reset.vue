@@ -106,10 +106,13 @@ export default {
             passwordReset: "passwordReset",
         }),
     },
+
+    //All of its synchronous child components have been mounted (does not include async components or components inside <Suspense> trees).
     mounted() {
         this.data.email = this.passwordReset.email;
         this.data.otp = this.passwordReset.otp;
     },
+
     methods: {
         async submit() {
             if (this.data.email.trim() == "")

@@ -37,7 +37,9 @@
                                     class="text-danger"
                                     v-if="errors.twoFactorCode"
                                     >{{ errors.twoFactorCode[0] }}</span
-                                >
+                                ><span class="text-danger" v-if="errmsg">{{
+                                    errmsg
+                                }}</span>
                             </div>
 
                             <div class="mb-2">
@@ -71,9 +73,9 @@
                     <div class="container-fluid">
                         <div class="container-fluid card rt col-10 p-5">
                             <h2 class="p-3 text-center">Login</h2>
-                            <div class="alert alert-dark" v-if="msg">
+                            <!-- <div class="alert alert-dark" v-if="msg">
                                 {{ msg }}
-                            </div>
+                            </div> -->
 
                             <div class="mb-2">
                                 Email
@@ -94,14 +96,24 @@
                                     v-model="data.password"
                                     placeholder="Password"
                                 />
-                                <span
-                                    class="w-full text-danger"
-                                    v-if="errors.password"
-                                    >{{ errors.password[0] }}
-                                </span>
-                                <router-link to="/forgot_password"
-                                    >Forgot Password</router-link
-                                >
+                                <div class="d-block">
+                                    <span
+                                        class="w-full text-danger float-start"
+                                        v-if="msg"
+                                        >{{ msg }}
+                                    </span>
+                                    <span
+                                        class="w-full text-danger float-start"
+                                        v-if="errors.password"
+                                        >{{ errors.password[0] }}
+                                    </span>
+
+                                    <router-link
+                                        class="float-end"
+                                        to="/forgot_password"
+                                        >Forgot Password</router-link
+                                    >
+                                </div>
                             </div>
 
                             <div class="mb-2">
@@ -138,11 +150,14 @@ export default {
                 password: "",
                 twoFactorCode: "",
             },
-            msg: "",
+            msg: null,
+            errmsg: null,
+
             isLoggingBlock: true,
             isLogging: false,
             isSubmitting: false,
             errors: [],
+            props: ["msg"],
         };
     },
     methods: {
@@ -153,11 +168,11 @@ export default {
             //     return this.e("Password is required");
             this.isLogging = true;
 
+            //if we put await in front of it, it will be a response! The await keyword causes code to wait for that Promise to resolve. And whatever data is normally passed to your callback as an argument is instead returned. There is still an asynchronous AJAX call happening, but our code reads a bit more like synchronous code.
             const res = await this.callApi("post", "/login", this.data);
 
             if (res.status == 200) {
                 this.msg = res.data.msg;
-                // window.location = "/";
                 this.isLoggingBlock = false;
             } else {
                 if (res.status == 401) {
@@ -192,14 +207,16 @@ export default {
             if (res.status == 200) {
                 this.s(res.data.msg);
                 window.location = "/";
+                this.$router.go();
+                window.location.reload();
                 //this.data.otp = "";
             } else {
                 if (res.status == 401) {
-                    this.msg = res.data.msg;
-                    // window.location = "/";
-                    this.isLoggingBlock = true;
+                    this.errmsg = res.data.msg;
+                    this.isLoggingBlock = false;
                 } else if (res.status == 402) {
-                    this.e(res.data.msg);
+                    this.errmsg = res.data.msg;
+                    this.isLoggingBlock = true;
                 } else if (res.status == 422) {
                     for (let i in res.data.errors) {
                         this.errors = res.data.errors;

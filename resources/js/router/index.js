@@ -12,17 +12,22 @@ import forgot from "../pages/auth/forgot";
 import login from "../pages/auth/login";
 import otp from "../pages/auth/otp";
 import register from "../pages/auth/register";
-
 import reset from "../pages/auth/reset";
 
+//Profile
 import profile from "../pages/profile/index";
 import followings from "../pages/profile/_id/following";
 import projects from "../pages/profile/_id/project";
 import research from "../pages/profile/_id/research";
 
+//Admin
+import teachers from "../pages/Admin/teachers";
+
 Vue.use(Router);
 
 let publicRoute = 1;
+let authRoute = 2;
+let defaultRoute = 3;
 
 export default new Router({
     mode: "history",
@@ -32,39 +37,49 @@ export default new Router({
             name: "index",
             component: index,
             meta: {
-                allowed: publicRoute,
-                title: "Home|LURC",
-                pageName: "Home",
+                allowed: defaultRoute,
+                title: "Home - LURC",
+                pageName: "index",
             },
         },
         {
             path: "/register",
             name: "register",
             component: register,
-            // meta: {
-            //   allowed: 3,
-            //   title: "Register User",
-            //   pageName: "Register"
-            // }
+            meta: {
+              allowed: defaultRoute,
+              title: "Register - LURC",
+              pageName: "Register"
+            }
         },
         {
             path: "/register/student",
             name: "student",
             component: student,
+            meta: {
+                allowed: defaultRoute,
+                title: "RegisterAsStudent - LURC",
+                pageName: "Register"
+            }
         },
         {
             path: "/register/teacher",
             name: "teacher",
             component: teacher,
+            meta: {
+                allowed: defaultRoute,
+                title: "RegisterAsTeacher - LURC",
+                pageName: "Register"
+            }
         },
         {
             path: "/login",
             name: "login",
             component: login,
             meta: {
-                allowed: publicRoute,
-                title: "Login|LURC",
-                pageName: "Login",
+                allowed: defaultRoute,
+                title: "Login - LURC",
+                pageName: "login",
             },
         },
         {
@@ -72,8 +87,8 @@ export default new Router({
             name: "forgot_password",
             component: forgot,
             meta: {
-                allowed: publicRoute,
-                title: "Forgot Password|LURC",
+                allowed: defaultRoute,
+                title: "Forgot Password - LURC",
                 pageName: "Forgot Password",
             },
         },
@@ -82,8 +97,8 @@ export default new Router({
             name: "reset_password",
             component: reset,
             meta: {
-                allowed: publicRoute,
-                title: "Reset Your Password|LURC",
+                allowed: defaultRoute,
+                title: "Reset Your Password - LURC",
                 pageName: "Reset Password",
             },
         },
@@ -92,8 +107,8 @@ export default new Router({
             name: "otp",
             component: otp,
             meta: {
-                allowed: publicRoute,
-                title: "Enter Your OTP|LURC",
+                allowed: defaultRoute,
+                title: "Enter Your OTP - LURC",
                 pageName: "OTP",
             },
         },
@@ -103,8 +118,8 @@ export default new Router({
             name: "email verify otp",
             component: emailVerifyOtp,
             meta: {
-                allowed: publicRoute,
-                title: "Enter Your OTP|LURC",
+                allowed: defaultRoute,
+                title: "Enter Your OTP - LURC",
                 pageName: "OTP",
             },
         },
@@ -113,26 +128,62 @@ export default new Router({
             path: "/home",
             name: "home",
             component: home,
+            meta: {
+                allowed: authRoute,
+                title: "Home - LURC",
+                pageName: "home",
+            },
         },
         {
             path: "/profile/:id",
             name: "profile",
             component: profile,
+            meta: {
+                allowed: authRoute,
+                title: "Profile",
+                pageName: "home",
+            },
         },
         {
             path: "/profile/:id/research",
             name: "research",
             component: research,
+            meta: {
+                allowed: authRoute,
+                title: "Research",
+                pageName: "home",
+            },
         },
         {
             path: "/profile/:id/projects",
             name: "projects",
             component: projects,
+            meta: {
+                allowed: authRoute,
+                title: "Projects",
+                pageName: "home",
+            },
         },
         {
             path: "/profile/:id/followings",
             name: "followings",
             component: followings,
+            meta: {
+                allowed: authRoute,
+                title: "Followings",
+                pageName: "home",
+            },
+        },
+
+        {
+            path: "/teachers",
+            name: "teachers",
+            component: teachers,
+            meta: {
+                allowed: authRoute,
+                title: "Teachers",
+                pageName: "teachers",
+            },
         },
     ],
 });
