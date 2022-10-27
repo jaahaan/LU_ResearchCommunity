@@ -1,113 +1,330 @@
 <template>
-    <nav class="navbar navbar-expand-lg navbar-dark navbg text">
-        <div class="container-fluid">
-            <a class="navbar-brand"
-                ><router-link class="nav-link active text" to="/home"
-                    ><img
-                        :src="'/images/logo.png'"
-                        alt="logo"
-                        class="img-fluid logo"
-                    />
-                    ResearchCommunity
-                </router-link></a
+    <div>
+        <header>
+            <div
+                class="navbar-body__mobile--wrapper"
+                v-bind:class="{ active: isSidebar }"
             >
-
-            <a
-                class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-            >
-                <span><i class="fa-solid fa-caret-down"></i></span>
-            </a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <router-link
-                            class="nav-link text"
-                            v-if="authUser.userType == 'admin'"
-                            to="/teachers"
-                            >Add Teacher</router-link
-                        >
-                    </li>
-
-                    <li class="nav-item dropdown">
-                        <a
-                            class="nav-link dropdown-toggle"
-                            href="#"
-                            id="navbarDropdown"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            Department
-                        </a>
-                        <ul
-                            class="dropdown-menu"
-                            aria-labelledby="navbarDropdown"
-                        >
-                            <li><a class="dropdown-item" href="#">CSE</a></li>
-                            <li><a class="dropdown-item" href="#">EEE</a></li>
-                            <li><a class="dropdown-item" href="#">CE</a></li>
-                            <li><a class="dropdown-item" href="#">ARCH</a></li>
-                            <!-- <li><hr class="dropdown-divider"></li> -->
-                            <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
-                        </ul>
-                    </li>
-                </ul>
-                <a class="navbar-brand d-flex"
-                    ><div>
-                        <form class="form-inline my-2 my-lg-0">
-                            <input
-                                class="form-control mr-sm-2"
-                                type="search"
-                                v-model="keyword"
-                                placeholder="Search..."
-                            />
-                            <ul
-                                class="search-list card list-group bg-dark"
-                                v-if="Users.length > 0 && keyword.length > 0"
-                            >
-                                <li
-                                    class="list-group-item list-group-item-action list-group-item-dark"
-                                    v-for="user in Users"
-                                    v-if="authUser.id != user.id"
-                                    :key="user.id"
-                                    v-text="user.name"
-                                    @click="getSearchedUser(user)"
-                                ></li>
-                            </ul>
-                        </form>
+                <div class="navbar-body__mobile">
+                    <div class="navbar-body__mobile--head">
+                        <!-- <a href="#"><img src="assets/images/logo.png" alt="Logo" /></a> -->
+                        <router-link class="lurc" to="/home"
+                            ><span class="lurc1">RESEARCH</span
+                            ><span class="lurc2">COMMUNITY</span>
+                        </router-link>
+                        <button type="button" v-on:click="hideSidebar()">
+                            <i class="lni lni-cross-circle"></i>
+                        </button>
                     </div>
+                    <ul class="navbar-body__mobile--body">
+                        <li class="nav-item">
+                            <router-link
+                                class="nav-link active"
+                                aria-current="page"
+                                to="/home"
+                                >Home</router-link
+                            >
+                        </li>
+
+                        <li class="nav-item">
+                            <router-link
+                                class="nav-link"
+                                aria-current="page"
+                                to="/research"
+                                >Research</router-link
+                            >
+                        </li>
+                        <li class="nav-item">
+                            <router-link
+                                class="nav-link"
+                                aria-current="page"
+                                v-if="authUser.userType == 'admin'"
+                                to="/teachers"
+                                >Add Teacher</router-link
+                            >
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a
+                                class="nav-link dropdown-toggle"
+                                href="#"
+                                id="navbarDropdown"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Departments
+                            </a>
+                            <ul
+                                class="dropdown-menu"
+                                aria-labelledby="navbarDropdown"
+                            >
+                                <li>
+                                    <a class="dropdown-item" href="#">CSE</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">EEE</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">ARCH</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">BuA</a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" href="#"
+                                        >Something else here</a
+                                    >
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <nav class="navbar navbar-expand-lg">
+                <div class="container header-content">
+                    <div class="navbar-item navbar-itemLogo">
+                        <a class="navbar-brand">
+                            <!-- <img src="/assets/images/logo.png" alt="Brand" /> -->
+                            <router-link class="lurc" to="/home"
+                                ><span class="lurc1">RESEARCH</span
+                                ><span class="lurc2">COMMUNITY</span>
+                            </router-link>
+                        </a>
+                    </div>
+                    <div class="navbar-item navbar-body">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <router-link
+                                    class="nav-link active"
+                                    aria-current="page"
+                                    to="/home"
+                                    >Home</router-link
+                                >
+                            </li>
+
+                            <li class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    aria-current="page"
+                                    to="/research"
+                                    >Research</router-link
+                                >
+                            </li>
+                            <li class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    aria-current="page"
+                                    v-if="authUser.userType == 'admin'"
+                                    to="/teachers"
+                                    >Add Teacher</router-link
+                                >
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a
+                                    class="nav-link dropdown-toggle"
+                                    href="#"
+                                    id="navbarDropdown"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    Departments
+                                </a>
+                                <ul
+                                    class="dropdown-menu"
+                                    aria-labelledby="navbarDropdown"
+                                >
+                                    <li>
+                                        <a class="dropdown-item" href="#"
+                                            >CSE</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#"
+                                            >EEE</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#"
+                                            >ARCH</a
+                                        >
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#"
+                                            >BuA</a
+                                        >
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item" href="#"
+                                            >Something else here</a
+                                        >
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="navbar-item">
+                        <ul class="navbar-item__action">
+                            <li><i class="lni lni-search-alt"></i></li>
+                            <li><i class="lni lni-alarm"></i></li>
+                            <li>
+                                <router-link :to="`/profile/${authUser.id}`"
+                                    ><img
+                                        :src="authUser.image"
+                                        alt="img"
+                                        class="img-fluid nav-profile-img m-auto"
+                                /></router-link>
+                            </li>
+                            <li>
+                                <button v-on:click="showSidebar()">
+                                    <i class="d-lg-none"
+                                        ><svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="25"
+                                            height="25"
+                                            fill="currentColor"
+                                            class="bi bi-list"
+                                            viewBox="0 0 16 16"
+                                        >
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
+                                            />
+                                        </svg>
+                                    </i>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <!-- <nav class="navbar navbar-expand-lg navbar-dark navbg text">
+            <div class="container-fluid">
+                <a class="navbar-brand"
+                    ><router-link class="nav-link active text" to="/home"
+                        ><img
+                            :src="'/images/logo.png'"
+                            alt="logo"
+                            class="img-fluid logo"
+                        />
+                        ResearchCommunity
+                    </router-link></a
+                >
+
+                <a
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span><i class="fa-solid fa-caret-down"></i></span>
+                </a>
+                <div
+                    class="collapse navbar-collapse"
+                    id="navbarSupportedContent"
+                >
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <router-link
+                                class="nav-link text"
+                                v-if="authUser.userType == 'admin'"
+                                to="/teachers"
+                                >Add Teacher</router-link
+                            >
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a
+                                class="nav-link dropdown-toggle"
+                                href="#"
+                                id="navbarDropdown"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                Department
+                            </a>
+                            <ul
+                                class="dropdown-menu"
+                                aria-labelledby="navbarDropdown"
+                            >
+                                <li>
+                                    <a class="dropdown-item" href="#">CSE</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">EEE</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">CE</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">ARCH</a>
+                                </li>
+                                
+                            </ul>
+                        </li>
+                    </ul>
+                    <a class="navbar-brand d-flex"
+                        ><div>
+                            <form class="form-inline my-2 my-lg-0">
+                                <input
+                                    class="form-control mr-sm-2"
+                                    type="search"
+                                    v-model="keyword"
+                                    placeholder="Search..."
+                                />
+                                <ul
+                                    class="search-list card list-group bg-dark"
+                                    v-if="
+                                        Users.length > 0 && keyword.length > 0
+                                    "
+                                >
+                                    <li
+                                        class="list-group-item list-group-item-action list-group-item-dark"
+                                        v-for="user in Users"
+                                        v-if="authUser.id != user.id"
+                                        :key="user.id"
+                                        v-text="user.name"
+                                        @click="getSearchedUser(user)"
+                                    ></li>
+                                </ul>
+                            </form>
+                        </div>
+                    </a>
+                </div>
+                <a class="navbar-item d-flex"
+                    ><router-link
+                        class="nav-link text"
+                        :to="`/profile/${authUser.id}`"
+                        ><img
+                            :src="authUser.image"
+                            alt="img"
+                            class="img-fluid profile-img m-auto"
+                    /></router-link>
+                </a>
+                <a class="navbar-item d-flex">
+                    <span @click="logout"
+                        ><i class="fa-solid fa-right-from-bracket"></i
+                    ></span>
                 </a>
             </div>
-            <a class="navbar-item d-flex"
-                ><router-link
-                    class="nav-link text"
-                    :to="`/profile/${authUser.id}`"
-                    ><img
-                        :src="authUser.image"
-                        alt="img"
-                        class="img-fluid profile-img m-auto"
-                /></router-link>
-            </a>
-            <a class="navbar-item d-flex">
-                <span @click="logout"
-                    ><i class="fa-solid fa-right-from-bracket"></i
-                ></span>
-            </a>
-        </div>
-        <hr />
-    </nav>
+            <hr />
+        </nav> -->
+    </div>
 </template>
 
 <script>
 export default {
     data() {
         return {
+            isSidebar: false,
             keyword: null,
             Users: [],
             user_id: -1,
@@ -119,6 +336,12 @@ export default {
         },
     },
     methods: {
+        showSidebar() {
+            this.isSidebar = true;
+        },
+        hideSidebar() {
+            this.isSidebar = false;
+        },
         getSearchedUser(user) {
             //     const res = await this.callApi(
             //     "get",
@@ -167,10 +390,10 @@ ul {
 }
 .search-hover {
 }
-.profile-img {
+.nav-profile-img {
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
 }
 .navbg {
     background: #474554;
@@ -188,9 +411,5 @@ ul {
 .logo {
     height: 10vh;
     width: 10vh;
-}
-.router-link-exact-active {
-    color: #34c5d9 !important;
-    border-left: 1px solid #34c5d9 !important;
 }
 </style>

@@ -23,7 +23,7 @@ class AuthController extends Controller
         if (Auth::check() && ($request->path() == 'login' || $request->path() == 'register' || $request->path() == '/')) {
             return redirect('/home');
         }
-        return view('home');
+        return view('welcome');
 
         //first check if you are loggedin and admin user ...
         // if (Auth::check()) {
@@ -346,7 +346,7 @@ class AuthController extends Controller
             ], 402);
         }             
         
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password])) {
             User::where('email', $request->email)->update([
                 'twoFactorCode' => null,
                 'expires_at' => null,
@@ -451,9 +451,10 @@ class AuthController extends Controller
 
     function logout()
     {
-        Auth::logout();
-        Session::flush();
-        Session::forget('url.intented');
+        // Auth::logout();
+        // Session::flush();
+        // Session::forget('url.intented');
+        Auth::guard('web')->logout();
         return response()->json([
             'success' => true,
             'msg' => 'You are Logged Out',

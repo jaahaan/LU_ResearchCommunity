@@ -1,9 +1,9 @@
 <template>
-    <div class="mt-3">
-        <!-- about-section starts -->
+    <div class="mt-2">
+        <!--**** about-section starts ****-->
         <!-- about edit -->
         <template v-if="about_id">
-            <div class="card m-auto col-md-8 col-lg-6 mb-3">
+            <div class="card mb-2">
                 <div class="card-header p-3 card-header-border">
                     <div class="d-block">
                         <div class="float-start">
@@ -28,13 +28,13 @@
                 <div class="card-footer text-muted">
                     <div class="d-block">
                         <button
-                            class="btn btn-design mx-2 float-end"
+                            class="profile-btn-design mx-2 float-end"
                             @click="updateAbout()"
                         >
                             <i class="fa-solid fa-floppy-disk"></i> Save
                         </button>
                         <button
-                            class="btn btn-design mx-2 float-end"
+                            class="profile-btn-design mx-2 float-end"
                             @click="deleteAbout(profileInfo)"
                         >
                             <i class="fa-solid fa-floppy-disk"></i> Delete
@@ -47,7 +47,7 @@
         <!-- about -->
         <template v-else>
             <div
-                class="card m-auto col-md-8 col-lg-6 mb-3"
+                class="card mb-2"
                 v-if="profileInfo.about && isLoading == false"
             >
                 <div class="card-header card-header-border p-3">
@@ -69,9 +69,9 @@
                 </div>
             </div>
         </template>
-        <!-- about-section ends-->
+        <!--**** about-section ends ****-->
 
-        <!-- education-section starts -->
+        <!--**** education-section starts ****-->
         <!-- education edit -->
         <!-- <template v-if="about_id">
             <div
@@ -101,7 +101,7 @@
 
         <template>
             <div
-                class="card m-auto col-md-8 col-lg-6 mb-3"
+                class="card mb-2"
                 v-if="educationInfo != '' && isLoading == false"
             >
                 <div class="card-header card-header-border p-3">
@@ -140,12 +140,12 @@
                 </div>
             </div>
         </template>
-        <!-- education-section ends-->
+        <!--**** education-section ends ****-->
 
-        <!-- Skills-section starts-->
+        <!--**** Skills-section starts ****-->
         <!-- skills edit -->
         <template v-if="skills_id">
-            <div class="card m-auto col-md-8 col-lg-6 mb-3">
+            <div class="card mb-2">
                 <div class="card-header card-header-border p-3">
                     <div class="d-block">
                         <div class="float-start">
@@ -170,7 +170,7 @@
                 <div class="card-footer text-muted p-3">
                     <div class="d-block">
                         <button
-                            class="btn btn-design mx-2 float-end"
+                            class="profile-btn-design mx-2 float-end"
                             @click="updateSkills()"
                         >
                             <i class="fa-solid fa-floppy-disk"></i> Save
@@ -183,7 +183,7 @@
         <!-- skills -->
         <template v-else>
             <div
-                class="card m-auto col-md-8 col-lg-6 mb-3"
+                class="card mb-2"
                 v-if="profileInfo.skills && isLoading == false"
             >
                 <div class="card-header card-header-border p-3">
@@ -205,12 +205,12 @@
                 </div>
             </div>
         </template>
-        <!-- Skills-section ends-->
+        <!--**** Skills-section ends ****-->
 
-        <!-- interests-section starts-->
+        <!--**** interests-section starts ****-->
         <!-- interests edit-->
         <template v-if="interests_id">
-            <div class="card m-auto col-md-8 col-lg-6 mb-3">
+            <div class="card mb-2">
                 <div class="card-header card-header-border p-3">
                     <div class="d-block">
                         <div class="float-start">
@@ -235,7 +235,7 @@
                 <div class="card-footer text-muted p-3">
                     <div class="d-block">
                         <button
-                            class="btn btn-design mx-2 float-end"
+                            class="profile-btn-design mx-2 float-end"
                             @click="updateInterests()"
                         >
                             <i class="fa-solid fa-floppy-disk"></i> Save
@@ -248,7 +248,7 @@
         <!-- interests-->
         <template v-else>
             <div
-                class="card m-auto col-md-8 col-lg-6 mb-3"
+                class="card mb-2"
                 v-if="profileInfo.interests && isLoading == false"
             >
                 <div class="card-header card-header-borderp-3">
@@ -271,11 +271,11 @@
                 </div>
             </div>
         </template>
-        <!-- interests-section ends -->
+        <!--**** interests-section ends ****-->
 
-        <!-- loader -->
+        <!--**** loader ****-->
         <template v-if="isLoading == true">
-            <div class="card m-auto col-md-8 col-lg-6 mb-3">
+            <div class="card mb-2">
                 <div class="card-header p-3">
                     <div class="profile-info-skeleton">
                         <h5 />
@@ -287,7 +287,31 @@
                 </div>
             </div>
 
-            <div class="card m-auto col-md-8 col-lg-6 mb-3">
+            <div class="card mb-2">
+                <div class="card-header p-3">
+                    <div class="profile-info-skeleton">
+                        <h5 />
+                    </div>
+                </div>
+
+                <div class="card-body p-3 profile-info-skeleton">
+                    <p />
+                </div>
+            </div>
+
+            <div class="card mb-2">
+                <div class="card-header p-3">
+                    <div class="profile-info-skeleton">
+                        <h5 />
+                    </div>
+                </div>
+
+                <div class="card-body p-3 profile-info-skeleton">
+                    <p />
+                </div>
+            </div>
+
+            <div class="card mb-2">
                 <div class="card-header p-3">
                     <div class="profile-info-skeleton">
                         <h5 />
@@ -549,12 +573,5 @@ p {
     height: 16px;
     margin: 0.25rem;
     background-color: #c0c0c0;
-}
-.btn-design {
-    background-color: #34c5d9;
-    border: none;
-    color: #fbf7ff;
-    /*TB LR */
-    padding: 3px 8px;
 }
 </style>

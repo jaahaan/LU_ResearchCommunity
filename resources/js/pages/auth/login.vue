@@ -18,7 +18,7 @@
                     v-if="!isLoggingBlock"
                 >
                     <div class="container-fluid">
-                        <div class="container-fluid card rt col-10 p-5">
+                        <div class="container-fluid rt col-10 p-5">
                             <h2 class="text-center mb-2">
                                 Two Factor Authentication
                             </h2>
@@ -46,9 +46,9 @@
                                 <button
                                     :class="[
                                         data.twoFactorCode
-                                            ? 'btn btn-design-change col-12'
-                                            : 'btn btn-design col-12',
-                                        'btn btn-design col-12',
+                                            ? ' btn-design-change col-12'
+                                            : ' btn-design col-12',
+                                        ' btn-design col-12',
                                     ]"
                                     @click="submit"
                                     :disabled="isSubmitting"
@@ -71,7 +71,7 @@
                     v-else-if="isLoggingBlock"
                 >
                     <div class="container-fluid">
-                        <div class="container-fluid card rt col-10 p-5">
+                        <div class="container-fluid rt col-10 p-5">
                             <h2 class="p-3 text-center">Login</h2>
                             <!-- <div class="alert alert-dark" v-if="msg">
                                 {{ msg }}
@@ -121,9 +121,9 @@
                                     type="button"
                                     :class="[
                                         data.email && data.password
-                                            ? 'btn btn-design-change col-12'
-                                            : 'btn btn-design col-12',
-                                        'btn btn-design col-12',
+                                            ? ' btn-design-change col-12'
+                                            : ' btn-design col-12',
+                                        ' btn-design  col-12',
                                     ]"
                                     @click="login"
                                     :disabled="isLogging"

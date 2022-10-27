@@ -72,7 +72,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'education' => 'array',
-        'skills' => 'array',
+        // 'skills' => 'array',
     ];
 
 

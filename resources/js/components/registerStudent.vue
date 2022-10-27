@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid card rt col-10 p-5">
+    <div class="container-fluid rt col-10 p-5">
         <div class="alert alert-dark" v-if="msg">{{ msg }}</div>
         <h2 class="text-center p-3">Register As Student</h2>
         <div class="mb-2">
@@ -63,9 +63,9 @@
                     data.password_confirmation &&
                     data.batch &&
                     data.department
-                        ? 'btn btn-design-change col-12'
-                        : 'btn btn-design col-12',
-                    'btn btn-design col-12',
+                        ? ' btn-design-change col-12'
+                        : ' btn-design col-12',
+                    ' btn-design col-12',
                 ]"
                 @click="register"
                 :disabled="isLoading"

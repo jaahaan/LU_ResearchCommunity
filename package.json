@@ -30,6 +30,7 @@
         "@fortawesome/free-regular-svg-icons": "^6.1.2",
         "@fortawesome/free-solid-svg-icons": "^6.1.2",
         "@fortawesome/vue-fontawesome": "^2.0.8",
+        "hooper": "^0.3.4",
         "iview": "^3.4.2",
         "view-design": "^4.7.0",
         "vuex": "^3.1.3"

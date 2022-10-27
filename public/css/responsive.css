@@ -1,0 +1,105 @@
+/***************************
+    Add Responsive Here
+***************************/
+@media (max-width: 991px) {
+    .navbar-item__menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        box-shadow: 1px 2px 12px 0 rgba(0, 0, 0, 0.04);
+    }
+    .navbar-item__menu .navbar-collapse {
+        max-width: 720px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .navbar-item__menu .navbar-collapse .nav-item {
+        --bs-gutter-x: 1.5rem;
+        margin-right: calc(var(--bs-gutter-x) * 0.5);
+        margin-left: calc(var(--bs-gutter-x) * 0.5);
+    }
+    /*.hero-section__content h1 {
+    font-size: 3em;
+    margin-bottom: 0.475em;
+  }*/
+}
+@media (max-width: 767px) {
+    body {
+        font-size: 0.9375em;
+    }
+
+    .pt-100 {
+        padding-top: 50px;
+    }
+    .pb-100 {
+        padding-bottom: 50px;
+    }
+    .pb-70 {
+        padding-bottom: 20px;
+    }
+    .ptb-100 {
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+    .section-header h2 {
+        font-size: 1.5em;
+    }
+    .hero-section {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background: linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #ffffff 30%,
+            #98978b 30%,
+            #98978b 100%
+        );
+    }
+    .slider {
+        margin-bottom: 20px;
+    }
+    /**.hero-section__content h4 {
+    font-size: 1.2em;
+  }
+  .hero-section__content h1 {
+    font-size: 2em;
+    margin-bottom: 0.65em;
+  }*/
+    .bg {
+        /*background-image: linear-gradient(angle, color-stop1, color-stop2);*/
+        background: linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #ffffff 30%,
+            #98978b 30%,
+            #98978b 100%
+        );
+    }
+}
+
+@media (max-width: 991px) {
+    .mt-15 {
+        margin-top: 0px;
+    }
+}
+@media (max-width: 575px) {
+    .navbar-itemLogo {
+        width: 20%;
+    }
+}
+@media (min-width: 992px) {
+    /******* For Nav *******/
+    .dropdown-menu {
+        display: block;
+        transform: translateY(10px);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+    .nav-item:hover .dropdown-menu {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: all;
+    }
+} /*# sourceMappingURL=responsive.css.map */

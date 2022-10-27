@@ -2,13 +2,8 @@
     <nav class="navbar navbar-expand navbg d-block">
         <div class="container-fluid">
             <a class="navbar-brand float-start d-flex active navbar-item">
-                <a class="nav-link" href="/"
-                    ><img
-                        :src="'/images/logo.png'"
-                        alt="logo"
-                        class="img-fluid logo"
-                    />
-                    <router-link class="lurc mt-5" to="/"
+                <a class="nav-link">
+                    <router-link class="lurc" to="/"
                         ><span class="lurc1">RESEARCH</span
                         ><span class="lurc2">COMMUNITY</span></router-link
                     ></a
@@ -51,7 +46,7 @@ body {
     color: #fbf7ff;
     border-bottom: 1px solid #fbf7ff !important;
 }
-.logo {
+.navbar-itemLogo {
     height: 10vh;
     width: 10vh;
 }
@@ -81,5 +76,10 @@ body {
 }
 .lurc2:hover {
     color: #fbf7ff;
+}
+@media (max-width: 575px) {
+    .navbar-itemnavbar-itemLogo {
+        width: 30%;
+    }
 }
 </style>

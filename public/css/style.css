@@ -1,0 +1,371 @@
+@import url(../font/font.css);
+.bg-gray {
+    background-color: #f8f8f8;
+}
+
+.t-clr__primary {
+    color: #0c0c0c !important;
+}
+
+.t-clr__secondary {
+    color: #f8f8f8 !important;
+}
+.mt-15 {
+    margin-top: 15px;
+}
+.pt-100 {
+    padding-top: 100px;
+}
+.pt-50 {
+    padding-top: 50px;
+}
+.pt-30 {
+    padding-top: 30px;
+}
+
+.pb-100 {
+    padding-bottom: 100px;
+}
+
+.pb-70 {
+    padding-bottom: 70px;
+}
+
+.pb-30 {
+    padding-bottom: 30px;
+}
+
+.ptb-100 {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+.plrb-1rem {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.f-weight__100 {
+    font-weight: 100 !important;
+}
+
+.f-weight__200 {
+    font-weight: 200 !important;
+}
+
+.f-weight__300 {
+    font-weight: 300 !important;
+}
+
+.f-weight__400 {
+    font-weight: 400 !important;
+}
+
+.f-weight__500 {
+    font-weight: 500 !important;
+}
+
+.f-weight__600 {
+    font-weight: 600 !important;
+}
+
+.f-weight__700 {
+    font-weight: 700 !important;
+}
+
+.f-weight__800 {
+    font-weight: 800 !important;
+}
+
+.c-pointer {
+    cursor: pointer;
+}
+
+button {
+    border: 0;
+    background-color: transparent;
+}
+button:active,
+button:focus {
+    border: 0;
+    outline: 0;
+}
+
+.btn-design {
+    border: 1px solid;
+    padding: 0.5em 1.875em;
+    border-radius: 4px;
+    color: #eee;
+    font-size: 1em;
+    font-weight: 500;
+    min-width: 125px;
+}
+.btn-design:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
+    color: #34c5d9;
+}
+.btn-design-change {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
+    color: #34c5d9;
+    background-color: #444253;
+}
+.btn-edit {
+    color: #a7a7a7;
+    border: none;
+    cursor: pointer;
+}
+.btn-edit:hover {
+    color: #5a606d;
+}
+.profile-btn-design {
+    border: 1px solid;
+    border-radius: 4px;
+    /*TB LR */
+    padding: 0.5em 1.875em;
+    color: #eee;
+    font-size: 1em;
+    font-weight: 500;
+    min-width: 100px;
+    background-color: #34c5d9;
+    color: #fbf7ff;
+}
+.profile-btn-design:hover {
+    box-shadow: 0 4px 8px 0 rgba(75, 75, 75, 0.7);
+}
+.title {
+    font-size: 4rem;
+    font-weight: 600;
+    /*property specifies the height of a line.*/
+    line-height: 1rem;
+    color: #98978b;
+    padding: 50px;
+}
+
+.rt-title {
+    font-size: 3rem;
+    font-weight: 600;
+    line-height: 3rem;
+    color: #474554;
+    margin: 20px;
+}
+
+.rt {
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
+    text-decoration: none;
+    background-color: #474554;
+    border: 1px solid #98978b;
+    color: #fbf7ff;
+    border-radius: 5px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-bottom: 0;
+}
+
+p {
+    margin-bottom: 0;
+}
+
+ul {
+    margin-bottom: 0;
+    padding-left: 0;
+}
+ul li {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+a {
+    text-decoration: none;
+}
+
+figure {
+    margin-bottom: 0;
+}
+
+/*****************************
+    Add All Typography Here
+*****************************/
+/******** Styling ********/
+html {
+    font-size: 1rem;
+}
+
+body {
+    font-size: 1em;
+    font-family: "Inter";
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+}
+
+/*************** Home CSS ***************/
+
+.bg {
+    /*background-image: linear-gradient(angle, color-stop1, color-stop2);*/
+    background: linear-gradient(
+        90deg,
+        #ffffff 0%,
+        #ffffff 30%,
+        #98978b 30%,
+        #98978b 100%
+    );
+}
+
+.hero-section {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    background: linear-gradient(
+        90deg,
+        #ffffff 0%,
+        #ffffff 30%,
+        #98978b 30%,
+        #98978b 100%
+    );
+}
+.hero-section__content {
+    text-align: center;
+    max-width: 800px;
+    margin: 60px auto;
+}
+.hero-section__content h4 {
+    color: #cdcdcd;
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.4;
+    font-weight: 400;
+}
+.hero-section__content h1 {
+    color: #ffffff;
+    font-size: 5em;
+    margin-bottom: 0.275em;
+    line-height: 1.4;
+}
+.hero-section__content .main-btn {
+    color: #ffffff;
+}
+
+/**========Footer Section========**/
+
+.footer__section {
+    background-color: #474554;
+    height: 60%;
+}
+.footer__section--main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid;
+}
+
+.footer__section--content {
+    padding: 20px 0;
+    margin: 20px 0;
+}
+
+.footer__section--content--head {
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
+    padding-bottom: 10px;
+}
+
+.footer__section--content--para {
+    color: #cdcdcd;
+    font-size: 16px;
+    font-weight: 400;
+}
+.footer__section--content--para:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.footer__section--content--icon a {
+    color: #34c5d9;
+    font-size: 16px;
+}
+.footer__section--content--icon a:hover {
+    color: #fff;
+}
+.footer__section--content--icon a:not(:last-child) {
+    margin-right: 10px;
+}
+
+.footer__section--copyright {
+    text-align: center;
+    font-size: 12px;
+    color: #cdcdcd;
+}
+
+@media (max-width: 991px) {
+    .footer__section--main {
+        padding-left: 10%;
+    }
+}
+body {
+    background-color: #ffffff;
+    color: #474554;
+}
+/*
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #474554;
+}
+*/
+a {
+    color: #34c5d9;
+}
+a:hover {
+    color: #e3e3e3;
+} /*# sourceMappingURL=style.css.map */
+
+._card {
+    display: flex;
+    margin: auto;
+    padding: 60px 50px;
+    justify-content: center;
+    background: #474554;
+    /* offset-x | offset-y | blur-radius | spread-radius | color */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    color: #fbf7ff;
+}
+
+.about {
+    background-color: #fbf7ff;
+    border-radius: 5px;
+    width: 100%;
+    color: #fbf7ff;
+    border: 1px solid #98978b;
+}
+.about-title {
+    font-size: 4rem;
+    font-weight: 600;
+    line-height: 1rem;
+    padding: 50px;
+    color: #474554;
+}
+
+.bg-card {
+    background: url("/assets/images/white_bg.jpg");
+}

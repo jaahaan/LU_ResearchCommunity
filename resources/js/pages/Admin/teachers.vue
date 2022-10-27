@@ -146,6 +146,7 @@
                                 </button>
                             </td>
                         </template>
+
                         <template v-else>
                             <td>{{ teacher.email }}</td>
                             <td>{{ teacher.designation }}</td>
@@ -283,6 +284,7 @@ export default {
                 });
             }
         },
+
         async updateTeacher() {
             // if (this.data.email.trim() == "")
             //     return this.e("Email is required");
@@ -338,6 +340,7 @@ export default {
                 this.swr();
             }
         },
+
         async reset() {
             this.editData.edit_id = "";
             this.editData.edit_index = "";

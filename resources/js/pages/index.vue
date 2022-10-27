@@ -1,11 +1,48 @@
 <template>
     <div>
         <!-- 1st row -->
+
+        <!-- <div class="bg">
+            <div
+                class="container-fluid d-flex flex-column justify-content-center align-items-center py-md-4 py-3"
+            >
+                <hooper :settings="hooperSettings">
+                    <slide>
+                        <div class="images img1 img-fluid">
+                            <h2>Slider 1</h2>
+                        </div>
+                    </slide>
+                    <slide>
+                        <div class="images img2 img-fluid">
+                            <h2>Slider 2</h2>
+                        </div>
+                    </slide>
+                    <slide>
+                        <div class="images img3 img-fluid">
+                            <h2>Slider 3</h2>
+                        </div>
+                    </slide>
+                    <slide>
+                        <div class="images img4 img-fluid">
+                            <h2>Slider 4</h2>
+                        </div>
+                    </slide>
+                    <slide>
+                        <div class="images img5 img-fluid">
+                            <h2>Slider 5</h2>
+                        </div>
+                    </slide>
+                </hooper>
+            </div>
+        </div> -->
+
+        <!--*************** Top Banner ***************-->
         <div class="bg">
             <div
                 class="container-fluid d-flex flex-column justify-content-center align-items-center py-md-4 py-3"
             >
                 <div class="row">
+                    <!--*************** Slider ***************-->
                     <div class="col-md-6">
                         <!-- Slider starts here -->
                         <div
@@ -70,18 +107,20 @@
                             research interests of our teachers.
                         </h1>
 
-                        <router-link
-                            class="btn btn-design px-5 m-3"
-                            style="background: #474554"
-                            to="/register"
-                            >Join Us</router-link
-                        >
+                        <div class="mt-3">
+                            <router-link
+                                class="btn-design px-5"
+                                style="background: #474554"
+                                to="/register"
+                                >Join Us</router-link
+                            >
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 2nd row -->
+        <!--*************** Random ***************-->
         <div class="p-5 bg-card">
             <div class="container-fluid justify-content-center">
                 <div class="row">
@@ -106,8 +145,43 @@
             </div>
         </div>
 
-        <!-- 3rd row -->
-        <div class="p-5 bg-card">
+        <!--*************** Research Interests Section ***************-->
+        <div class="pt-5 pb-5 bg-card">
+            <div class="justify-content-around">
+                <h5 class="text-center rt-title">
+                    Find Your Research Interests
+                </h5>
+                <hooper :settings="hooperSettings">
+                    <slide>
+                        <div class="text-center rt m-2">
+                            <h2 class="p-3">ENGINEERING</h2>
+                        </div>
+                    </slide>
+                    <slide>
+                        <div class="text-center rt m-2">
+                            <h2 class="p-3">SCIENCE</h2>
+                        </div>
+                    </slide>
+                    <slide>
+                        <div class="text-center rt m-2">
+                            <h2 class="p-3">MACHINE LEARNING</h2>
+                        </div>
+                    </slide>
+                    <slide>
+                        <div class="text-center rt m-2">
+                            <h2 class="p-3">DATA SCIENCE</h2>
+                        </div>
+                    </slide>
+                    <slide>
+                        <div class="text-center rt m-2">
+                            <h2 class="p-3">AI</h2>
+                        </div>
+                    </slide>
+                </hooper>
+            </div>
+        </div>
+
+        <!-- <div class="p-5 bg-card">
             <div class="container-fluid justify-content-around">
                 <div class="row">
                     <div
@@ -158,9 +232,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
-        <!-- 4th row -->
+        <!--*************** About ***************-->
         <div
             class="container-fluid text-center justify-content-center col-md-8 pb-5 about"
         >
@@ -177,7 +251,7 @@
             </div>
         </div>
 
-        <!-- 5th row -->
+        <!--*************** Random ***************-->
         <div class="p-5 bg-card">
             <div class="container-fluid justify-content-center">
                 <div class="row">
@@ -204,21 +278,50 @@
             </div>
         </div>
 
+        <!--*************** Footer Section ***************-->
         <bottomContainer />
     </div>
 </template>
 
 <script>
 import bottomContainer from "../components/footer";
-
+import {
+    Hooper,
+    Slide,
+    Progress as HooperProgress,
+    Pagination as HooperPagination,
+    Navigation as HooperNavigation,
+} from "hooper";
+import "hooper/dist/hooper.css";
 export default {
     name: "index",
     components: {
+        Hooper,
+        Slide,
         bottomContainer,
     },
 
     data() {
-        return {};
+        return {
+            hooperSettings: {
+                infiniteScroll: true,
+                centerMode: true,
+                autoPlay: true,
+                playSpeed: 2000,
+                breakpoints: {
+                    1200: {
+                        itemsToShow: 3.5,
+                    },
+
+                    995: {
+                        itemsToShow: 2,
+                    },
+                    0: {
+                        itemsToShow: 1,
+                    },
+                },
+            },
+        };
     },
 
     methods: {},
@@ -263,6 +366,34 @@ h1 {
     font-size: 30px;
 }
 
+.images {
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+}
+.img1 {
+    background: url("/images/Coffee.png");
+}
+.img2 {
+    background: url("/images/Coffee.png");
+}
+.img3 {
+    background: url("/images/Coffee.png");
+}
+.img4 {
+    background: url("/images/Coffee.png");
+}
+.img5 {
+    background: url("/images/Coffee.png");
+}
+h2 {
+    color: #fff;
+}
+.hooper {
+    height: 100%;
+}
 @media (max-width: 768px) {
     .slider {
         margin-bottom: 20px;

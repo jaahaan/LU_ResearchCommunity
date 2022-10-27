@@ -1,6 +1,82 @@
 <template>
     <div>
-        <nav class="navbar navbar-expand justify-content-center navbg">
+        <div
+            class="navbar-body__mobile--wrapper"
+            v-bind:class="{ active: isSidebar }"
+        >
+            <div class="navbar-body__mobile">
+                <div class="navbar-body__mobile--head">
+                    <!-- <a href="#"><img src="assets/images/logo.png" alt="Logo" /></a> -->
+                    <h5 class="d-inline t-clr__secondary">
+                        Add Your Information
+                    </h5>
+                    <button type="button" v-on:click="hideSidebar()">
+                        <i class="lni lni-cross-circle"></i>
+                    </button>
+                </div>
+                <ul class="navbar-body__mobile--body">
+                    <li class="nav-item" @click="showAboutModal(profileInfo)">
+                        <a class="nav-link">About</a>
+                    </li>
+
+                    <li
+                        class="nav-item"
+                        @click="showEducationModal(profileInfo)"
+                    >
+                        <a class="nav-link">Education</a>
+                    </li>
+                    <li class="nav-item" @click="showSkillsModal(profileInfo)">
+                        <a class="nav-link">Skills</a>
+                    </li>
+                    <li
+                        class="nav-item"
+                        @click="showInterestsModal(profileInfo)"
+                    >
+                        <a class="nav-link">Interests</a>
+                    </li>
+                </ul>
+
+                <div class="navbar-body__mobile--head">
+                    <!-- <a href="#"><img src="assets/images/logo.png" alt="Logo" /></a> -->
+                    <h5 class="d-inline t-clr__secondary">Add Your Research</h5>
+                </div>
+                <ul class="navbar-body__mobile--body">
+                    <li class="nav-item" @click="showAboutModal(profileInfo)">
+                        <a class="nav-link">Preprint</a>
+                    </li>
+
+                    <li
+                        class="nav-item"
+                        @click="showEducationModal(profileInfo)"
+                    >
+                        <a class="nav-link">Conference Paper</a>
+                    </li>
+                    <li class="nav-item" @click="showSkillsModal(profileInfo)">
+                        <a class="nav-link">Presentation</a>
+                    </li>
+                    <li
+                        class="nav-item"
+                        @click="showInterestsModal(profileInfo)"
+                    >
+                        <a class="nav-link">Poster</a>
+                    </li>
+                    <li
+                        class="nav-item"
+                        @click="showInterestsModal(profileInfo)"
+                    >
+                        <a class="nav-link">Project</a>
+                    </li>
+                    <li
+                        class="nav-item"
+                        @click="showInterestsModal(profileInfo)"
+                    >
+                        <a class="nav-link">Others</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand justify-content-center navbg mt-15">
             <div>
                 <ul class="navbar-nav">
                     <li class="nav-item active">
@@ -34,11 +110,8 @@
                 </ul>
             </div>
             <div v-if="authUser.id == this.$route.params.id">
-                <button
-                    class="btn btn-design col-12 m-2"
-                    @click="showSectionModal()"
-                >
-                    <i class="fa-solid fa-plus"></i> Add Section
+                <button class="btn-design" v-on:click="showSidebar()">
+                    <i class="fa-solid fa-plus"></i> Add New
                 </button>
             </div>
         </nav>
@@ -368,6 +441,7 @@ export default {
     components: {},
     data() {
         return {
+            isSidebar: false,
             isLoading: true,
             isAdding: false,
             profileInfo: "",
@@ -405,6 +479,12 @@ export default {
         };
     },
     methods: {
+        showSidebar() {
+            this.isSidebar = true;
+        },
+        hideSidebar() {
+            this.isSidebar = false;
+        },
         //section modal
         showSectionModal() {
             this.sectionModal = true;
@@ -563,6 +643,7 @@ export default {
                 this.swr();
             }
             this.isLoading = false;
+            this.isSidebar = false;
         },
     },
     async created() {
@@ -582,39 +663,17 @@ export default {
 </script>
 <style scoped>
 .navbg {
-    background: #474554;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-.profile-btn {
-}
-h5 {
-    color: #2f394e;
-}
-.profile-btn {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    font-size: 1rem;
-    color: #fab162;
-    border: 1px solid #fab162;
-}
-.profile-btn:hover {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    color: #191919;
-    background-color: #fab162;
-    font-size: 1rem;
+    background: #5c596d;
 }
 
 .text {
-    color: #a7a7a7;
+    color: #e3e3e3;
 }
 .text:hover {
     color: #fbf7ff;
     border-bottom: 1px solid #fbf7ff !important;
 }
 
-.logo {
-    height: 10vh;
-    width: 10vh;
-}
 .router-link-exact-active {
     color: #34c5d9 !important;
     border-bottom: 1px solid #34c5d9 !important;

@@ -21,46 +21,51 @@ use App\Http\Controllers\TeacherController;
 
 use App\Http\Middleware\AuthCheck;
 
-Route::prefix('/api')->middleware('authCheck')->group(function () {
-    Route::group(['middleware'=>'PreventBackHistory'],function () {
-    //get user info
-    Route::get('/get_profile_info/{id}', [ProfileController::class, 'getProfileInfo']);
-    Route::get('/get_education/{id}', [ProfileController::class, 'getEducation']);
+// Auth::routes();
 
-    //profile image
-    Route::post('/delete_image', [ProfileController::class, 'deleteImage']);
-    Route::post('/upload', [ProfileController::class, 'upload']);
+Route::prefix('/api')->group(function () {
+    Route::middleware(['auth:web','PreventBackHistory'])->group(function() {
+        //get user info
+        Route::get('/get_profile_info/{id}', [ProfileController::class, 'getProfileInfo']);
+        Route::get('/get_education/{id}', [ProfileController::class, 'getEducation']);
 
-    //edit profile info
-    Route::post('/edit_profile/{id}', [ProfileController::class, 'editProfile']);
+        //profile image
+        Route::post('/delete_image', [ProfileController::class, 'deleteImage']);
+        Route::post('/upload', [ProfileController::class, 'upload']);
 
-    //create update profile info
-    Route::post('/save_about/{id}', [ProfileController::class, 'about']);
-    Route::post('/delete_about/{id}', [ProfileController::class, 'deleteAbout']);
+        //edit profile info
+        Route::post('/edit_profile/{id}', [ProfileController::class, 'editProfile']);
 
-    Route::post('/save_education/{id}', [ProfileController::class, 'education']);
-    Route::post('/save_skills/{id}', [ProfileController::class, 'skills']);
-    Route::post('/save_interests/{id}', [ProfileController::class, 'interests']);
+        //create update profile info
+        Route::post('/save_about/{id}', [ProfileController::class, 'about']);
+        Route::post('/delete_about/{id}', [ProfileController::class, 'deleteAbout']);
 
-    //search
-    Route::get('/search', [HomeController::class, 'search']);
+        Route::post('/save_education/{id}', [ProfileController::class, 'education']);
+        Route::post('/save_skills/{id}', [ProfileController::class, 'skills']);
+        Route::post('/save_interests/{id}', [ProfileController::class, 'interests']);
 
-    //get people you may know
-    Route::get('/get_all_user', [HomeController::class, 'getUserInfo']);
-    
-    //admin
-    //add teacher
-    // Route::post('/add_teacher', [ProfileController::class, 'addTeacher']);
-    // Route::get('/get_teacher_info', [ProfileController::class, 'getTeacherInfo']);
-    // Route::post('/edit_Teacher', [ProfileController::class, 'editTeacher']);
-    // Route::post('/delete_Teacher', [ProfileController::class, 'deleteTeacher']);
-    Route::resource('/teachers',  TeacherController::class);
+        //search
+        Route::get('/search', [HomeController::class, 'search']);
 
-    //for logout
-    Route::get('/logout', [AuthController::class, 'logout']);
+        //get people you may know
+        Route::get('/get_all_user', [HomeController::class, 'getUserInfo']);
+        
+        //admin
+        //add teacher
+        // Route::post('/add_teacher', [ProfileController::class, 'addTeacher']);
+        // Route::get('/get_teacher_info', [ProfileController::class, 'getTeacherInfo']);
+        // Route::post('/edit_Teacher', [ProfileController::class, 'editTeacher']);
+        // Route::post('/delete_Teacher', [ProfileController::class, 'deleteTeacher']);
+        Route::resource('/teachers',  TeacherController::class);
+
+        //for logout
+        Route::get('/logout', [AuthController::class, 'logout']);
+
     });
+    
 });
-Route::group(['middleware'=>'PreventBackHistory'],function () {
+
+Route::middleware(['guest:web','PreventBackHistory'])->group(function(){
     //for register
     Route::post('/register_t', [AuthController::class, 'register_t']);
     Route::post('/register_s', [AuthController::class, 'register_s']);
@@ -76,6 +81,5 @@ Route::group(['middleware'=>'PreventBackHistory'],function () {
     Route::post('/reset_password', [AuthController::class, 'resetPassword']);
 
 });
-
 Route::get('/',  [AuthController::class, 'index']);
 Route::any('{slug}', [AuthController::class, 'index'])->where('slug', '([A-z\d\-\/_.]+)');
