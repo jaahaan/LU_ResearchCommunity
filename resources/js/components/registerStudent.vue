@@ -63,9 +63,9 @@
                     data.password_confirmation &&
                     data.batch &&
                     data.department
-                        ? ' btn-design-change col-12'
-                        : ' btn-design col-12',
-                    ' btn-design col-12',
+                        ? ' main-btn-change col-12'
+                        : ' main-btn col-12',
+                    ' main-btn col-12',
                 ]"
                 @click="register"
                 :disabled="isLoading"
@@ -124,6 +124,7 @@ export default {
                 this.data.password_confirmation = "";
                 this.data.batch = "";
                 this.data.department = "";
+                this.errors = [];
             } else {
                 if (res.status == 422) {
                     for (let i in res.data.errors) {
@@ -142,10 +143,10 @@ export default {
 <style scoped>
 input {
     display: block;
-    padding: 4px;
+    padding: 6px 15px;
     width: 100%;
     box-sizing: none;
-    border: 1px solid #845007;
+    border: 1px solid #fff;
     border-radius: 5px;
     color: #555;
 }

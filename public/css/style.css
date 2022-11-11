@@ -1,4 +1,4 @@
-@import url(../font/font.css);
+/* @import url(../font/font.css); */
 .bg-gray {
     background-color: #f8f8f8;
 }
@@ -80,7 +80,20 @@
     cursor: pointer;
 }
 
-button {
+/* .container {
+    margin: 0;
+    padding: 0;
+} */
+/* html {
+    font-size: 1rem;
+} */
+
+/* body {
+    font-size: 1em;
+    font-family: "Inter";
+    color: #0c0c0c;
+} */
+/* button {
     border: 0;
     background-color: transparent;
 }
@@ -88,9 +101,9 @@ button:active,
 button:focus {
     border: 0;
     outline: 0;
-}
+} */
 
-.btn-design {
+/* .main-btn {
     border: 1px solid;
     padding: 0.5em 1.875em;
     border-radius: 4px;
@@ -99,11 +112,11 @@ button:focus {
     font-weight: 500;
     min-width: 125px;
 }
-.btn-design:hover {
+.main-btn:hover {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
     color: #34c5d9;
 }
-.btn-design-change {
+.main-btn-change {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
     color: #34c5d9;
     background-color: #444253;
@@ -116,21 +129,59 @@ button:focus {
 .btn-edit:hover {
     color: #5a606d;
 }
-.profile-btn-design {
+.profile-main-btn {
     border: 1px solid;
     border-radius: 4px;
-    /*TB LR */
+    TB LR
     padding: 0.5em 1.875em;
-    color: #eee;
     font-size: 1em;
     font-weight: 500;
     min-width: 100px;
     background-color: #34c5d9;
     color: #fbf7ff;
 }
-.profile-btn-design:hover {
+.profile-main-btn:hover {
+    box-shadow: 0 4px 8px 0 rgba(75, 75, 75, 0.7);
+} */
+
+/**project*/
+.project-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.project-link-box {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+}
+.project-link-btn {
+    border-radius: 15px;
+    background-color: #34c5d9;
+    padding: 2px 15px;
+    color: #fbf7ff;
+    margin-left: 10px;
+}
+.project-link-btn:hover {
+    color: #fbf7ff;
     box-shadow: 0 4px 8px 0 rgba(75, 75, 75, 0.7);
 }
+
+.add_new_card {
+    border: 1px dotted #a7a7a7;
+    padding: 0.5em 1.875em;
+    border-radius: 4px;
+    font-size: 2em;
+    font-weight: 500;
+    width: 100%;
+    min-height: 20vh;
+}
+.add_new_card:hover {
+    color: #444253;
+    background-color: #f4f4f4;
+    border: 1px dotted #34c5d9;
+}
+
 .title {
     font-size: 4rem;
     font-weight: 600;
@@ -165,6 +216,8 @@ h4,
 h5,
 h6 {
     margin-bottom: 0;
+    font-weight: 700;
+    color: #0c0c0c;
 }
 
 p {
@@ -195,23 +248,6 @@ figure {
     Add All Typography Here
 *****************************/
 /******** Styling ********/
-html {
-    font-size: 1rem;
-}
-
-body {
-    font-size: 1em;
-    font-family: "Inter";
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-weight: 700;
-}
 
 /*************** Home CSS ***************/
 
@@ -263,7 +299,7 @@ h6 {
 }
 
 /**========Footer Section========**/
-
+/* 
 .footer__section {
     background-color: #474554;
     height: 60%;
@@ -307,7 +343,7 @@ h6 {
     margin-right: 10px;
 }
 
-.footer__section--copyright {
+.footer__section-copyright {
     text-align: center;
     font-size: 12px;
     color: #cdcdcd;
@@ -318,26 +354,14 @@ h6 {
         padding-left: 10%;
     }
 }
-body {
-    background-color: #ffffff;
-    color: #474554;
-}
-/*
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: #474554;
-}
-*/
+
 a {
     color: #34c5d9;
 }
 a:hover {
     color: #e3e3e3;
-} /*# sourceMappingURL=style.css.map */
+} */
+/*# sourceMappingURL=style.css.map */
 
 ._card {
     display: flex;

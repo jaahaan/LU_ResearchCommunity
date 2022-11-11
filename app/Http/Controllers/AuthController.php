@@ -90,7 +90,7 @@ class AuthController extends Controller
 
         $isVerifiedCode = rand(100000, 999999);
         $expires_at = now();
-
+        // $name = $request->name;
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -101,7 +101,7 @@ class AuthController extends Controller
             'isVerifiedCode' => $isVerifiedCode,
             'expires_at' => $expires_at,
         ]);
-
+        // return $name;
         $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $isVerifiedCode;
 
         \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
@@ -214,106 +214,106 @@ class AuthController extends Controller
     }
 
     
-        // public function login(Request $request)
-        // {
-        //     $request->validate([
-        //         'email' => 'bail|required|email|exists:users,email',
-        //         'password' => 'bail|required|min:2|max:20',
-        //     ], ['email.exists' => 'No account found for this email']);
+        public function login(Request $request)
+        {
+            $request->validate([
+                'email' => 'bail|required|email|exists:users,email',
+                'password' => 'bail|required|min:2|max:20',
+            ], ['email.exists' => 'No account found for this email']);
     
-        //     // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
-        //     // 
-        //     //             return response()->json([
-        //     //                 'success' => false,
-        //     //                 'admin' => 'not-found'
-        //     //             ], 401);
-        //     //         }
+            // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
+            // 
+            //             return response()->json([
+            //                 'success' => false,
+            //                 'admin' => 'not-found'
+            //             ], 401);
+            //         }
     
-        //     if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-        //         return response()->json([
-        //             'success' => true,
-        //             'msg' => 'You are logged in',
-        //         ], 200);
-        //     } else {
-        //         return response()->json([
-        //             'msg' => 'Incorrect Password!!',
-        //             'success' => false
-        //         ], 401);
-        //     }
-        // }
-
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'bail|required|email|exists:users,email',
-            'password' => 'bail|required|min:2|max:20',
-        ], ['email.exists' => 'No account found for this email']);
-
-        // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
-        // 
-        //             return response()->json([
-        //                 'success' => false,
-        //                 'admin' => 'not-found'
-        //             ], 401);
-        //         }
-
-        // $checkUser = User::where('email', $request->email)->where(Hash::check('password', $request->password))->count();
-        $input = $request->all();
-        $data = User::select('id', 'email', 'password')->where('email', $input['email'])->first();
-        // \Log::info($data);
-
-        //The makeVisible method returns the model instance
-        $data->makeVisible('password')->toArray();
-
-        // return $data;
-        $checkUser = Hash::check($input['password'], $data->password);
-        if ($checkUser) {
-            $check = User::where('email', $request->email)->where('isEmailVerified', 1)->count();
-            if ($check == 1) {
-                $twoFactorCode = rand(100000, 999999);
-                $expires_at = now();
-                \Log::info($expires_at);
-                User::where('email', $request->email)->update([
-                    'twoFactorCode' => $twoFactorCode,
-                    'expires_at' => $expires_at,
-                ]);
-                $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Two factor authentication is: ' . $twoFactorCode;
-
-                \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
-                    $message->to($request->email)
-                        ->from('noreply@lurc.com', 'LURC')
-                        ->subject('Two Factor Authentication');
-                });
-
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 return response()->json([
                     'success' => true,
-                    'msg' => 'We have sent a two factor authentication code to your email.'
+                    'msg' => 'You are logged in',
                 ], 200);
             } else {
-                $isVerifiedCode = rand(100000, 999999);
-                User::where('email', $request->email)->update([
-                    'isVerifiedCode' => $isVerifiedCode,
-                ]);
-                $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $isVerifiedCode;
-
-                \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
-                    $message->to($request->email)
-                        ->from('noreply@lurc.com', 'LURC')
-                        ->subject('Email Verification');
-                });
-
                 return response()->json([
-                    'success' => false,
-                    'msg' => 'Your email is not verified!!  We have sent an OTP to your email. Submit your OTP to verify your account.'
-                ], 402);
+                    'msg' => 'Incorrect Password!!',
+                    'success' => false
+                ], 401);
             }
-        } else {
-            return response()->json([
-                'success' => false,
-                'msg' => 'Incorrect Password',
-            ], 401);
         }
-    }
+
+    // public function login(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'bail|required|email|exists:users,email',
+    //         'password' => 'bail|required|min:2|max:20',
+    //     ], ['email.exists' => 'No account found for this email']);
+
+    //     // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
+    //     // 
+    //     //             return response()->json([
+    //     //                 'success' => false,
+    //     //                 'admin' => 'not-found'
+    //     //             ], 401);
+    //     //         }
+
+    //     // $checkUser = User::where('email', $request->email)->where(Hash::check('password', $request->password))->count();
+    //     $input = $request->all();
+    //     $data = User::select('id', 'email', 'password')->where('email', $input['email'])->first();
+    //     // \Log::info($data);
+
+    //     //The makeVisible method returns the model instance
+    //     $data->makeVisible('password')->toArray();
+
+    //     // return $data;
+    //     $checkUser = Hash::check($input['password'], $data->password);
+    //     if ($checkUser) {
+    //         $check = User::where('email', $request->email)->where('isEmailVerified', 1)->count();
+    //         if ($check == 1) {
+    //             $twoFactorCode = rand(100000, 999999);
+    //             $expires_at = now();
+    //             \Log::info($expires_at);
+    //             User::where('email', $request->email)->update([
+    //                 'twoFactorCode' => $twoFactorCode,
+    //                 'expires_at' => $expires_at,
+    //             ]);
+    //             $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Two factor authentication is: ' . $twoFactorCode;
+
+    //             \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
+    //                 $message->to($request->email)
+    //                     ->from('noreply@lurc.com', 'LURC')
+    //                     ->subject('Two Factor Authentication');
+    //             });
+
+    //             return response()->json([
+    //                 'success' => true,
+    //                 'msg' => 'We have sent a two factor authentication code to your email.'
+    //             ], 200);
+    //         } else {
+    //             $isVerifiedCode = rand(100000, 999999);
+    //             User::where('email', $request->email)->update([
+    //                 'isVerifiedCode' => $isVerifiedCode,
+    //             ]);
+    //             $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $isVerifiedCode;
+
+    //             \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
+    //                 $message->to($request->email)
+    //                     ->from('noreply@lurc.com', 'LURC')
+    //                     ->subject('Email Verification');
+    //             });
+
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'msg' => 'Your email is not verified!!  We have sent an OTP to your email. Submit your OTP to verify your account.'
+    //             ], 402);
+    //         }
+    //     } else {
+    //         return response()->json([
+    //             'success' => false,
+    //             'msg' => 'Incorrect Password',
+    //         ], 401);
+    //     }
+    // }
 
     public function submitTwoFactorCode(Request $request)
     {

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Education;
+use App\Models\Project;
+use App\Models\Publication;
 use App\Models\Teacher;
 
 
@@ -21,7 +23,7 @@ class ProfileController extends Controller
         return Education::where('user_id', $id)->get();
     }
 
-    public function editProfile(Request $request, $id)
+    public function updateProfile(Request $request, $id)
     {
         //validate request
         $this->validate($request, [
@@ -74,6 +76,7 @@ class ProfileController extends Controller
         ]);
         
     }
+
     public function education(Request $request, $id)
     {    
         //validate request
@@ -85,7 +88,7 @@ class ProfileController extends Controller
             'startMonth' => 'required',
             'startYear' => 'required',
         ]);
-        $data = $request->only('institute','degree','fieldOfStudy', 'startDate', 'endDate', 'grade', 'activities');
+        $data = $request->only('institute','degree','fieldOfStudy', 'startMonth', 'startYear','endMonth', 'endYear', 'grade', 'activities');
         $test['education'] = json_encode($data);
         $education = User::where('id', $id)->update($test);
 
@@ -130,6 +133,95 @@ class ProfileController extends Controller
         ]);    
     }
 
+    public function saveProject(Request $request, $id)
+    {
+        
+        //validate request
+        $this->validate($request, [
+            'project_name' => 'required',
+            'project_type' => 'required',
+        ]);
+       
+        $project =  Project::create([
+            'user_id' => $id,
+            'project_name' => $request->project_name,
+            'project_type' => $request->project_type,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'project_url' => $request->project_url,
+            'project_description' => $request->project_description,
+        ]);   
+        return response()->json(['msg' => 'Project Added Successfully.', 'status' => $project], 200);
+
+    }
+    public function getProject($id)
+    {
+        return Project::where('user_id', $id)->get();
+    }
+    public function updateProject(Request $request)
+    {
+        //validate request
+        $this->validate($request, [
+            'user_id' => 'required',
+            'project_name' => 'required',
+            'project_type' => 'required',
+        ]);
+        $update_project = Project::where('id', $request->id)->update([
+            'user_id' => $request->user_id,
+            'project_name' => $request->project_name,
+            'project_type' => $request->project_type,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'project_url' => $request->project_url,
+            'project_description' => $request->project_description,
+        ]);
+        return response()->json(['msg' => 'Project Updateded Successfully.', 'status' => $update_project], 200);
+
+    }
+
+    public function deleteProject($id)
+    {
+        $delete_project = Project::where('id', $id)->delete();
+        return response()->json(['msg' => 'Project Deleted Successfully.', 'status' => $delete_project], 200);
+
+    }
+
+    public function getResearch($id)
+    {
+        return Publication::where('user_id', $id)->get();
+    }
+
+    public function saveResearch(Request $request, $id)
+    {
+        $this->validate($request, [
+            'publication_type' => 'required',
+            'publication_title' => 'required',
+        ]);
+        $authors = $request->author_id;
+
+        $publicationAuthors = [];
+        foreach ($authors as $a) {
+            array_push($publicationAuthors, [$a => $a]);
+        }
+        // $data = $request->only('institute','degree','fieldOfStudy', 'startMonth', 'startYear','endMonth', 'endYear', 'grade', 'activities');
+        // $test['author_id'] = json_encode($publicationAuthors);
+        // $education = User::where('id', $id)->update($test);
+        
+            $research = Publication::create([
+                'user_id' => $id,
+                'publication_type' => $request->publication_type,
+                'publication_title' => $request->publication_title,
+                'publication_abstract' => $request->publication_abstract,
+
+                'author_id' => json_encode($publicationAuthors),
+                'metaDescription' => $request->metaDescription,
+                'jsonData' => $request->jsonData,
+            ]);
+
+            return response()->json(['msg' => 'Added Successfully.', 'status' => $research], 200);
+            
+    }
+    
     //image upload
     public function upload(Request $request)
     {

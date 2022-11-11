@@ -1,5 +1,34 @@
 <template>
     <div class="mt-2">
+        <div
+            class="card mb-2 p-3"
+            v-if="
+                authUser.id == this.$route.params.id &&
+                isLoading == false &&
+                profileInfo.about == null &&
+                profileInfo.skills == null &&
+                profileInfo.interests == null &&
+                educationInfo == ''
+            "
+        >
+            <button class="add_new_card" v-on:click="showSidebar()">
+                <i class="lni lni-folder"></i> Add Your Information
+            </button>
+        </div>
+        <div
+            class="card mb-2 p-3"
+            v-else-if="
+                isLoading == false &&
+                profileInfo.about == null &&
+                profileInfo.skills == null &&
+                profileInfo.interests == null &&
+                educationInfo == ''
+            "
+        >
+            <h1 class="Nothing_to_show_card text-center">
+                No information to show
+            </h1>
+        </div>
         <!--**** about-section starts ****-->
         <!-- about edit -->
         <template v-if="about_id">
@@ -28,13 +57,13 @@
                 <div class="card-footer text-muted">
                     <div class="d-block">
                         <button
-                            class="profile-btn-design mx-2 float-end"
+                            class="profile-main-btn mx-2 float-end"
                             @click="updateAbout()"
                         >
                             <i class="fa-solid fa-floppy-disk"></i> Save
                         </button>
                         <button
-                            class="profile-btn-design mx-2 float-end"
+                            class="profile-main-btn mx-2 float-end"
                             @click="deleteAbout(profileInfo)"
                         >
                             <i class="fa-solid fa-floppy-disk"></i> Delete
@@ -60,7 +89,7 @@
                             class="btn-edit mx-2 float-end"
                             @click="editAbout(profileInfo)"
                         >
-                            <i class="fa-solid fa-pen" />
+                            <i class="lni lni-pencil"></i>
                         </div>
                     </div>
                 </div>
@@ -114,7 +143,7 @@
                             class="btn-edit mx-2 float-end"
                             @click="editEducation(profileInfo)"
                         >
-                            <i class="fa-solid fa-pen" />
+                            <i class="lni lni-pencil"></i>
                         </div>
                     </div>
                 </div>
@@ -170,7 +199,7 @@
                 <div class="card-footer text-muted p-3">
                     <div class="d-block">
                         <button
-                            class="profile-btn-design mx-2 float-end"
+                            class="profile-main-btn mx-2 float-end"
                             @click="updateSkills()"
                         >
                             <i class="fa-solid fa-floppy-disk"></i> Save
@@ -196,7 +225,7 @@
                             class="btn-edit mx-2 float-end"
                             @click="editSkills(profileInfo)"
                         >
-                            <i class="fa-solid fa-pen" />
+                            <i class="lni lni-pencil"></i>
                         </div>
                     </div>
                 </div>
@@ -235,7 +264,7 @@
                 <div class="card-footer text-muted p-3">
                     <div class="d-block">
                         <button
-                            class="profile-btn-design mx-2 float-end"
+                            class="profile-main-btn mx-2 float-end"
                             @click="updateInterests()"
                         >
                             <i class="fa-solid fa-floppy-disk"></i> Save
@@ -261,7 +290,7 @@
                             class="btn-edit mx-2 float-end"
                             @click="editInterests(profileInfo)"
                         >
-                            <i class="fa-solid fa-pen" />
+                            <i class="lni lni-pencil"></i>
                         </div>
                     </div>
                 </div>
@@ -334,10 +363,6 @@ export default {
             profileInfo: "",
             educationInfo: "",
             editData: {
-                image: "",
-                name: "",
-                designation: "",
-                department: "",
                 about: "",
                 skills: "",
                 interests: "",
@@ -379,6 +404,7 @@ export default {
                 this.profileInfo.about = this.editData.about;
                 this.reset();
                 this.s("About has been updated successfully!");
+                this.errors = [];
             } else {
                 if (res.status == 422) {
                     if (res.data.errors.about) {

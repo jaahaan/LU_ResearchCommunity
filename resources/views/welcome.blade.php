@@ -7,8 +7,10 @@
 
     <title>Welcome</title>
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/responsive.css">
+    <!-- <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="/css/navbar.css"> -->
+
+    <link rel="stylesheet" href="/css/app.css">
 
     <link rel="stylesheet" href="/css/vendor/lineicons.css">
 
@@ -44,7 +46,7 @@
             window.authUser = false
             @endif
         })();
-    </script>
+</script>
 </head>
 
 <body class="antialiased">

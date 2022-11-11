@@ -46,9 +46,9 @@
                                 <button
                                     :class="[
                                         data.twoFactorCode
-                                            ? ' btn-design-change col-12'
-                                            : ' btn-design col-12',
-                                        ' btn-design col-12',
+                                            ? ' main-btn-change col-12'
+                                            : ' main-btn col-12',
+                                        ' main-btn col-12',
                                     ]"
                                     @click="submit"
                                     :disabled="isSubmitting"
@@ -121,9 +121,9 @@
                                     type="button"
                                     :class="[
                                         data.email && data.password
-                                            ? ' btn-design-change col-12'
-                                            : ' btn-design col-12',
-                                        ' btn-design  col-12',
+                                            ? ' main-btn-change col-12'
+                                            : ' main-btn col-12',
+                                        ' main-btn  col-12',
                                     ]"
                                     @click="login"
                                     :disabled="isLogging"
@@ -172,8 +172,14 @@ export default {
             const res = await this.callApi("post", "/login", this.data);
 
             if (res.status == 200) {
-                this.msg = res.data.msg;
-                this.isLoggingBlock = false;
+                // this.msg = res.data.msg;
+                this.s(res.data.msg);
+
+                window.location = "/";
+                this.$router.go();
+                this.errors = [];
+
+                // this.isLoggingBlock = false;
             } else {
                 if (res.status == 401) {
                     this.msg = res.data.msg;
@@ -183,12 +189,14 @@ export default {
                         this.errors = res.data.errors;
                         // this.e(res.data.errors[i][0]);
                     }
-                } else if (res.status == 402) {
-                    this.e(res.data.msg);
-                    this.$router.push(
-                        `/emailVerifyOtp?email=${this.data.email}`
-                    );
-                } else {
+                }
+                // else if (res.status == 402) {
+                //     this.e(res.data.msg);
+                //     this.$router.push(
+                //         `/emailVerifyOtp?email=${this.data.email}`
+                //     );
+                // }
+                else {
                     this.swr();
                 }
             }
@@ -208,7 +216,9 @@ export default {
                 this.s(res.data.msg);
                 window.location = "/";
                 this.$router.go();
-                window.location.reload();
+                // window.location.reload();
+                this.errors = [];
+
                 //this.data.otp = "";
             } else {
                 if (res.status == 401) {
@@ -229,15 +239,19 @@ export default {
             this.isSubmitting = false;
         },
     },
+
+    // created(){
+    //     if(this.authInfo) this.$router.push('/')
+    // }
 };
 </script>
 <style scoped>
 input {
     display: block;
-    padding: 4px;
+    padding: 6px 15px;
     width: 100%;
     box-sizing: none;
-    border: 1px solid #845007;
+    border: 1px solid #fff;
     border-radius: 5px;
     color: #555;
 }

@@ -16,7 +16,7 @@
                     <div class="container-fluid">
                         <div class="text-center">
                             <button
-                                class="btn btn-design m-auto cext-center col-5"
+                                class="btn main-btn m-auto cext-center col-5"
                                 v-for="(tab, index) in tabs"
                                 :key="tab"
                                 @click="component = tab"

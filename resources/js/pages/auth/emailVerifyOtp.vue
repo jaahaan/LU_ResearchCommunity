@@ -14,7 +14,7 @@
 
                 <div class="col-md-6 my-md-auto justify-content-center">
                     <div class="container-fluid">
-                        <div class="container-fluid card rt col-10 p-5">
+                        <div class="container-fluid rt col-10 p-5">
                             <div class="alert alert-dark">
                                 <p>We have sent an OTP to your email.</p>
                             </div>
@@ -35,9 +35,9 @@
                                 <button
                                     :class="[
                                         data.otp
-                                            ? 'btn btn-design-change col-12'
-                                            : 'btn btn-design col-12',
-                                        'btn btn-design col-12',
+                                            ? ' main-btn-change col-12'
+                                            : ' main-btn col-12',
+                                        'btn main-btn col-12',
                                     ]"
                                     @click="submit"
                                     :disabled="isSubmitting"

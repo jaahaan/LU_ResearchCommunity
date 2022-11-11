@@ -1,0 +1,23 @@
+// Add variables here
+@use "./mixins" as *;
+
+:root {
+    --nav-height: 80px;
+
+    @include breakpoint-max(767px) {
+        --nav-height: 55px;
+    }
+}
+
+// $titleRed: #bc5d5d;
+$inverseColor: #ffffff;
+$colorWhite: #ffffff;
+$primaryColor: #474554;
+$secondaryColor: #34c5d9;
+$grayColor: #3a3a3a;
+$borderColor: #e3e3e3;
+$gray: #3d3b3b;
+$bgWhite: #ffffff;
+$titleRed: #34c5d9;
+$btnHover: #5a606d;
+$random: #444253;

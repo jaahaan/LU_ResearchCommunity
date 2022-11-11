@@ -109,7 +109,7 @@
 
                         <div class="mt-3">
                             <router-link
-                                class="btn-design px-5"
+                                class="main-btn px-5"
                                 style="background: #474554"
                                 to="/register"
                                 >Join Us</router-link
@@ -279,7 +279,6 @@
         </div>
 
         <!--*************** Footer Section ***************-->
-        <bottomContainer />
     </div>
 </template>
 

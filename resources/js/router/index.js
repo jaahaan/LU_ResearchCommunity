@@ -17,8 +17,10 @@ import reset from "../pages/auth/reset";
 //Profile
 import profile from "../pages/profile/index";
 import followings from "../pages/profile/_id/following";
+import post from "../pages/profile/_id/post";
 import projects from "../pages/profile/_id/project";
-import research from "../pages/profile/_id/research";
+import publication from "../pages/profile/_id/publication";
+
 
 //Admin
 import teachers from "../pages/Admin/teachers";
@@ -135,33 +137,43 @@ export default new Router({
             },
         },
         {
-            path: "/profile/:id",
+            path: "/profile/:slug/:id",
             name: "profile",
             component: profile,
             meta: {
                 allowed: authRoute,
                 title: "Profile",
-                pageName: "home",
+                pageName: "profile",
             },
         },
         {
-            path: "/profile/:id/research",
-            name: "research",
-            component: research,
+            path: "/profile/:slug/:id/publication",
+            name: "publication",
+            component: publication,
             meta: {
                 allowed: authRoute,
                 title: "Research",
-                pageName: "home",
+                pageName: "publication",
             },
         },
         {
-            path: "/profile/:id/projects",
+            path: "/profile/:slug/:id/projects",
             name: "projects",
             component: projects,
             meta: {
                 allowed: authRoute,
                 title: "Projects",
-                pageName: "home",
+                pageName: "projrcts",
+            },
+        },
+        {
+            path: "/profile/:slug/:id/posts",
+            name: "posts",
+            component: post,
+            meta: {
+                allowed: authRoute,
+                title: "Posts",
+                pageName: "posts",
             },
         },
         {
@@ -171,7 +183,7 @@ export default new Router({
             meta: {
                 allowed: authRoute,
                 title: "Followings",
-                pageName: "home",
+                pageName: "followings",
             },
         },
 

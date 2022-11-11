@@ -38,9 +38,9 @@
                                 <button
                                     :class="[
                                         data.otp
-                                            ? 'btn btn-design-change col-12'
-                                            : 'btn btn-design col-12',
-                                        'btn btn-design col-12',
+                                            ? 'btn main-btn-change col-12'
+                                            : 'btn main-btn col-12',
+                                        'btn main-btn col-12',
                                     ]"
                                     @click="submit"
                                     :disabled="isSubmitting"

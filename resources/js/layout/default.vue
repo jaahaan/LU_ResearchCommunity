@@ -4,9 +4,9 @@
             <div
                 v-if="
                     $route.name == 'profile' ||
-                    $route.name == 'research' ||
+                    $route.name == 'publication' ||
                     $route.name == 'projects' ||
-                    $route.name == 'followings'
+                    $route.name == 'posts'
                 "
             >
                 <HomeNavbar />
@@ -36,6 +36,7 @@
         <div v-else>
             <Navbar />
             <router-view />
+            <bottomContainer />
         </div>
     </div>
 </template>
@@ -45,6 +46,8 @@ import HomeNavbar from "../components/homeNav";
 import Navbar from "../components/navbar";
 import profileHeader from "../components/profileHeader";
 import ProfileNav from "../components/profileNav";
+import bottomContainer from "../components/footer";
+
 export default {
     props: ["user"],
     components: {
@@ -52,6 +55,7 @@ export default {
         HomeNavbar,
         profileHeader,
         ProfileNav,
+        bottomContainer,
     },
     data() {
         return {};
@@ -67,18 +71,13 @@ export default {
 };
 </script>
 <style scoped>
-.container-fluid {
-    margin: 0;
-    padding: 0;
-}
-
 .profile-header-bg {
     /*background-image: linear-gradient(angle, color-stop1, color-stop2);*/
     background: linear-gradient(
         180deg,
         #5c596d 0%,
-        #5c596d 70px,
-        #fff 70px,
+        #5c596d 80px,
+        #fff 80px,
         #fff 100%
     );
 }

@@ -36,7 +36,7 @@
                         :on-exceeded-size="handleMaxSize"
                         action="/api/upload"
                     >
-                        <div class="profile-btn-design">
+                        <div class="profile-main-btn">
                             <i class="fa-solid fa-cloud-arrow-up"></i>
                             Upload Image
                         </div>
@@ -91,15 +91,12 @@
                     </div>
                     <div class="d-flex mb-2">
                         <button
-                            class="profile-btn-design col-6"
+                            class="profile-main-btn col-6"
                             @click="closeEditModal()"
                         >
                             Cancel
                         </button>
-                        <button
-                            class="profile-btn-design col-6"
-                            @click="save()"
-                        >
+                        <button class="profile-main-btn col-6" @click="save()">
                             <i class="fa-solid fa-floppy-disk"></i> Save
                         </button>
                     </div>
@@ -141,7 +138,7 @@
                         >
                             <div>
                                 <i
-                                    class="fa-solid fa-cloud-arrow-up profile-btn-design"
+                                    class="fa-solid fa-cloud-arrow-up profile-main-btn"
                                 ></i>
                                 Upload Image
                             </div>
@@ -184,15 +181,12 @@
                     </div>
                     <div class="d-flex mb-2">
                         <button
-                            class="profile-btn-design col-6"
+                            class="profile-main-btn col-6"
                             @click="closeEditModal()"
                         >
                             Cancel
                         </button>
-                        <button
-                            class="profile-btn-design col-6"
-                            @click="save()"
-                        >
+                        <button class="profile-main-btn col-6" @click="save()">
                             <i class="fa-solid fa-floppy-disk"></i> Save
                         </button>
                     </div>
@@ -324,6 +318,8 @@ export default {
                 this.reset();
                 this.u("Profile has been updated successfully!");
                 this.editModal = false;
+                this.errors = [];
+
                 // window.location = `/profile/${this.profileInfo.id}`;
             } else {
                 if (res.status == 422) {

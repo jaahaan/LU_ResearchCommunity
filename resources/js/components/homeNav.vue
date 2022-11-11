@@ -2,21 +2,21 @@
     <div>
         <header>
             <div
-                class="navbar-body__mobile--wrapper"
+                class="navbar-mobile--wrapper d-lg-none"
                 v-bind:class="{ active: isSidebar }"
             >
-                <div class="navbar-body__mobile">
-                    <div class="navbar-body__mobile--head">
-                        <!-- <a href="#"><img src="assets/images/logo.png" alt="Logo" /></a> -->
-                        <router-link class="lurc" to="/home"
+                <div class="navbar-mobile">
+                    <div class="navbar-mobile--head">
+                        <img src="/images/logo.png" alt="Brand" />
+                        <span class="lurc"
                             ><span class="lurc1">RESEARCH</span
                             ><span class="lurc2">COMMUNITY</span>
-                        </router-link>
+                        </span>
                         <button type="button" v-on:click="hideSidebar()">
                             <i class="lni lni-cross-circle"></i>
                         </button>
                     </div>
-                    <ul class="navbar-body__mobile--body">
+                    <ul class="navbar-mobile--body">
                         <li class="nav-item">
                             <router-link
                                 class="nav-link active"
@@ -81,6 +81,71 @@
                     </ul>
                 </div>
             </div>
+
+            <!-- ****notification**** -->
+
+            <div
+                class="navbar-notification--wrapper"
+                v-bind:class="{ active: isNotification }"
+            >
+                <div class="navbar-notification">
+                    <div class="navbar-notification--head">
+                        <h4>Notification</h4>
+                        <button type="button" v-on:click="hideNotification()">
+                            <i class="lni lni-close"></i>
+                        </button>
+                    </div>
+                    <div class="navbar-notification--body">
+                        <i class="lni lni-alarm"></i>
+                        <p>Notification Is Empty</p>
+                    </div>
+                </div>
+            </div>
+            <!-- ****SearchBox**** -->
+            <div
+                class="navbar-search"
+                v-bind:class="{ active: isSearchbar }"
+                ref="searchBox"
+            >
+                <div class="navbar-search-input">
+                    <input
+                        type="search"
+                        placeholder="Search..."
+                        v-model="keyword"
+                    />
+                    <button type="button" class="search-button">
+                        <i class="lni lni-search-alt"></i>
+                    </button>
+                </div>
+
+                <div class="navbar-search-cancel">
+                    <button
+                        type="button"
+                        class="cancel-button"
+                        v-on:click="cancelSearchBar()"
+                    >
+                        <i>
+                            <i class="lni lni-close"></i>
+                        </i>
+                    </button>
+                </div>
+                <div class="navbar-search-result">
+                    <ul
+                        class="search-list card list-group bg-dark w-100 c-pointer"
+                        v-if="Users.length > 0 && keyword.length > 0"
+                    >
+                        <li
+                            class="list-group-item list-group-item-action list-group-item-dark"
+                            v-for="user in Users"
+                            v-if="authUser.id != user.id"
+                            :key="user.id"
+                            v-text="user.name"
+                            @click="getSearchedUser(user)"
+                        ></li>
+                    </ul>
+                </div>
+            </div>
+
             <nav class="navbar navbar-expand-lg">
                 <div class="container header-content">
                     <div class="navbar-item navbar-itemLogo">
@@ -92,7 +157,7 @@
                             </router-link>
                         </a>
                     </div>
-                    <div class="navbar-item navbar-body">
+                    <div class="navbar-item navbar-body d-none d-lg-block">
                         <ul class="navbar-nav">
                             <li class="nav-item">
                                 <router-link
@@ -168,10 +233,22 @@
 
                     <div class="navbar-item">
                         <ul class="navbar-item__action">
-                            <li><i class="lni lni-search-alt"></i></li>
-                            <li><i class="lni lni-alarm"></i></li>
+                            <li
+                                v-on:click="showSearchbar()"
+                                ref="searchBoxSource"
+                            >
+                                <i class="lni lni-search-alt"> </i>
+                            </li>
                             <li>
-                                <router-link :to="`/profile/${authUser.id}`"
+                                <div v-on:click="showNotification()">
+                                    <i class="lni lni-alarm"></i>
+                                    <span class="navbar-action__badge">3</span>
+                                </div>
+                            </li>
+                            <!-- <li><i class="lni lni-alarm"></i></li> -->
+                            <li>
+                                <router-link
+                                    :to="`/profile/${authUser.slug}/${authUser.id}`"
                                     ><img
                                         :src="authUser.image"
                                         alt="img"
@@ -202,121 +279,6 @@
                 </div>
             </nav>
         </header>
-        <!-- <nav class="navbar navbar-expand-lg navbar-dark navbg text">
-            <div class="container-fluid">
-                <a class="navbar-brand"
-                    ><router-link class="nav-link active text" to="/home"
-                        ><img
-                            :src="'/images/logo.png'"
-                            alt="logo"
-                            class="img-fluid logo"
-                        />
-                        ResearchCommunity
-                    </router-link></a
-                >
-
-                <a
-                    class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
-                >
-                    <span><i class="fa-solid fa-caret-down"></i></span>
-                </a>
-                <div
-                    class="collapse navbar-collapse"
-                    id="navbarSupportedContent"
-                >
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <router-link
-                                class="nav-link text"
-                                v-if="authUser.userType == 'admin'"
-                                to="/teachers"
-                                >Add Teacher</router-link
-                            >
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a
-                                class="nav-link dropdown-toggle"
-                                href="#"
-                                id="navbarDropdown"
-                                role="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                Department
-                            </a>
-                            <ul
-                                class="dropdown-menu"
-                                aria-labelledby="navbarDropdown"
-                            >
-                                <li>
-                                    <a class="dropdown-item" href="#">CSE</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">EEE</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">CE</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">ARCH</a>
-                                </li>
-                                
-                            </ul>
-                        </li>
-                    </ul>
-                    <a class="navbar-brand d-flex"
-                        ><div>
-                            <form class="form-inline my-2 my-lg-0">
-                                <input
-                                    class="form-control mr-sm-2"
-                                    type="search"
-                                    v-model="keyword"
-                                    placeholder="Search..."
-                                />
-                                <ul
-                                    class="search-list card list-group bg-dark"
-                                    v-if="
-                                        Users.length > 0 && keyword.length > 0
-                                    "
-                                >
-                                    <li
-                                        class="list-group-item list-group-item-action list-group-item-dark"
-                                        v-for="user in Users"
-                                        v-if="authUser.id != user.id"
-                                        :key="user.id"
-                                        v-text="user.name"
-                                        @click="getSearchedUser(user)"
-                                    ></li>
-                                </ul>
-                            </form>
-                        </div>
-                    </a>
-                </div>
-                <a class="navbar-item d-flex"
-                    ><router-link
-                        class="nav-link text"
-                        :to="`/profile/${authUser.id}`"
-                        ><img
-                            :src="authUser.image"
-                            alt="img"
-                            class="img-fluid profile-img m-auto"
-                    /></router-link>
-                </a>
-                <a class="navbar-item d-flex">
-                    <span @click="logout"
-                        ><i class="fa-solid fa-right-from-bracket"></i
-                    ></span>
-                </a>
-            </div>
-            <hr />
-        </nav> -->
     </div>
 </template>
 
@@ -325,6 +287,11 @@ export default {
     data() {
         return {
             isSidebar: false,
+            isSearchbar: false,
+            isNotification: false,
+            isFilter: false,
+            mobileDropdownIndex: -1,
+
             keyword: null,
             Users: [],
             user_id: -1,
@@ -342,13 +309,51 @@ export default {
         hideSidebar() {
             this.isSidebar = false;
         },
+        showSearchbar() {
+            this.isSearchbar = true;
+        },
+        hideSearchbar(e) {
+            if (this.isSearchbar) {
+                let target = e.target;
+                var container = this.$refs.searchBox;
+                var source = this.$refs.searchBoxSource;
+
+                if (!source.contains(target) && !container.contains(target)) {
+                    this.isSearchbar = false;
+                }
+            }
+        },
+        showNotification() {
+            this.isNotification = true;
+        },
+        hideNotification() {
+            this.isNotification = false;
+        },
+        showFilter() {
+            this.isFilter = true;
+        },
+        hideFilter() {
+            this.isFilter = false;
+        },
+
+        mobileMenuDropdown(index) {
+            if (this.mobileDropdownIndex === index) {
+                this.mobileDropdownIndex = -1;
+            } else {
+                this.mobileDropdownIndex = index;
+            }
+        },
+        cancelSearchBar() {
+            this.isSearchbar = false;
+            this.keyword = "";
+        },
         getSearchedUser(user) {
             //     const res = await this.callApi(
             //     "get",
             //     `/api/get_profile_info/${this.user_id}`
             // );
             this.user_id = user.id;
-            this.$router.push(`/profile/${this.user_id}`);
+            this.$router.push(`/profile/${this.user.slug}${this.user_id}`);
             this.keyword = "";
         },
         getResults() {
@@ -371,19 +376,17 @@ export default {
             }
         },
     },
+
+    mounted() {
+        document.addEventListener("click", this.hideSearchbar);
+    },
+    beforeDestroy() {
+        document.removeEventListener("click", this.hideSearchbar);
+    },
 };
 </script>
 
 <style scoped>
-body {
-    margin: 0;
-    padding: 0;
-}
-
-ul {
-    list-style-type: none;
-}
-
 .search-list {
     position: absolute;
     font-size: 1rem;
@@ -394,22 +397,5 @@ ul {
     border-radius: 50%;
     width: 30px;
     height: 30px;
-}
-.navbg {
-    background: #474554;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-}
-.text {
-    color: #a7a7a7;
-}
-
-.text:hover {
-    color: #fbf7ff;
-    border-left: 1px solid #fbf7ff !important;
-}
-
-.logo {
-    height: 10vh;
-    width: 10vh;
 }
 </style>

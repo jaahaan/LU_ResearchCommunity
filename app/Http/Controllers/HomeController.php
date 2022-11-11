@@ -17,9 +17,10 @@ class HomeController extends Controller
         return response()->json($users);
     }
 
-    public function getUserInfo()
+    public function getUserInfo(Request $request)
     {
-        return User::limit(3)->get();
+        $limit = $request->limit? $request->limit : 3;
+        return User::limit($limit)->get();
     }
 
     //     public function index(Request $request)

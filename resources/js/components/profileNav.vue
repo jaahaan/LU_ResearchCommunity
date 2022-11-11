@@ -1,11 +1,11 @@
 <template>
     <div>
         <div
-            class="navbar-body__mobile--wrapper"
+            class="navbar-notification--wrapper"
             v-bind:class="{ active: isSidebar }"
         >
-            <div class="navbar-body__mobile">
-                <div class="navbar-body__mobile--head">
+            <div class="navbar-notification">
+                <div class="navbar-notification--head">
                     <!-- <a href="#"><img src="assets/images/logo.png" alt="Logo" /></a> -->
                     <h5 class="d-inline t-clr__secondary">
                         Add Your Information
@@ -14,7 +14,7 @@
                         <i class="lni lni-cross-circle"></i>
                     </button>
                 </div>
-                <ul class="navbar-body__mobile--body">
+                <ul class="navbar-notification--body">
                     <li class="nav-item" @click="showAboutModal(profileInfo)">
                         <a class="nav-link">About</a>
                     </li>
@@ -36,11 +36,11 @@
                     </li>
                 </ul>
 
-                <div class="navbar-body__mobile--head">
+                <div class="navbar-notification--head">
                     <!-- <a href="#"><img src="assets/images/logo.png" alt="Logo" /></a> -->
                     <h5 class="d-inline t-clr__secondary">Add Your Research</h5>
                 </div>
-                <ul class="navbar-body__mobile--body">
+                <ul class="navbar-notification--body">
                     <li class="nav-item" @click="showAboutModal(profileInfo)">
                         <a class="nav-link">Preprint</a>
                     </li>
@@ -66,53 +66,49 @@
                     >
                         <a class="nav-link">Project</a>
                     </li>
-                    <li
-                        class="nav-item"
-                        @click="showInterestsModal(profileInfo)"
-                    >
-                        <a class="nav-link">Others</a>
-                    </li>
                 </ul>
             </div>
         </div>
 
-        <nav class="navbar navbar-expand justify-content-center navbg mt-15">
+        <nav class="navbar navbar-expand justify-content-center">
             <div>
                 <ul class="navbar-nav">
                     <li class="nav-item active">
                         <router-link
                             class="nav-link text"
-                            :to="`/profile/${this.$route.params.id}`"
+                            :to="`/profile/${this.$route.params.slug}/${this.$route.params.id}`"
                             >Profile
                         </router-link>
                     </li>
                     <li class="nav-item">
                         <router-link
                             class="nav-link text"
-                            :to="`/profile/${this.$route.params.id}/research`"
+                            :to="`/profile/${this.$route.params.slug}/${this.$route.params.id}/publication`"
                             >Research</router-link
                         >
                     </li>
                     <li class="nav-item">
                         <router-link
                             class="nav-link text"
-                            :to="`/profile/${this.$route.params.id}/projects`"
+                            :to="`/profile/${this.$route.params.slug}/${this.$route.params.id}/projects`"
                             >Projects</router-link
                         >
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item me-2">
                         <router-link
                             class="nav-link text"
-                            :to="`/profile/${this.$route.params.id}/followings`"
-                            >Followings</router-link
+                            :to="`/profile/${this.$route.params.slug}/${this.$route.params.id}/posts`"
+                            >Posts</router-link
                         >
                     </li>
+                    <li class="nav-item">
+                        <div v-if="authUser.id == this.$route.params.id">
+                            <button class="main-btn" v-on:click="showSidebar()">
+                                <i class="fa-solid fa-plus"></i> Add New
+                            </button>
+                        </div>
+                    </li>
                 </ul>
-            </div>
-            <div v-if="authUser.id == this.$route.params.id">
-                <button class="btn-design" v-on:click="showSidebar()">
-                    <i class="fa-solid fa-plus"></i> Add New
-                </button>
             </div>
         </nav>
 
@@ -234,6 +230,7 @@
                     placeholder="Ex: Computer Science"
                 />
             </div>
+
             <div class="mb-2">
                 <label>Start Date</label>
                 <div class="row">
@@ -499,6 +496,7 @@ export default {
             this.aboutModal = true;
             this.isEditingItem = true;
             this.sectionModal = false;
+            this.hideSidebar();
         },
 
         async saveAbout() {
@@ -533,6 +531,7 @@ export default {
             this.educationData = profileInfo;
             this.educationModal = true;
             this.sectionModal = false;
+            this.hideSidebar();
         },
 
         async saveEducation() {
@@ -559,19 +558,16 @@ export default {
         },
 
         showSkillsModal(profileInfo) {
-            // let obj = {
-            // 	id : tag.id,
-            // 	tagName : tag.tagName
-            // }
             this.editData = profileInfo;
             this.skillsModal = true;
             this.isEditingItem = true;
             this.sectionModal = false;
+            this.hideSidebar();
         },
 
         async saveSkills() {
             if (this.editData.skills.trim() == "") return this.e("required");
-            this.user_id = this.$route.params.id;
+            this.user_id = this.$route.params.slug;
             const res = await this.callApi(
                 "post",
                 `/api/save_skills/${this.user_id}`,
@@ -594,19 +590,16 @@ export default {
         },
 
         showInterestsModal(profileInfo) {
-            // let obj = {
-            // 	id : tag.id,
-            // 	tagName : tag.tagName
-            // }
             this.editData = profileInfo;
             this.interestsModal = true;
             this.isEditingItem = true;
             this.sectionModal = false;
+            this.hideSidebar();
         },
 
         async saveInterests() {
             if (this.editData.interests.trim() == "") return this.e("required");
-            this.user_id = this.$route.params.id;
+            this.user_id = this.$route.params.slug;
             const res = await this.callApi(
                 "post",
                 `/api/save_interests/${this.user_id}`,
@@ -631,7 +624,7 @@ export default {
         async reset() {
             this.token = window.Laravel.csrfToken;
 
-            this.user_id = this.$route.params.id;
+            this.user_id = this.$route.params.slug;
             const res = await this.callApi(
                 "get",
                 `/api/get_profile_info/${this.user_id}`
@@ -662,20 +655,37 @@ export default {
 };
 </script>
 <style scoped>
-.navbg {
-    background: #5c596d;
+.navbar.navbar-expand {
+    background-color: #5c596d;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
-
-.text {
+.navbar-expand .navbar-nav .nav-link {
     color: #e3e3e3;
 }
-.text:hover {
-    color: #fbf7ff;
-    border-bottom: 1px solid #fbf7ff !important;
+.navbar.navbar-expand .nav-item:hover .nav-link:after {
+    width: 100%;
 }
-
-.router-link-exact-active {
-    color: #34c5d9 !important;
-    border-bottom: 1px solid #34c5d9 !important;
+.navbar.navbar-expand .nav-link {
+    position: relative;
+    transition: color 0.3s linear;
+    font-weight: 500;
+}
+.navbar.navbar-expand .nav-link:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    border-radius: 2px;
+    background-color: #34c5d9;
+    transition: width 0.2s ease-in-out;
+}
+.navbar.navbar-expand .nav-link.active {
+    color: #34c5d9;
+}
+.navbar.navbar-expand .nav-link.active:after {
+    width: 100%;
 }
 </style>

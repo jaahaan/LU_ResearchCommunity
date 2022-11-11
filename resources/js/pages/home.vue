@@ -70,7 +70,7 @@
                                 <div class="card-footer text-muted p-3">
                                     <div class="d-block">
                                         <button
-                                            class="btn btn-design mx-2 float-start"
+                                            class="btn main-btn mx-2 float-start"
                                         >
                                             Download
                                         </button>
@@ -376,7 +376,9 @@ export default {
     methods: {
         getUser(user) {
             this.user_id = user.id;
-            this.$router.push(`/profile/${this.user_id}`);
+            this.user_slug = user.slug;
+
+            this.$router.push(`/profile/${this.user_slug}/${this.user_id}`);
             this.keyword = "";
         },
     },
@@ -409,7 +411,7 @@ h6:hover {
     color: #000;
 }
 
-.btn-design {
+.main-btn {
     color: #3a4660;
     /*TB LR */
     padding: 3px 5px;

@@ -24,7 +24,7 @@ use App\Http\Middleware\AuthCheck;
 // Auth::routes();
 
 Route::prefix('/api')->group(function () {
-    Route::middleware(['auth:web','PreventBackHistory'])->group(function() {
+    Route::middleware(['authCheck','PreventBackHistory'])->group(function() {
         //get user info
         Route::get('/get_profile_info/{id}', [ProfileController::class, 'getProfileInfo']);
         Route::get('/get_education/{id}', [ProfileController::class, 'getEducation']);
@@ -34,7 +34,7 @@ Route::prefix('/api')->group(function () {
         Route::post('/upload', [ProfileController::class, 'upload']);
 
         //edit profile info
-        Route::post('/edit_profile/{id}', [ProfileController::class, 'editProfile']);
+        Route::post('/edit_profile/{id}', [ProfileController::class, 'updateProfile']);
 
         //create update profile info
         Route::post('/save_about/{id}', [ProfileController::class, 'about']);
@@ -43,6 +43,17 @@ Route::prefix('/api')->group(function () {
         Route::post('/save_education/{id}', [ProfileController::class, 'education']);
         Route::post('/save_skills/{id}', [ProfileController::class, 'skills']);
         Route::post('/save_interests/{id}', [ProfileController::class, 'interests']);
+
+        //acreate project
+        Route::get('/get_project/{id}', [ProfileController::class, 'getProject']);
+        Route::post('/save_project/{id}', [ProfileController::class, 'saveProject']);
+        Route::post('/update_project', [ProfileController::class, 'updateProject']);
+        Route::post('/delete_project/{id}', [ProfileController::class, 'deleteProject']);
+
+        Route::get('/get_research/{id}', [ProfileController::class, 'getResearch']);
+        Route::post('/save_research/{id}', [ProfileController::class, 'saveResearch']);
+        Route::post('/update_research', [ProfileController::class, 'updateResearch']);
+        Route::post('/delete_research/{id}', [ProfileController::class, 'deleteResearch']);
 
         //search
         Route::get('/search', [HomeController::class, 'search']);
@@ -65,7 +76,7 @@ Route::prefix('/api')->group(function () {
     
 });
 
-Route::middleware(['guest:web','PreventBackHistory'])->group(function(){
+Route::middleware(['PreventBackHistory'])->group(function(){
     //for register
     Route::post('/register_t', [AuthController::class, 'register_t']);
     Route::post('/register_s', [AuthController::class, 'register_s']);
@@ -81,5 +92,27 @@ Route::middleware(['guest:web','PreventBackHistory'])->group(function(){
     Route::post('/reset_password', [AuthController::class, 'resetPassword']);
 
 });
+
+Route::prefix('/api')->group(function () {
+    Route::middleware(['PreventBackHistory'])->group(function(){
+        //for register
+        Route::post('/register_t', [AuthController::class, 'register_t']);
+        Route::post('/register_s', [AuthController::class, 'register_s']);
+        Route::post('/verify_email', [AuthController::class, 'verifyEmail']);
+    
+        //for login
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/submit_twoFactor_otp', [AuthController::class, 'submitTwoFactorCode']);
+    
+        Route::post('/api/login', [AuthController::class, 'login']);
+        Route::post('/api/submit_twoFactor_otp', [AuthController::class, 'submitTwoFactorCode']);
+        //For Reset password
+        Route::post('/send_reset_password_otp', [AuthController::class, 'sendResetPassOtp']);
+        Route::post('/submit_reset_password_otp', [AuthController::class, 'submitResetPassOtp']);
+        Route::post('/reset_password', [AuthController::class, 'resetPassword']);
+    
+    });
+});
+
 Route::get('/',  [AuthController::class, 'index']);
 Route::any('{slug}', [AuthController::class, 'index'])->where('slug', '([A-z\d\-\/_.]+)');

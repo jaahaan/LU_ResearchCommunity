@@ -16,12 +16,13 @@ class CreatePublicationsTable extends Migration
         Schema::create('publications', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
+            $table->string('publication_type');
             $table->string('publication_title');
-            $table->text('publication_description')->nullable();
-            $table->string('publication_link')->nullable();
-            $table->boolean('ongoing')->nullable();
-            $table->timestamp('starting_date')->nullable();
-            $table->timestamp('ending_date')->nullable();
+            $table->text('publication_abstract')->nullable();
+            $table->text('author_id')->nullable();
+            $table->string('url')->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->timestamps();
         });
     }

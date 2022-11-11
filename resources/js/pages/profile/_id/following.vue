@@ -10,11 +10,8 @@
 </template>
 
 <script>
-import profileHeader from "../../../components/profileHeader";
 export default {
-    components: {
-        profileHeader,
-    },
+    components: {},
     data() {
         return {};
     },

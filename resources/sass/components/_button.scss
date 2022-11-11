@@ -1,0 +1,82 @@
+// Add variables here
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+button {
+    border: 0;
+    background-color: transparent;
+
+    &:active,
+    &:focus {
+        border: 0;
+        outline: 0;
+    }
+}
+// Button CSS
+.main-btn {
+    padding: 0.5em 1.875em;
+    border-radius: 4px;
+    border: 1px solid;
+    color: #ffffff;
+    font-size: 1em;
+    font-weight: 500;
+    min-width: 125px;
+    &__border {
+        border: 2px solid $secondaryColor;
+        background-color: transparent;
+        color: $secondaryColor;
+    }
+    &:hover {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
+        color: #34c5d9;
+    }
+    &-change {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
+        color: #34c5d9;
+        background-color: #444253;
+    }
+}
+
+.btn-edit {
+    color: #a7a7a7;
+    border: none;
+    cursor: pointer;
+    &:hover {
+        color: #5a606d;
+    }
+}
+
+.profile-main-btn {
+    border: 1px solid;
+    border-radius: 4px;
+    /*TB LR */
+    padding: 0.5em 1.875em;
+    font-size: 1em;
+    font-weight: 500;
+    min-width: 100px;
+    background-color: #34c5d9;
+    color: #fbf7ff;
+
+    &:hover {
+        box-shadow: 0 4px 8px 0 rgba(75, 75, 75, 0.7);
+    }
+}
+//RESPONSIVE
+
+@include breakpoint-max(767px) {
+    .main-btn {
+        padding: 0.8375em 1.475em;
+        font-size: 0.9em;
+    }
+    .profile-main-btn {
+        padding: 0.8375em 1.475em;
+        font-size: 0.9em;
+    }
+}
+@include breakpoint-max(540px) {
+    // Button CSS
+    .main-btn {
+        padding: 0.3em 0.9em;
+        font-size: 0.8em;
+    }
+}

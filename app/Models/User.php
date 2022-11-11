@@ -10,10 +10,14 @@ use Laravel\Sanctum\HasApiTokens;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
+use Cviebrock\EloquentSluggable\Sluggable;
+
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use Sluggable;
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +27,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'slug',
         'password',
         'department',
         'department_id',
@@ -50,6 +55,26 @@ class User extends Authenticatable
             }
         }
     }
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'name'
+            ]
+        ];
+    }
+
+    // public function setSlugAttribute($name){
+    //     $this->attributes['slug'] = $this->uniqueSlug($name);
+    // }
+
+    // private function uniqueSlug($name){
+    //     $slug = Str::slug($name, '-');
+    //     $count = User::where('slug', 'LIKE', "{$slug}%")->count();
+    //     $newCount = $count > 0 ? ++$count : '';
+    //     return $newCount > 0 ? "$slug-$newCount" : $slug;
+    // }
+
     // public function setPasswordAttribute($password){
     //     $this->attributes['password'] = encrypt($password);
     // }
