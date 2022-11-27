@@ -10,10 +10,7 @@ class Attachment extends Model
     use HasFactory;
     protected $fillable = [
         'post_id',
-        'image',
-        'pdf',
-        'pptx',
-        'xlsx',
-        'docs',
+        'type',
+        'url',
     ];
 }

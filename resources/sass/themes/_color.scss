@@ -3,20 +3,22 @@
 
 // Add Colors here
 body {
-    background-color: #ffffff;
+    background-color: #f4f4f4;
 }
 
-h1,
+h1 {
+    color: #ffffff;
+}
 h2,
 h3,
 h4,
 h5,
 h6 {
-    color: $primaryColor;
+    color: #0c0c0c;
 }
 
 a {
-    color: $secondaryColor;
+    color: #0c0c0c;
     &:hover {
         color: $secondaryColor;
     }

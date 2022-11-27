@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Session;
+date_default_timezone_set('Asia/Dhaka');
 
 class AuthController extends Controller
 {
@@ -451,10 +452,10 @@ class AuthController extends Controller
 
     function logout()
     {
-        // Auth::logout();
-        // Session::flush();
-        // Session::forget('url.intented');
-        Auth::guard('web')->logout();
+        Auth::logout();
+        Session::flush();
+        Session::forget('url.intented');
+        // Auth::guard('web')->logout();
         return response()->json([
             'success' => true,
             'msg' => 'You are Logged Out',

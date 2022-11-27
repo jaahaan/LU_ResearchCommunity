@@ -18,6 +18,9 @@ import common from './plugin/common';
 //Mixins are a flexible way to distribute reusable functionalities for Vue components.
 Vue.mixin(common)
 
+import Editor from 'vue-editor-js';
+Vue.use(Editor);
+
 let authUser = window.authUser
 
 router.beforeEach((to, from, next) => {

@@ -38,10 +38,7 @@
                 <div class="card-body">
                     <div class="mb-2">
                         <label>Publication Type *</label>
-                        <Select
-                            v-model="data.publication_type"
-                            placeholder="Select Type"
-                        >
+                        <Select v-model="data.type" placeholder="Select Type">
                             <Option value="Article">Article</Option>
                             <Option value="Conference Paper"
                                 >Conference Paper</Option
@@ -52,39 +49,68 @@
                             <Option value="Preprint">Preprint</Option>
                             <Option value="Poster">Poster</Option>
                         </Select>
-                        <span
-                            class="text-danger"
-                            v-if="errors.publication_type"
-                            >{{ errors.publication_type[0] }}</span
-                        >
+                        <span class="text-danger" v-if="errors.type">{{
+                            errors.type[0]
+                        }}</span>
                     </div>
 
+                    <div v-if="data.type == 'Conference Paper'">
+                        <div
+                            class="mb-2"
+                            v-if="data.type == 'Conference Paper'"
+                        >
+                            <label>Conference *</label>
+                            <Input
+                                type="text"
+                                v-model="data.conference"
+                                placeholder="Conference"
+                            />
+                            <span
+                                class="text-danger"
+                                v-if="errors.conference"
+                                >{{ errors.conference[0] }}</span
+                            >
+                        </div>
+                        <div
+                            class="mb-2"
+                            v-if="data.type == 'Conference Paper'"
+                        >
+                            <label>Publication Date</label>
+                            <input
+                                type="month"
+                                v-model="data.publication_date"
+                                placeholder="Publication Date"
+                                class="d-block w-100 p-1"
+                            />
+                            <span
+                                class="text-danger"
+                                v-if="errors.start_date"
+                                >{{ errors.start_date[0] }}</span
+                            >
+                        </div>
+                    </div>
                     <div class="mb-2">
                         <label>Title *</label>
                         <Input
                             type="text"
-                            v-model="data.publication_title"
-                            placeholder="Project Name"
+                            v-model="data.title"
+                            placeholder="Research Title"
                         />
-                        <span
-                            class="text-danger"
-                            v-if="errors.publication_title"
-                            >{{ errors.publication_title[0] }}</span
-                        >
+                        <span class="text-danger" v-if="errors.title">{{
+                            errors.title[0]
+                        }}</span>
                     </div>
 
                     <div class="mb-2">
                         <label>Abstract</label>
                         <textarea
                             class="form-control form-outline"
-                            v-model="data.publication_abstract"
+                            v-model="data.abstract"
                             rows="4"
                         ></textarea>
-                        <span
-                            class="text-danger"
-                            v-if="errors.publication_abstract"
-                            >{{ errors.publication_abstract[0] }}</span
-                        >
+                        <span class="text-danger" v-if="errors.abstract">{{
+                            errors.abstract[0]
+                        }}</span>
                     </div>
 
                     <div class="mb-2">
@@ -104,41 +130,17 @@
                             >
                         </Select>
                     </div>
-
                     <div class="mb-2">
-                        <div class="row">
-                            <div class="col-6">
-                                <label>Start Date</label>
-                                <input
-                                    type="month"
-                                    v-model="data.start_date"
-                                    placeholder="Start Date"
-                                    class="d-block w-100 p-1"
-                                />
-                                <span
-                                    class="text-danger"
-                                    v-if="errors.start_date"
-                                    >{{ errors.start_date[0] }}</span
-                                >
-                            </div>
-
-                            <div class="col-6">
-                                <label>End Date (or expected)</label>
-                                <input
-                                    type="month"
-                                    v-model="data.end_date"
-                                    placeholder="Start Date"
-                                    class="d-block w-100 p-1"
-                                />
-                                <span
-                                    class="text-danger"
-                                    v-if="errors.end_date"
-                                    >{{ errors.end_date[0] }}</span
-                                >
-                            </div>
-                        </div>
+                        <label>Affiliation</label>
+                        <Input
+                            type="text"
+                            placeholder="Affiliation"
+                            v-model="data.affiliation"
+                        />
+                        <span class="text-danger" v-if="errors.affiliation">{{
+                            errors.affiliation[0]
+                        }}</span>
                     </div>
-
                     <div class="mb-2">
                         <label>URL</label>
                         <Input
@@ -150,12 +152,58 @@
                             errors.url[0]
                         }}</span>
                     </div>
+                    <div class="mb-2">
+                        <label>Attachment</label>
+                        <Upload
+                            :headers="{
+                                'x-csrf-token': token,
+                                'X-Requested-With': 'XMLHttpRequest',
+                            }"
+                            ref="upload"
+                            :multiple="true"
+                            :show-upload-list="true"
+                            :on-success="handleSuccess"
+                            :format="[
+                                'jpg',
+                                'jpeg',
+                                'png',
+                                'pdf',
+                                'docx',
+                                'txt',
+                                'mp4',
+                                'mp3',
+                                'zip',
+                            ]"
+                            :max-size="21048"
+                            :on-format-error="handleFormatError"
+                            :on-exceeded-size="handleMaxSize"
+                            :on-remove="deleteAttachment"
+                            type="drag"
+                            action="/api/upload_attachment"
+                        >
+                            <div class="profile-main-btn">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                Upload Attachment
+                            </div>
+                        </Upload>
+                        <div v-if="this.attachmentName" class="attachmentName">
+                            <span class="c-pointer">{{
+                                this.attachmentName
+                            }}</span>
+                            <span @click="deleteAttachment"
+                                ><i class="lni lni-trash-can c-pointer"></i
+                            ></span>
+                        </div>
+                        <span class="text-danger" v-if="errors.url">{{
+                            errors.url[0]
+                        }}</span>
+                    </div>
                 </div>
                 <div class="card-footer text-muted p-3">
                     <div class="d-block">
                         <button
                             class="profile-main-btn mx-2 float-end"
-                            @click="saveResearch()"
+                            @click="save"
                         >
                             <i class="fa-solid fa-floppy-disk"></i> Save
                         </button>
@@ -171,18 +219,18 @@
         </template>
 
         <!--**** Researches ****-->
-        <!-- <template
+        <template
             v-if="
                 researches != '' &&
                 isLoading == false &&
-                showProjectForm == false
+                showResearchForm == false
             "
         >
             <div class="card">
                 <div class="card-header card-header-border p-3">
                     <div class="d-block">
                         <div class="float-start">
-                            <h5>Projects</h5>
+                            <h5>Researches</h5>
                         </div>
                         <div
                             v-if="authUser.id == route_id && editData.id == ''"
@@ -195,143 +243,9 @@
                 </div>
                 <div v-for="(research, index) in researches" :key="index">
                     <div class="card-body">
-                        **** For edit ****
-                        <div class="card mb-2" v-if="editData.id == project.id">
-                            <div class="card-header card-header-border p-3">
-                                <div class="d-block">
-                                    <div class="float-start">
-                                        <h5>
-                                            Edit
-                                            {{ research.publication_type }}
-                                            {{ project.publication_name }}
-                                        </h5>
-                                    </div>
-                                    <div
-                                        class="btn-edit text-danger mx-2 float-end"
-                                        @click="reset()"
-                                    >
-                                        <i class="fa-solid fa-xmark"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-2">
-                                    <label>Project Name *</label>
-                                    <Input
-                                        type="text"
-                                        v-model="editData.project_name"
-                                        placeholder="Project Name"
-                                        :ref="`projectName${project.id}`"
-                                    />
-                                    <span
-                                        class="text-danger"
-                                        v-if="errors.project_name"
-                                        >{{ errors.project_name[0] }}</span
-                                    >
-                                </div>
-                                <div class="mb-2">
-                                    <label>Project Type *</label>
-                                    <Input
-                                        type="text"
-                                        v-model="editData.project_type"
-                                        placeholder="e.g. Mobile App / Website"
-                                    />
-                                    <span
-                                        class="text-danger"
-                                        v-if="errors.project_type"
-                                        >{{ errors.project_type[0] }}</span
-                                    >
-                                </div>
-                                <div class="mb-2">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <label>Start Date</label>
-                                            <input
-                                                type="month"
-                                                v-model="editData.start_date"
-                                                placeholder="Start Date"
-                                                class="d-block w-100 p-1"
-                                            />
-                                            <span
-                                                class="text-danger"
-                                                v-if="errors.start_date"
-                                                >{{
-                                                    errors.start_date[0]
-                                                }}</span
-                                            >
-                                        </div>
-
-                                        <div class="col-6">
-                                            <label
-                                                >End Date (or expected)</label
-                                            >
-                                            <input
-                                                type="month"
-                                                v-model="editData.end_date"
-                                                placeholder="Start Date"
-                                                class="d-block w-100 p-1"
-                                            />
-                                            <span
-                                                class="text-danger"
-                                                v-if="errors.end_date"
-                                                >{{ errors.end_date[0] }}</span
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mb-2">
-                                    <label>Project URL</label>
-                                    <Input
-                                        type="url"
-                                        v-model="editData.publication_url"
-                                        placeholder="Project URL"
-                                    />
-                                    <span
-                                        class="text-danger"
-                                        v-if="errors.publication_url"
-                                        >{{ errors.publication_url[0] }}</span
-                                    >
-                                </div>
-
-                                <div class="mb-2">
-                                    <label>Description</label>
-                                    <textarea
-                                        class="form-control form-outline"
-                                        v-model="editData.project_description"
-                                        rows="4"
-                                    ></textarea>
-                                    <span
-                                        class="text-danger"
-                                        v-if="errors.project_description"
-                                        >{{
-                                            errors.project_description[0]
-                                        }}</span
-                                    >
-                                </div>
-                            </div>
-                            <div class="card-footer text-muted p-3">
-                                <div class="d-block">
-                                    <button
-                                        class="profile-main-btn mx-2 float-end"
-                                        @click="updateProject()"
-                                    >
-                                        <i class="fa-solid fa-floppy-disk"></i>
-                                        Save
-                                    </button>
-                                    <button
-                                        class="profile-main-btn mx-2 float-end"
-                                        @click="deleteProject()"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div v-else>
+                        <div>
                             <div class="project-header">
-                                <h4>{{ project.project_name }}</h4>
+                                <h4>{{ project.title }}</h4>
                                 <div
                                     v-if="authUser.id == project.user_id"
                                     class="btn-edit mx-2"
@@ -368,7 +282,7 @@
                     </div>
                 </div>
             </div>
-        </template> -->
+        </template>
 
         <!--**** loader ****-->
     </div>
@@ -388,28 +302,98 @@ export default {
             route_id: this.$route.params.id,
 
             data: {
-                publication_type: "",
-                publication_title: "",
-                author_id: "",
-                publication_abstract: "",
-                start_date: "",
-                end_date: "",
-                publication_url: "",
+                type: "",
+                conference: "",
+                conference_date: "",
+                title: "",
+                author_id: [],
+                attachment: "",
+                abstract: "",
+                url: "",
+                images: [],
+                pdf: "",
             },
             editData: {
                 user_id: "",
-                project_name: "",
-                project_type: "",
+                type: "",
+                conference: "",
+                conference_date: "",
+                title: "",
+                author_id: [],
+                attachment: "",
+                abstract: "",
                 start_date: "",
                 end_date: "",
-                project_url: "",
-                project_description: "",
+                url: "",
+                images: [],
+                pdf: "",
                 id: "",
                 index: "",
             },
+            isEditingItem: false,
+            attachmentName: "",
         };
     },
     methods: {
+        clearErrorMessage() {
+            this.errors = [];
+        },
+        async deleteAttachment() {
+            let attachment = this.attachmentName;
+            this.$refs.upload.clearFiles();
+            this.attachmentName = "";
+            this.data.attachment = "";
+
+            const res = await this.callApi("post", "/api/delete_attachment", {
+                Name: attachment,
+            });
+            if (res.status != 200) {
+                this.data.attachment = attachment;
+                this.swr();
+            }
+        },
+        handleSuccess(res, file) {
+            // res = `/attachments/${res}`;
+            // res1 = `${res}`;
+            this.$refs.upload.clearFiles();
+            // if (this.isEditingItem) {
+            //     console.log("inside");
+            //     return (this.data.attachments = res);
+            // }
+            // console.log(res);
+            // this.data.attachment = `\\attachments\\${res}`;
+            console.log(this.data.attachment);
+            this.data.attachment = `${res}`;
+
+            this.attachmentName = `${res}`;
+        },
+
+        handleError(res, file) {
+            this.$Notice.warning({
+                title: "The file format is incorrect",
+                desc: `${
+                    file.errors.file.length
+                        ? file.errors.file[0]
+                        : "Something went wrong!"
+                }`,
+            });
+        },
+
+        handleFormatError(file) {
+            this.$Notice.warning({
+                title: "The file format is incorrect",
+                desc:
+                    "File format of " +
+                    file.name +
+                    " is incorrect, please select jpg or png.",
+            });
+        },
+        handleMaxSize(file) {
+            this.$Notice.warning({
+                title: "Exceeding file size limit",
+                desc: "File  " + file.name + " is too large, no more than 2M.",
+            });
+        },
         showForm() {
             this.showResearchForm = true;
         },
@@ -417,45 +401,53 @@ export default {
             this.showResearchForm = false;
             this.editData.id = "";
             this.user_id = this.$route.params.id;
-
-            const res = await this.callApi(
-                "get",
-                `/api/get_research/${this.user_id}`
-            );
-            if (res.status == 200) {
-                this.projects = res.data;
-            } else {
-                this.swr();
-            }
+            this.data = {
+                type: "",
+                conference: "",
+                conference_date: "",
+                title: "",
+                author_id: [],
+                attachment: "",
+                abstract: "",
+                url: "",
+                images: [],
+                pdf: "",
+            };
+            // const res = await this.callApi(
+            //     "get",
+            //     `/api/get_research/${this.user_id}`
+            // );
+            // if (res.status == 200) {
+            //     this.researches = res.data;
+            //     this.errors = [];
+            // } else {
+            //     this.swr();
+            // }
 
             this.isLoading = false;
         },
 
-        async saveResearch() {
+        async save() {
             // if (this.data.project_name.trim() == "")
             //     return this.e("Project Name is required");
             // if (this.data.project_type.trim() == "")
             //     return this.e("Project type is required");
             // if (this.data.start_date.trim() == "")
             //     return this.e("Start date is required");
+
             this.user_id = this.$route.params.id;
             console.log(this.user_id);
             const res = await this.callApi(
                 "post",
-                `/api/save_research/${this.user_id}`,
+                `/api/save_post/${this.user_id}`,
                 this.data
             );
             this.isLoading = true;
             if (res.status === 200) {
                 this.s(res.data.msg);
                 // this.msg = res.data.msg;
-                // this.data.project_name = "";
-                // this.data.project_type = "";
-                // this.data.start_date = "";
-                // this.data.end_date = "";
-                // this.data.project_url = "";
-                // this.data.project_description = "";
                 this.reset();
+                this.clearErrorMessage();
             } else {
                 if (res.status == 422) {
                     console.log(this.$route.params.id);
@@ -470,7 +462,7 @@ export default {
             this.isLoading = false;
         },
 
-        editResearch(index) {
+        edit(index) {
             if (this.projects[index].id) {
                 this.editData.user_id = this.projects[index].user_id;
                 this.editData.project_name = this.projects[index].project_name;
@@ -492,7 +484,7 @@ export default {
             }
         },
 
-        async updateResearch() {
+        async update() {
             // if (this.data.email.trim() == "")
             //     return this.e("Email is required");
             // if (this.data.designation.trim() == "")
@@ -503,7 +495,7 @@ export default {
 
             const res = await this.callApi(
                 "post",
-                "/api/update_research",
+                "/api/update_post",
                 this.editData
             );
 
@@ -523,12 +515,12 @@ export default {
             }
             this.isLoading = false;
         },
-        async deleteResearch() {
+        async delete() {
             this.isLoading = true;
 
             const res = await this.callApi(
                 "post",
-                `/api/delete_research/${this.editData.id}`
+                `/api/delete_post/${this.editData.id}`
             );
 
             if (res.status === 200) {
@@ -544,13 +536,10 @@ export default {
         this.token = window.Laravel.csrfToken;
         this.user_id = this.$route.params.id;
 
-        const res = await this.callApi(
-            "get",
-            `/api/get_research/${this.user_id}`
-        );
-        const resuser = await this.callApi("get", `/api/get_all_user`);
-        if (resuser.status == 200) {
-            this.users = resuser.data;
+        const res = await this.callApi("get", `/api/get_post/${this.user_id}`);
+        const resUser = await this.callApi("get", `/api/get_all_user`);
+        if (resUser.status == 200) {
+            this.users = resUser.data;
         } else {
             this.swr();
         }
@@ -559,5 +548,3 @@ export default {
     },
 };
 </script>
-
-<style></style>

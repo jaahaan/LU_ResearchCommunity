@@ -10,8 +10,5 @@ class Department extends Model
     use HasFactory;
     protected $fillable = [
         'department_name',
-        'category_id',
-        'post_id',
-        'description',
     ];
 }

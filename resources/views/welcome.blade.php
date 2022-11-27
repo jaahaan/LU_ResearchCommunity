@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="/css/app.css">
 
     <link rel="stylesheet" href="/css/vendor/lineicons.css">
+    <link rel="stylesheet" href="/css/vendor/line-awesome.min.css">
+
 
 
     <!-- Bootstrpap css -->

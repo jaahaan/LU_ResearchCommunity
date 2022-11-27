@@ -127,10 +127,10 @@
                     <div
                         class="col-12 col-md-6 my-md-auto text-center justify-content-center pb-3"
                     >
-                        <h2 class="col-8 _card">
+                        <h1 class="col-8 _card">
                             Science is a way of thinking much more than it is a
                             body of knowledge.
-                        </h2>
+                        </h1>
                     </div>
                     <div
                         class="col-12 col-md-6 my-md-auto text-center justify-content-center"
@@ -154,27 +154,27 @@
                 <hooper :settings="hooperSettings">
                     <slide>
                         <div class="text-center rt m-2">
-                            <h2 class="p-3">ENGINEERING</h2>
+                            <h1 class="p-3">ENGINEERING</h1>
                         </div>
                     </slide>
                     <slide>
                         <div class="text-center rt m-2">
-                            <h2 class="p-3">SCIENCE</h2>
+                            <h1 class="p-3">SCIENCE</h1>
                         </div>
                     </slide>
                     <slide>
                         <div class="text-center rt m-2">
-                            <h2 class="p-3">MACHINE LEARNING</h2>
+                            <h1 class="p-3">MACHINE LEARNING</h1>
                         </div>
                     </slide>
                     <slide>
                         <div class="text-center rt m-2">
-                            <h2 class="p-3">DATA SCIENCE</h2>
+                            <h1 class="p-3">DATA SCIENCE</h1>
                         </div>
                     </slide>
                     <slide>
                         <div class="text-center rt m-2">
-                            <h2 class="p-3">AI</h2>
+                            <h1 class="p-3">AI</h1>
                         </div>
                     </slide>
                 </hooper>
@@ -235,20 +235,15 @@
         </div> -->
 
         <!--*************** About ***************-->
-        <div
-            class="container-fluid text-center justify-content-center col-md-8 pb-5 about"
-        >
-            <div>
-                <h2 class="about-title">About Us</h2>
-                <h6
-                    class="m-3 _card col-9 m-auto text-center justify-content-center"
-                >
-                    Our mission is to help the students gather knowledge about
-                    research field and find the research works of our honourable
-                    teachers that can guide them to find out their own research
-                    interest.
-                </h6>
-            </div>
+        <div>
+            <h6
+                class="m-3 _card col-9 mx-auto text-center justify-content-center"
+            >
+                Our mission is to help the students gather knowledge about
+                research field and find the research works of our honourable
+                teachers that can guide them to find out their own research
+                interest.
+            </h6>
         </div>
 
         <!--*************** Random ***************-->
@@ -258,11 +253,11 @@
                     <div
                         class="col-12 col-md-6 my-md-auto text-center justify-content-center pb-3"
                     >
-                        <h2 class="col-8 _card">
+                        <h1 class="col-8 _card">
                             Connect with our research community to share your
                             thoughts, collaborate with your teachers, colleagues
                             and friends.
-                        </h2>
+                        </h1>
                     </div>
 
                     <div
@@ -360,11 +355,6 @@ export default {
     background: url("../../../public/images/white_bg.jpg");
 }
 
-h1 {
-    color: #474554;
-    font-size: 30px;
-}
-
 .images {
     height: 70vh;
     display: flex;
@@ -387,9 +377,7 @@ h1 {
 .img5 {
     background: url("/images/Coffee.png");
 }
-h2 {
-    color: #fff;
-}
+
 .hooper {
     height: 100%;
 }

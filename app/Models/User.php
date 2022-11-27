@@ -101,13 +101,13 @@ class User extends Authenticatable
     ];
 
 
-    // public function academies(): HasMany{
-    //     return $this->hasMany(Academy::class, 'club_id');
-    // }
-    // public function memberOfClubs(): HasMany
-    // {
-    //     return $this->hasMany(ClubPlayer::class, 'player_id');
-    // }
+    public function post(): HasMany{
+        return $this->hasMany(Post::class, 'user_id');
+    }
+    public function comment(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'user_id');
+    }
     // public function teams(): HasMany{
     //     return $this->hasMany(Team::class, 'owner_id','id');
     // }

@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;
+
 use App\Http\Controllers\TeacherController;
 
 use App\Http\Middleware\AuthCheck;
@@ -39,38 +42,59 @@ Route::prefix('/api')->group(function () {
         //create update profile info
         Route::post('/save_about/{id}', [ProfileController::class, 'about']);
         Route::post('/delete_about/{id}', [ProfileController::class, 'deleteAbout']);
-
         Route::post('/save_education/{id}', [ProfileController::class, 'education']);
         Route::post('/save_skills/{id}', [ProfileController::class, 'skills']);
         Route::post('/save_interests/{id}', [ProfileController::class, 'interests']);
 
-        //acreate project
-        Route::get('/get_project/{id}', [ProfileController::class, 'getProject']);
-        Route::post('/save_project/{id}', [ProfileController::class, 'saveProject']);
-        Route::post('/update_project', [ProfileController::class, 'updateProject']);
-        Route::post('/delete_project/{id}', [ProfileController::class, 'deleteProject']);
 
-        Route::get('/get_research/{id}', [ProfileController::class, 'getResearch']);
-        Route::post('/save_research/{id}', [ProfileController::class, 'saveResearch']);
-        Route::post('/update_research', [ProfileController::class, 'updateResearch']);
-        Route::post('/delete_research/{id}', [ProfileController::class, 'deleteResearch']);
+        //Post
+        Route::get('/get_user_post/{id}', [PostController::class, 'getUserPost']);
+        Route::get('/get_all_post', [PostController::class, 'getAllPost']);
+        Route::post('/save_post/{id}', [PostController::class, 'savePost']);
+        Route::post('/upload_attachment', [PostController::class, 'uploadAttachment']);
+        Route::post('/delete_attachment', [PostController::class, 'deleteAttachment']);
+        // Route::get('/download_attachment/{url}', [PostController::class, 'downloadAttachment']);
+        // Route::get('/view_attachment/{id}', [PostController::class, 'viewAttachment']);
+        Route::post('/update_post', [PostController::class, 'updatePost']);
+        Route::post('/delete_post', [PostController::class, 'deletePost']);
+        Route::get('/post_details/{slug}', [PostController::class, 'postDetails']);
+        // Route::get('/post_abstract/{slug}', [PostController::class, 'postAbstract']);
+
+        Route::post('/up_vote', [PostController::class, 'upVote']);
+        Route::post('/down_vote', [PostController::class, 'downVote']);
+        Route::post('/read/{id}', [PostController::class, 'read']);
+        Route::post('/like', [PostController::class, 'like']);
+
+        //Comments
+        Route::get('/get_comments/{slug}', [CommentController::class, 'getComments']);
+        Route::post('/add_comment', [CommentController::class, 'addComment']);
+        Route::post('/comment_like', [CommentController::class, 'commentLike']);
 
         //search
         Route::get('/search', [HomeController::class, 'search']);
+
+        //get departments
+        Route::get('/get_departments', [HomeController::class, 'getDepartments']);
 
         //get people you may know
         Route::get('/get_all_user', [HomeController::class, 'getUserInfo']);
         
         //admin
         //add teacher
-        // Route::post('/add_teacher', [ProfileController::class, 'addTeacher']);
-        // Route::get('/get_teacher_info', [ProfileController::class, 'getTeacherInfo']);
-        // Route::post('/edit_Teacher', [ProfileController::class, 'editTeacher']);
-        // Route::post('/delete_Teacher', [ProfileController::class, 'deleteTeacher']);
-        Route::resource('/teachers',  TeacherController::class);
+        Route::resource('/teachers',TeacherController::class);
+        Route::post('/teachers_update',[TeacherController::class,'TeacherUpdate']);
+        Route::post('/teachers_del',[TeacherController::class,'TeacherDel']);
+
 
         //for logout
         Route::get('/logout', [AuthController::class, 'logout']);
+
+
+        // //create project
+        // Route::get('/get_project/{id}', [ProfileController::class, 'getProject']);
+        // Route::post('/save_project/{id}', [ProfileController::class, 'saveProject']);
+        // Route::post('/update_project', [ProfileController::class, 'updateProject']);
+        // Route::post('/delete_project/{id}', [ProfileController::class, 'deleteProject']);
 
     });
     

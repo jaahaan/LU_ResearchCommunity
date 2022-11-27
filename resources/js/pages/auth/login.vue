@@ -19,9 +19,9 @@
                 >
                     <div class="container-fluid">
                         <div class="container-fluid rt col-10 p-5">
-                            <h2 class="text-center mb-2">
+                            <h1 class="text-center mb-2">
                                 Two Factor Authentication
-                            </h2>
+                            </h1>
                             <div class="alert alert-dark" v-if="msg">
                                 {{ msg }}
                             </div>
@@ -72,7 +72,7 @@
                 >
                     <div class="container-fluid">
                         <div class="container-fluid rt col-10 p-5">
-                            <h2 class="p-3 text-center">Login</h2>
+                            <h1 class="p-3 text-center">Login</h1>
                             <!-- <div class="alert alert-dark" v-if="msg">
                                 {{ msg }}
                             </div> -->
@@ -161,11 +161,16 @@ export default {
         };
     },
     methods: {
+        clearErrorMessage() {
+            this.errmsg = [];
+            this.errors = [];
+        },
         async login() {
             // if (this.data.email.trim() == "")
             //     return this.e("Email is required");
             // if (this.data.password.trim() == "")
             //     return this.e("Password is required");
+            this.clearErrorMessage();
             this.isLogging = true;
 
             //if we put await in front of it, it will be a response! The await keyword causes code to wait for that Promise to resolve. And whatever data is normally passed to your callback as an argument is instead returned. There is still an asynchronous AJAX call happening, but our code reads a bit more like synchronous code.
@@ -178,6 +183,7 @@ export default {
                 window.location = "/";
                 this.$router.go();
                 this.errors = [];
+                this.clearErrorMessage();
 
                 // this.isLoggingBlock = false;
             } else {

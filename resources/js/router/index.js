@@ -21,6 +21,9 @@ import post from "../pages/profile/_id/post";
 import projects from "../pages/profile/_id/project";
 import publication from "../pages/profile/_id/publication";
 
+//description
+import post_description from "../pages/post_description";
+
 
 //Admin
 import teachers from "../pages/Admin/teachers";
@@ -197,5 +200,35 @@ export default new Router({
                 pageName: "teachers",
             },
         },
+        {
+            path: "/description/:slug",
+            name: "post_description",
+            component: post_description,
+            meta: {
+                allowed: authRoute,
+                title: "Post details",
+                pageName: "post_description",
+            },
+        },
+        // {
+        //     path: "/description/:slug",
+        //     name: "overview",
+        //     component: overview,
+        //     meta: {
+        //         allowed: authRoute,
+        //         title: "Post overview",
+        //         pageName: "post_overview",
+        //     },
+        // },
+        // {
+        //     path: "/description/:slug/comments",
+        //     name: "comments",
+        //     component: comments,
+        //     meta: {
+        //         allowed: authRoute,
+        //         title: "Post comments",
+        //         pageName: "post_comments",
+        //     },
+        // },
     ],
 });

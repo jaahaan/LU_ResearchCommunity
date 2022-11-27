@@ -17,8 +17,8 @@ class CreateVotesTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('post_id');
-            $table->integer('upVote');
-            $table->integer('downVote');
+            $table->integer('upVote')->default(0);
+            $table->integer('downVote')->default(0);
             $table->timestamps();
         });
     }

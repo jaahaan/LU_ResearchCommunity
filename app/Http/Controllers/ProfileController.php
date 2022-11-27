@@ -6,11 +6,11 @@ use App\Models\User;
 use App\Models\Education;
 use App\Models\Project;
 use App\Models\Publication;
+
 use App\Models\Teacher;
-
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
@@ -191,36 +191,7 @@ class ProfileController extends Controller
         return Publication::where('user_id', $id)->get();
     }
 
-    public function saveResearch(Request $request, $id)
-    {
-        $this->validate($request, [
-            'publication_type' => 'required',
-            'publication_title' => 'required',
-        ]);
-        $authors = $request->author_id;
-
-        $publicationAuthors = [];
-        foreach ($authors as $a) {
-            array_push($publicationAuthors, [$a => $a]);
-        }
-        // $data = $request->only('institute','degree','fieldOfStudy', 'startMonth', 'startYear','endMonth', 'endYear', 'grade', 'activities');
-        // $test['author_id'] = json_encode($publicationAuthors);
-        // $education = User::where('id', $id)->update($test);
-        
-            $research = Publication::create([
-                'user_id' => $id,
-                'publication_type' => $request->publication_type,
-                'publication_title' => $request->publication_title,
-                'publication_abstract' => $request->publication_abstract,
-
-                'author_id' => json_encode($publicationAuthors),
-                'metaDescription' => $request->metaDescription,
-                'jsonData' => $request->jsonData,
-            ]);
-
-            return response()->json(['msg' => 'Added Successfully.', 'status' => $research], 200);
-            
-    }
+    
     
     //image upload
     public function upload(Request $request)

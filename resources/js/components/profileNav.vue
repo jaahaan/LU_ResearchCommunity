@@ -654,38 +654,4 @@ export default {
     },
 };
 </script>
-<style scoped>
-.navbar.navbar-expand {
-    background-color: #5c596d;
-    padding-top: 15px;
-    padding-bottom: 15px;
-}
-.navbar-expand .navbar-nav .nav-link {
-    color: #e3e3e3;
-}
-.navbar.navbar-expand .nav-item:hover .nav-link:after {
-    width: 100%;
-}
-.navbar.navbar-expand .nav-link {
-    position: relative;
-    transition: color 0.3s linear;
-    font-weight: 500;
-}
-.navbar.navbar-expand .nav-link:after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    border-radius: 2px;
-    background-color: #34c5d9;
-    transition: width 0.2s ease-in-out;
-}
-.navbar.navbar-expand .nav-link.active {
-    color: #34c5d9;
-}
-.navbar.navbar-expand .nav-link.active:after {
-    width: 100%;
-}
-</style>
+<style scoped></style>

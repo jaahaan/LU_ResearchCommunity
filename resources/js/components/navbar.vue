@@ -24,7 +24,7 @@
                 <ul class="navbar-mobile--body">
                     <li class="nav-item">
                         <router-link
-                            class="nav-link active"
+                            class="nav-link"
                             aria-current="page"
                             to="/home"
                             >Home</router-link
@@ -162,7 +162,7 @@
                     </ul>
                 </div>
                 <div class="navbar-item">
-                    <ul class="navbar-item__action">
+                    <ul class="navbar-item__right">
                         <li>
                             <router-link class="nav-link" to="/login"
                                 >Login</router-link

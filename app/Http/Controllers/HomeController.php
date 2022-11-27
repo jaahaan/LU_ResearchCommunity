@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Department;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,10 +21,14 @@ class HomeController extends Controller
 
     public function getUserInfo(Request $request)
     {
-        $limit = $request->limit? $request->limit : 3;
-        return User::limit($limit)->get();
+        // $limit = $request->limit? $request->limit : 3;
+        return User::get();
     }
-
+    public function getDepartments(Request $request)
+    {
+        // $limit = $request->limit? $request->limit : 3;
+        return Department::get();
+    }
     //     public function index(Request $request)
     //     {
     //         //first check if you are loggedin and admin user ...

@@ -3,6 +3,9 @@
 @use "../abstracts/mixins" as *;
 
 // Add styles here
+footer {
+    background-color: $primaryColor;
+}
 .footer {
     &-info {
         padding-top: 45px;

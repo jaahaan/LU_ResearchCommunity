@@ -239,12 +239,6 @@ export default {
 </script>
 
 <style scoped>
-footer {
-    position: relative;
-    padding: 15px;
-    background: #474554;
-    text-align: center;
-}
 /**
 .footer_text {
     font-size: 13px;

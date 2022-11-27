@@ -2,18 +2,18 @@
 @use "../abstracts/variables" as *;
 @use "../abstracts/mixins" as *;
 
-// input {
-//     border: 0;
-//     padding: 0;
-//     background-color: transparent;
-//     color: $primaryColor;
+input {
+    border: 0;
+    padding: 0;
+    // background-color: transparent;
+    color: $primaryColor;
 
-//     &:focus,
-//     &:active {
-//         border: 0;
-//         outline: 0;
-//     }
-// }
+    &:focus,
+    &:active {
+        border: 0;
+        outline: 0;
+    }
+}
 
 // Custom input
 // .custom-input {

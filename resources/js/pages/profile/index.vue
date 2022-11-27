@@ -66,7 +66,7 @@
                             class="profile-main-btn mx-2 float-end"
                             @click="deleteAbout(profileInfo)"
                         >
-                            <i class="fa-solid fa-floppy-disk"></i> Delete
+                            Delete
                         </button>
                     </div>
                 </div>
@@ -580,11 +580,8 @@ export default {
 .card-bg {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.card-header-border {
-    border-bottom: 1px solid #34c5d9;
-}
-p {
-    color: #333;
+.card {
+    border: 1px solid #cdcdcd;
 }
 
 .profile-info-skeleton h5 {

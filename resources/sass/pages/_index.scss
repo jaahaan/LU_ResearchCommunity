@@ -1,5 +1,6 @@
 // @forward './home';
 // @forward './shop';
-// @forward './signIn';
-// @forward './signUp';
-// @forward './cart';
+@forward "./post_description";
+@forward "./post";
+@forward "./cart";
+@forward "./dashboard";

@@ -1,6 +1,10 @@
 <template>
     <div>
         <div v-if="$store.state.user">
+            <HomeNavbar />
+            <!-- <div v-if="$route.name == 'overview' || $route.name == 'comments'">
+                <postHeader />
+            </div> -->
             <div
                 v-if="
                     $route.name == 'profile' ||
@@ -9,7 +13,6 @@
                     $route.name == 'posts'
                 "
             >
-                <HomeNavbar />
                 <div class="container-fluid profile-header-bg">
                     <div class="container col-md-8 m-auto">
                         <div class="row">
@@ -29,7 +32,6 @@
                 </div>
             </div>
             <div v-else>
-                <HomeNavbar />
                 <router-view />
             </div>
         </div>
@@ -47,6 +49,7 @@ import Navbar from "../components/navbar";
 import profileHeader from "../components/profileHeader";
 import ProfileNav from "../components/profileNav";
 import bottomContainer from "../components/footer";
+import postHeader from "../components/post_header";
 
 export default {
     props: ["user"],
@@ -56,6 +59,7 @@ export default {
         profileHeader,
         ProfileNav,
         bottomContainer,
+        postHeader,
     },
     data() {
         return {};
@@ -71,8 +75,9 @@ export default {
 };
 </script>
 <style scoped>
-.profile-header-bg {
-    /*background-image: linear-gradient(angle, color-stop1, color-stop2);*/
+/*background-image: linear-gradient(angle, color-stop1, color-stop2);*/
+
+/*.profile-header-bg {
     background: linear-gradient(
         180deg,
         #5c596d 0%,
@@ -80,5 +85,5 @@ export default {
         #fff 80px,
         #fff 100%
     );
-}
+}*/
 </style>

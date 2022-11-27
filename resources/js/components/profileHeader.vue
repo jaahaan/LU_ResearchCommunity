@@ -136,16 +136,14 @@
                             :on-exceeded-size="handleMaxSize"
                             action="/api/upload"
                         >
-                            <div>
-                                <i
-                                    class="fa-solid fa-cloud-arrow-up profile-main-btn"
-                                ></i>
+                            <div class="profile-main-btn">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
                                 Upload Image
                             </div>
                         </Upload>
                     </div>
                     <div class="text-center col-6" @click="deleteImage()">
-                        <div>
+                        <div class="profile-main-btn">
                             <i class="fa-solid fa-trash"></i>
                             Delete Image
                         </div>
@@ -235,7 +233,7 @@
 
         <!---******* loader *******--->
         <div
-            class="profile__info-bottom-border container mb-2"
+            class="profile-info-bottom-border container mb-2"
             v-if="isLoading == true"
         >
             <div class="profile-header-skeleton m-lg-auto">
@@ -443,75 +441,4 @@ export default {
     },
 };
 </script>
-
-<style>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
-body {
-    font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
-}
-</style>
-
-<style scoped>
-.profile-header {
-    width: 200px;
-    height: 200px;
-    text-align: center;
-    line-height: 150px;
-    border: 1px solid transparent;
-    overflow: hidden;
-    background: #fff;
-    position: relative;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-}
-.profile-header img {
-    width: 100%;
-    height: 100%;
-}
-.profile-header-cover {
-    display: none;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.6);
-}
-.profile-header:hover .profile-header-cover {
-    display: block;
-}
-.profile-header-cover i {
-    color: #fff;
-    font-size: 40px;
-    cursor: pointer;
-    margin: auto;
-}
-
-.profile-header-skeleton {
-    width: 200px;
-    height: 200px;
-    text-align: center;
-    line-height: 100px;
-    border: 1px solid transparent;
-    overflow: hidden;
-    background: #a7a7a7;
-    border-radius: 50%;
-}
-.profile-info-skeleton h4 {
-    width: 80%;
-    height: 20px;
-    display: block;
-    background-color: #c0c0c0;
-    margin: 0.5rem;
-}
-.profile-info-skeleton p {
-    width: 70%;
-    height: 14px;
-    margin: 0.5rem;
-    background-color: #a7a7a7;
-}
-.profile__info-bottom-border {
-    border-radius: 5px;
-    border-bottom: 1px solid #dadada;
-}
-</style>
+<style scoped></style>

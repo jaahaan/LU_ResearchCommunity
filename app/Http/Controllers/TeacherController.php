@@ -14,8 +14,11 @@ class TeacherController extends Controller
      */
     public function index()
     {
-        return response()->json(Teacher::get());
-
+        $data=Teacher::orderBy('id', 'asc')->get(); 
+        return response()->json([
+            'success'=> true,
+            'data'=>$data,
+        ],200);
     }
 
     /**
@@ -34,12 +37,20 @@ class TeacherController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $teacher = Teacher::create($request->all());
-        return response()->json($teacher);
+    public function store(Request $request){
+        $data = $request->all();
+        return Teacher::create($data);
     }
+    public function TeacherUpdate(Request $request){
+        Teacher::where('id',$request->id)->update($request->all());
+        $update=Teacher::where('id',$request->id)->first();
+        return $update;
 
+    }
+    public function TeacherDel(Request $request){
+        // return 'dine';
+        return Teacher::where('id',$request->id)->delete();
+    }
     /**
      * Display the specified resource.
      *
@@ -69,10 +80,9 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Teacher $teacher)
+    public function update(Request $request, $id)
     {
-        $teacher->update($request->all());
-        return response()->json($teacher);
+        //
     }
 
     /**
@@ -81,9 +91,8 @@ class TeacherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Teacher $teacher)
+    public function destroy($id)
     {
-        $teacher->delete();
-        return response()->json('success');
+        //
     }
 }

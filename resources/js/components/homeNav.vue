@@ -19,7 +19,7 @@
                     <ul class="navbar-mobile--body">
                         <li class="nav-item">
                             <router-link
-                                class="nav-link active"
+                                class="nav-link"
                                 aria-current="page"
                                 to="/home"
                                 >Home</router-link
@@ -161,7 +161,7 @@
                         <ul class="navbar-nav">
                             <li class="nav-item">
                                 <router-link
-                                    class="nav-link active"
+                                    class="nav-link"
                                     aria-current="page"
                                     to="/home"
                                     >Home</router-link
@@ -295,6 +295,7 @@ export default {
             keyword: null,
             Users: [],
             user_id: -1,
+            user_slug: "",
         };
     },
     watch: {
@@ -353,7 +354,9 @@ export default {
             //     `/api/get_profile_info/${this.user_id}`
             // );
             this.user_id = user.id;
-            this.$router.push(`/profile/${this.user.slug}${this.user_id}`);
+            this.user_slug = user.slug;
+
+            this.$router.push(`/profile/${this.user_slug}/${this.user_id}`);
             this.keyword = "";
         },
         getResults() {
@@ -391,8 +394,7 @@ export default {
     position: absolute;
     font-size: 1rem;
 }
-.search-hover {
-}
+
 .nav-profile-img {
     border-radius: 50%;
     width: 30px;

@@ -14,26 +14,31 @@ button {
 }
 // Button CSS
 .main-btn {
-    padding: 0.5em 1.875em;
-    border-radius: 4px;
+    padding: 0.5em 1em;
+    border-radius: 20px;
     border: 1px solid;
-    color: #ffffff;
     font-size: 1em;
     font-weight: 500;
     min-width: 125px;
+    border: 1px solid $secondaryColor;
     &__border {
-        border: 2px solid $secondaryColor;
         background-color: transparent;
         color: $secondaryColor;
     }
+    &__bg {
+        background-color: $secondaryColor;
+        color: $bgWhite;
+    }
     &:hover {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
-        color: #34c5d9;
+        // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
+        background-color: $btnHover;
+        border: 1px solid $secondaryColor;
+        color: $bgWhite;
     }
     &-change {
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
-        color: #34c5d9;
-        background-color: #444253;
+        // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
+        color: $secondaryColor;
+        background-color: $primaryColor;
     }
 }
 
@@ -48,35 +53,36 @@ button {
 
 .profile-main-btn {
     border: 1px solid;
-    border-radius: 4px;
+    border-radius: 20px;
     /*TB LR */
     padding: 0.5em 1.875em;
     font-size: 1em;
     font-weight: 500;
     min-width: 100px;
-    background-color: #34c5d9;
+    background-color: $secondaryColor;
     color: #fbf7ff;
-
     &:hover {
-        box-shadow: 0 4px 8px 0 rgba(75, 75, 75, 0.7);
+        // box-shadow: 0 4px 8px 0 rgba(75, 75, 75, 0.7);
+        background-color: $btnHover;
     }
 }
 //RESPONSIVE
 
 @include breakpoint-max(767px) {
     .main-btn {
-        padding: 0.8375em 1.475em;
+        padding: 0.5em 1em;
         font-size: 0.9em;
     }
     .profile-main-btn {
-        padding: 0.8375em 1.475em;
+        padding: 0.5em 1em;
+
         font-size: 0.9em;
     }
 }
 @include breakpoint-max(540px) {
     // Button CSS
     .main-btn {
-        padding: 0.3em 0.9em;
+        padding: 0.4em 0.8em;
         font-size: 0.8em;
     }
 }
