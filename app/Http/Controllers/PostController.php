@@ -32,6 +32,7 @@ class PostController extends Controller
             $post = $value;
             $check = Read::where(['post_id'=>$post->id])->first();
             $voteCheck = Vote::where(['post_id'=>$post->id])->first();
+            
             $checkUpVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id, 'upVote'=>1])->first();
             $checkDownVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id, 'downVote'=>1])->first();
             $likecheck = Like::where(['post_id'=>$post->id])->first();
@@ -89,123 +90,129 @@ class PostController extends Controller
     }
 
     
-    // public function getAllPost(Request $request)
-    // {
-    //     $search = $request->search;
-    //     $userId = $request->user;
-    //     $departmentName=  $request->department;
-    //     $limit = $request->limit? $request->limit : 5;
-    //     $default = $request->default;
+    public function getAllResearch(Request $request)
+    {
+        $search = $request->search;
+        $userId = $request->user;
+        $departmentName=  $request->department;
+        $limit = $request->limit? $request->limit : 5;
+        $default = $request->default;
 
-    //     $query =  Post::with('user', 'read', 'vote', 'like', 'authors', 'department', 'attachments')->get();
+        $query =  Post::with('user', 'read', 'vote', 'like', 'authors', 'department', 'attachments');
 
-    //     if($search){
-    //         $query->where(function ($queryy) use ($search){
-    //             $queryy->where('user',  'like', "%$search%")
-    //             ->orWhere('type', 'like', "%$search%")
-    //              ->orWhere('title', 'like', "%$search%");
-    //         });
-    //     }
+        if($search){
+            $query->where(function ($queryy) use ($search){
+                $queryy->where('user_name',  'like', "%$search%")
+                ->orWhere('type', 'like', "%$search%")
+                 ->orWhere('title', 'like', "%$search%");
+            });
+        }
         
-    //     if($departmentName){
-    //         $query->where('department_id', $departmentName);
-    //     }      
-    //     if($default=='asc'){
-    //         $query->orderBy('title','asc');
-    //     }
-    //     if($default=='desc'){
-    //         $query->orderBy('title','desc');
-    //     }
-    //     $data = $query->limit($limit)->get();
+        if($departmentName){
+            $query->where('department_id', $departmentName);
+        }      
+        if($default=='asc'){
+            $query->orderBy('title','asc');
+        }
+        if($default=='desc'){
+            $query->orderBy('title','desc');
+        }
+        $data = $query->limit($limit)->get();
 
 
-    //     $formattedData = [];
-    //     foreach($data as $value){
-    //         $post = $value;
-    //         $check = Read::where(['post_id'=>$post->id])->first();
-    //         $voteCheck = Vote::where(['post_id'=>$post->id])->first();
-    //         $checkUpVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id, 'upVote'=>1])->first();
-    //         $checkDownVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id, 'downVote'=>1])->first();
-    //         $likecheck = Like::where(['post_id'=>$post->id])->first();
-    //         $AuthLikeCheck = Like::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id])->first();
+        $formattedData = [];
+        foreach($data as $value){
+            $post = $value;
+            $check = Read::where(['post_id'=>$post->id])->first();
+            $voteCheck = Vote::where(['post_id'=>$post->id])->first();
+            if(Auth::check()){
+                $checkUpVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id, 'upVote'=>1])->first();
+                $checkDownVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id, 'downVote'=>1])->first();
+                $likecheck = Like::where(['post_id'=>$post->id])->first();
+                $AuthLikeCheck = Like::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id])->first();
 
-    //         if($checkUpVote){
-    //             $post['authUserVote']= "up";
-    //         } if($checkDownVote){
-    //             $post['authUserVote']= "down";
-    //         } if(!$checkUpVote && !$checkDownVote){
-    //             $post['authUserVote']= "none";
-    //         } if($likecheck){
-    //             $post['like_count'] =$post->like->like_count;
-    //         } if($AuthLikeCheck){
-    //             $post['authUserLike'] = 'yes';
-    //         } 
-    //         if(!$likecheck){
-    //             $post['like_count'] = 0;
-    //         } if(!$AuthLikeCheck){
-    //             $post['authUserLike'] = 'no';
-    //         } 
+                if($checkUpVote){
+                    $post['authUserVote']= "up";
+                } if($checkDownVote){
+                    $post['authUserVote']= "down";
+                } if(!$checkUpVote && !$checkDownVote){
+                    $post['authUserVote']= "none";
+                } if($likecheck){
+                    $post['like_count'] =$post->like->like_count;
+                } if($AuthLikeCheck){
+                    $post['authUserLike'] = 'yes';
+                } 
+                if(!$likecheck){
+                    $post['like_count'] = 0;
+                } if(!$AuthLikeCheck){
+                    $post['authUserLike'] = 'no';
+                } 
+            }
+            
 
-    //         $post['image'] = $post->user->image;
-    //         $post['name'] = $post->user->name;
-    //         $post['user_slug'] = $post->user->slug;
-    //         $post['department'] = $post->user->department;
-    //         $post['designation'] = $post->user->designation;
+            $post['image'] = $post->user->image;
+            $post['name'] = $post->user->name;
+            $post['user_slug'] = $post->user->slug;
+            $post['department'] = $post->user->department;
+            $post['designation'] = $post->user->designation;
 
-    //         if(!$check){
-    //             $post['read_count'] = 0;
-    //         } 
-    //         if($check){
-    //             $post['read_count'] = $post->read->read_count;
-    //         } if(!$voteCheck){
-    //             $post['upVote'] = 0;
-    //             $post['downVote'] = 0;
-    //             $post['avgVote'] = 0;
-    //         }  if($voteCheck){
-    //             $post['upVote'] = $post->vote->upVote;
-    //             $post['avgVote'] = $post->vote->upVote - $post->vote->downVote;
-    //             $post['downVote'] = $post->vote->downVote;
-    //         }
-    //         unset($post['vote']);
-    //         unset($post['user']);
-    //         unset($post['read']);
-    //         unset($post['like']);
+            if(!$check){
+                $post['read_count'] = 0;
+            } 
+            if($check){
+                $post['read_count'] = $post->read->read_count;
+            } if(!$voteCheck){
+                $post['upVote'] = 0;
+                $post['downVote'] = 0;
+                $post['avgVote'] = 0;
+            }  if($voteCheck){
+                $post['upVote'] = $post->vote->upVote;
+                $post['avgVote'] = $post->vote->upVote - $post->vote->downVote;
+                $post['downVote'] = $post->vote->downVote;
+            }
+            unset($post['vote']);
+            unset($post['user']);
+            unset($post['read']);
+            unset($post['like']);
+            unset($post['department']);
 
-    //         array_push($formattedData, $post);
+            array_push($formattedData, $post);
 
-    //     }
-    //     return response()->json([
-    //         'success'=> true,
-    //         'data'=>$formattedData,
-    //     ],200);
-    // }
+        }
+        return response()->json([
+            'success'=> true,
+            'data'=>$formattedData,
+        ],200);
+    }
 
 
     public function postDetails($slug){
         $data = Post::where('slug',$slug)->with('user','read', 'vote', 'like', 'authors', 'attachments')->first();
         $check = Read::where(['post_id'=>$data->id])->first();
         $voteCheck = Vote::where(['post_id'=>$data->id])->first();
-        $checkUpVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$data->id, 'upVote'=>1])->first();
-        $checkDownVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$data->id, 'downVote'=>1])->first();
-        $likecheck = Like::where(['post_id'=>$data->id])->first();
-        $AuthLikeCheck = Like::where(['user_id'=>Auth::user()->id,'post_id'=>$data->id])->first();
+        if(Auth::check()){
+            $checkUpVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$data->id, 'upVote'=>1])->first();
+            $checkDownVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$data->id, 'downVote'=>1])->first();
+            $likecheck = Like::where(['post_id'=>$data->id])->first();
+            $AuthLikeCheck = Like::where(['user_id'=>Auth::user()->id,'post_id'=>$data->id])->first();
 
-        if($checkUpVote){
-            $data['authUserVote']= "up";
-        } if($checkDownVote){
-            $data['authUserVote']= "down";
-        } if(!$checkUpVote && !$checkDownVote){
-            $data['authUserVote']= "none";
-        } if($likecheck){
-            $data['like_count'] =$data->like->like_count;
-        } if($AuthLikeCheck){
-            $data['authUserLike'] = 'yes';
-        } 
-        if(!$likecheck){
-            $data['like_count'] = 0;
-        } if(!$AuthLikeCheck){
-            $data['authUserLike'] = 'no';
-        } 
+            if($checkUpVote){
+                $data['authUserVote']= "up";
+            } if($checkDownVote){
+                $data['authUserVote']= "down";
+            } if(!$checkUpVote && !$checkDownVote){
+                $data['authUserVote']= "none";
+            } if($likecheck){
+                $data['like_count'] =$data->like->like_count;
+            } if($AuthLikeCheck){
+                $data['authUserLike'] = 'yes';
+            } 
+            if(!$likecheck){
+                $data['like_count'] = 0;
+            } if(!$AuthLikeCheck){
+                $data['authUserLike'] = 'no';
+            } 
+        }
         $formattedData = [];
 
         $data['image'] = $data->user->image;
@@ -274,6 +281,7 @@ class PostController extends Controller
         try{
         $post = Post::create([
             'user_id' => $id,
+            'user_name' => Auth::user()->name,
             'type' => $request->type,
             'title' => $request->title,
             'abstract' => $request->abstract,
@@ -313,18 +321,33 @@ class PostController extends Controller
         \Log::info($checkUpVote);
 
     	if ($checkUpVote) {
-    		Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'upVote'=>$request->upVote])->delete();
-    		return 'deleted';
+    		$data = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'upVote'=>$request->upVote])->delete();
+    		return response()->json([
+                'success'=> true,
+                'data'=> 'del',
+            ],200);
 
     	} else if($checkDownVote){
     		Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'downVote'=>$request->upVote])->delete();
-            return 'deleted down';
-        } else{
-	    	return Vote::create([
+            $data = Vote::create([
                 'user_id' => Auth::user()->id,
 	    	    'post_id' => $request->id,
                 'upVote'=> $request->upVote,
+            ]);
+            return response()->json([
+                'success'=> true,
+                'data'=> 'del_up',
             ],201);
+        } else{
+	    	$data = Vote::create([
+                'user_id' => Auth::user()->id,
+	    	    'post_id' => $request->id,
+                'upVote'=> $request->upVote,
+            ]);
+            return response()->json([
+                'success'=> true,
+                'data'=> 'up',
+            ],202);
     	}
         
         
@@ -338,24 +361,33 @@ class PostController extends Controller
         \Log::info($checkDownVote);
 
     	if ($checkDownVote) {
-    		Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'downVote'=>$request->downVote])->delete();
-    		return Vote::create([
-                'status' => 'deleted',
+    		$data = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'downVote'=>$request->downVote])->delete();
+    		return response()->json([
+                'success'=> true,
+                'data'=> 'del',
             ],200);
     	} else if($checkUpVote){
     		Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'upVote'=>$request->downVote])->delete();
 
-	    	return Vote::create([
+	    	$data = Vote::create([
                 'user_id' => Auth::user()->id,
 	    	    'post_id' => $request->id,
                 'downVote'=> $request->downVote,
+            ]);
+            return response()->json([
+                'success'=> true,
+                'data'=> 'del_up',
             ],201);
     	} else{
-            return Vote::create([
+            $data = Vote::create([
                 'user_id' => Auth::user()->id,
 	    	    'post_id' => $request->id,
                 'downVote'=> $request->downVote,
-            ], 202);
+            ]);
+            return response()->json([
+                'success'=> true,
+                'data'=> 'up',
+            ],202);
         }
         
         
@@ -388,7 +420,27 @@ class PostController extends Controller
         
     }
 
+    public function getLikedUser(Request $request){
+        \Log::info($request);
+        $data = Like::where('post_id',$request->id)->with('user')->get();
+        
+        $formattedData = [];
 
+        foreach($data as $value){
+            $LikedUser = $value;
+
+            $LikedUser['image'] = $LikedUser->user->image;
+            $LikedUser['name'] = $LikedUser->user->name;
+            $LikedUser['user_slug'] = $LikedUser->user->slug;
+            unset($LikedUser['user']);
+            array_push($formattedData, $LikedUser);
+        }
+        return response()->json([
+            'success'=> true,
+            'data'=>$formattedData,
+        ],200);
+        
+    }
     // public function downloadAttachment($url){
     //     \Log::info($url);
 

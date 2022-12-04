@@ -14,7 +14,7 @@
 
                 <div class="col-md-6 my-md-auto justify-content-center">
                     <div class="container-fluid">
-                        <div class="container-fluid card rt col-10 p-5">
+                        <div class="container-fluid rt col-10 p-5">
                             <h2 class="p-3 text-center">Forgot Password!!</h2>
 
                             <div class="alert alert-dark">
@@ -41,9 +41,9 @@
                                 <button
                                     :class="[
                                         data.email
-                                            ? 'btn main-btn-change col-12'
-                                            : 'btn main-btn col-12',
-                                        'btn main-btn col-12',
+                                            ? ' main-btn-change col-12'
+                                            : ' main-btn col-12',
+                                        ' main-btn col-12',
                                     ]"
                                     @click="send"
                                     :disabled="isSending"

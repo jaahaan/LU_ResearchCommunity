@@ -73,7 +73,7 @@
                         display: block;
                         position: absolute;
                         top: 100%;
-                        left: 0;
+                        right: -50%;
                         transform: translateY(10px);
                         opacity: 0;
                         visibility: hidden;
@@ -188,6 +188,33 @@
                 // }
                 i {
                     padding: 5px;
+                }
+                &.dropdown {
+                    position: relative;
+                    .dropdown-menu {
+                        display: block;
+                        position: absolute;
+                        top: 100%;
+                        right: -50%;
+                        transform: translateY(10px);
+                        opacity: 0;
+                        visibility: hidden;
+                        pointer-events: none;
+                        transition: all 0.3s ease;
+                        .dropdown-item {
+                            &:hover {
+                                color: $secondaryColor;
+                            }
+                        }
+                    }
+                    &:hover {
+                        .dropdown-menu {
+                            transform: translateY(0);
+                            opacity: 1;
+                            visibility: visible;
+                            pointer-events: all;
+                        }
+                    }
                 }
             }
         }

@@ -1,14 +1,18 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Post;
-use App\Models\CommentLike;
-use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Auth;
+
+use App\Models\Post;
+use App\Models\CommentLike;
+use App\Models\Comment;
+use App\Models\CommentReply;
+
 class CommentController extends Controller
 {
+    //comments
     public function getComments($slug){
         $query = Post::where('slug',$slug)->first();
 
@@ -66,11 +70,43 @@ class CommentController extends Controller
         
     }
 
+    public function getCommentLikedUser(Request $request){
+        \Log::info($request);
+        $data = CommentLike::where('comment_id',$request->id)->with('user')->get();
+        
+        $formattedData = [];
+
+        foreach($data as $value){
+            $LikedUser = $value;
+
+            $LikedUser['image'] = $LikedUser->user->image;
+            $LikedUser['name'] = $LikedUser->user->name;
+            $LikedUser['user_slug'] = $LikedUser->user->slug;
+            unset($LikedUser['user']);
+            array_push($formattedData, $LikedUser);
+        }
+        return response()->json([
+            'success'=> true,
+            'data'=>$formattedData,
+        ],200);
+        
+    }
+
     public function addComment(Request $request){
         return Comment::create([
             'user_id' => Auth::user()->id,
             'post_id' => $request->id,
             'comment' => $request->comment,
+        ], 201);
+    }
+
+    //Comment Reply
+    public function addCommentReply(Request $request){
+        return CommentReply::create([
+            'user_id' => Auth::user()->id,
+            'post_id' => $request->post_id,
+            'comment_id' => $request->comment_id,
+            'comment' => $request->commentReply,
         ], 201);
     }
 }

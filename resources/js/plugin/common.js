@@ -33,9 +33,8 @@ export default {
             }
         },
 
-        i(desc, title="Hey") {
+        i(desc) {
             this.$Notice.info({
-                title: title,
                 desc: desc
             });
         },

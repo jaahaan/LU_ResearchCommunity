@@ -1,0 +1,233 @@
+// Add variables here
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.home-post-section {
+    display: flex;
+    border-bottom: 1px solid #e3e3e3;
+
+    .menu-item {
+        width: 100%;
+        &-box {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            .post-details {
+                box-shadow: 0px 0px 3px $grayColor;
+                border-radius: 2px;
+                padding: 20px;
+                width: 88%;
+                margin-right: 30px;
+                // .title {
+                //     font-size: 16px;
+                //     font-weight: 400;
+                //     color: $primaryColor;
+                //     border: 0;
+                //     padding: 0;
+                //     margin-bottom: 20px;
+                // }
+                .sub-title {
+                    font-size: 17px;
+                    font-weight: 400;
+                    color: #3e3e3e;
+                    margin: 5px 0px;
+                    justify-content: space-between;
+                    display: flex;
+                    i {
+                        color: $btnHover;
+                        cursor: pointer;
+                    }
+                }
+            }
+            .vote {
+                margin: auto;
+                text-align: center;
+                i {
+                    font-size: 2rem;
+                    color: #cdcdcd;
+                    margin: 2px 0px;
+                    cursor: pointer;
+                }
+                .upActive {
+                    color: #4caf50;
+                }
+                .downActive {
+                    color: #ed2939;
+                }
+            }
+        }
+        &--title {
+            font-size: 24px;
+            font-weight: 500;
+            // border-bottom: 2px dashed #e3e3e3;
+            margin-bottom: 10px;
+        }
+        .header {
+            display: flex;
+            width: 100%;
+            border-bottom: 2px dashed $secondaryColor;
+            padding-bottom: 15px;
+            margin-bottom: 17px;
+            img {
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+            }
+            &-content {
+                margin-left: 0.5rem !important;
+                a {
+                    color: #000000;
+                    font-size: 1.1em;
+                    font-weight: 500;
+                    &:hover {
+                        color: $grayColor;
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+        .footer {
+            display: flex;
+            width: 100%;
+            border-top: 2px dashed $secondaryColor;
+            padding-top: 15px;
+            margin-top: 17px;
+            justify-content: space-between;
+            align-items: center;
+            a {
+                margin-left: 1rem !important;
+                font-size: 1.25em;
+                font-weight: 500;
+                color: black !important;
+                img {
+                    width: 1em;
+                }
+                &:hover {
+                    text-decoration: underline;
+                    img {
+                        color: $secondaryColor !important;
+                    }
+                }
+            }
+            .active {
+                color: $btnHover !important;
+                font-weight: bolder;
+            }
+        }
+    }
+}
+
+//description
+.post-description {
+    .sub-title {
+        font-size: 16px;
+        font-weight: 400;
+        color: #3e3e3e;
+        margin-bottom: 5px;
+    }
+}
+
+// Responsive
+
+@include breakpoint-max(1199px) {
+    .post {
+        &-menu {
+            &--list {
+                &---item {
+                    i {
+                        margin-left: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+@include breakpoint-max(991px) {
+    .post {
+        &-section {
+            display: block;
+            gap: 0;
+            box-shadow: 0px 0px 3px #e2e2e2;
+            border-radius: 2px;
+            .menu-item {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 30px 60px;
+            }
+        }
+        &-menu {
+            width: 100%;
+            box-shadow: none;
+            border-radius: 0;
+            margin-bottom: 20px;
+            &--list {
+                &---item {
+                    .menu-link {
+                        border-bottom: 1px solid #e3e3e3;
+                    }
+                }
+            }
+        }
+    }
+}
+@include breakpoint-max(767px) {
+    .post {
+        &-section {
+            padding-bottom: 0;
+            .menu-item {
+                padding: 2px 20px;
+                &-box {
+                    .post-details {
+                        margin-right: 7px;
+                        .sub-title {
+                            font-size: 12px;
+                        }
+                    }
+                    .vote {
+                        i {
+                            font-size: 1.7rem;
+                        }
+                    }
+                }
+                &--title {
+                    font-size: 20px;
+                    padding-bottom: 10px;
+                    margin-bottom: 10px;
+                }
+            }
+        }
+        &-menu {
+            figure {
+                text-align: center;
+                margin-bottom: 20px;
+                padding-top: 35px;
+            }
+            .header {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+            p {
+                font-size: 13px;
+                margin-bottom: 35px;
+            }
+            &--list {
+                &---item {
+                    .menu-link {
+                        padding: 18px 15px;
+                        i {
+                            font-size: 20px;
+                        }
+                        h4 {
+                            font-size: 14px;
+                        }
+                    }
+                }
+            }
+        }
+        &-description {
+            .sub-title {
+                font-size: 13px;
+            }
+        }
+    }
+}

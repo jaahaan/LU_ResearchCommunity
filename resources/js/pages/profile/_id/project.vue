@@ -495,16 +495,28 @@ export default {
             this.showProjectForm = false;
             this.editData.id = "";
             this.user_id = this.$route.params.id;
-            this.errors = "";
-            const res = await this.callApi(
-                "get",
-                `/api/get_project/${this.user_id}`
-            );
-            if (res.status == 200) {
-                this.projects = res.data;
-            } else {
-                this.swr();
-            }
+            this.data = {
+                type: "",
+                title: "",
+                author_id: [],
+                attachment: "",
+                abstract: "",
+                url: "",
+                images: [],
+                pdf: "",
+                start_date: "",
+                end_date: "",
+            };
+            // const res = await this.callApi(
+            //     "get",
+            //     `/api/get_research/${this.user_id}`
+            // );
+            // if (res.status == 200) {
+            //     this.researches = res.data;
+            //     this.errors = [];
+            // } else {
+            //     this.swr();
+            // }
 
             this.isLoading = false;
         },

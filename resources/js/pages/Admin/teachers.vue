@@ -1,38 +1,8 @@
 <template>
     <div>
-        <!-- <div class="common-page-card">
-            <Row>
-                <Col span="24">
-                    <Form ref="formInline" inline>
-                        
-                    </Form>
-                </Col>
-                <Col span="24">
-                    <Table
-                        border
-                        :loading="loading"
-                        :no-data-text="'no data found'"
-                        :columns="columns1"
-                        :data="teachersInfo"
-                    >
-                        <template slot="loading">
-                            <h4 class="table-loading">
-                                <i
-                                    class="ivu-load-loop ivu-icon ivu-icon-ios-loading"
-                                ></i
-                                ><span style="margin-left: 10px"
-                                    >Loading Data...</span
-                                >
-                            </h4>
-                        </template>
-                    </Table>
-                </Col>
-            </Row>
-        </div> -->
-
         <section class="container">
-            <div class="cart-section">
-                <div class="cart-section--table">
+            <div class="teacher-section">
+                <div class="teacher-section--table">
                     <div class="d-block pt-5 pb-5">
                         <h4 class="float-start">Faculty Members</h4>
                         <button

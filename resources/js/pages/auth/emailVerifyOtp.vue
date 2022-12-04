@@ -37,7 +37,7 @@
                                         data.otp
                                             ? ' main-btn-change col-12'
                                             : ' main-btn col-12',
-                                        'btn main-btn col-12',
+                                        ' main-btn col-12',
                                     ]"
                                     @click="submit"
                                     :disabled="isSubmitting"
@@ -80,7 +80,7 @@ export default {
             if (res.status == 200) {
                 this.s(res.data.msg);
                 // this.$store.commit("setVerifyEmail", this.data);
-                this.$router.push("/login");
+                this.$router.push("/home");
                 //this.data.otp = "";
             } else {
                 if (res.status == 401) {

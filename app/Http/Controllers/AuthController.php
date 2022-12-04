@@ -89,8 +89,8 @@ class AuthController extends Controller
             ]
         );
 
-        $isVerifiedCode = rand(100000, 999999);
-        $expires_at = now();
+        $passwordToken = rand(100000, 999999);
+        $token_expired_at = now();
         // $name = $request->name;
         $user = User::create([
             'name' => $request->name,
@@ -99,11 +99,11 @@ class AuthController extends Controller
             'department' => $request->department,
             'designation' => $request->designation,
             'userType' => 'teacher',
-            'isVerifiedCode' => $isVerifiedCode,
-            'expires_at' => $expires_at,
+            'passwordToken' => $passwordToken,
+            'token_expired_at' => $token_expired_at,
         ]);
         // return $name;
-        $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $isVerifiedCode;
+        $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $passwordToken;
 
         \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
             $message->to($request->email)
@@ -146,8 +146,8 @@ class AuthController extends Controller
             ]
         );
         
-        $isVerifiedCode = rand(100000, 999999);
-        $expires_at = now();
+        $passwordToken = rand(100000, 999999);
+        $token_expired_at = now();
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -155,11 +155,11 @@ class AuthController extends Controller
             'department' => $request->department,
             'designation' => 'Student',
             'userType' => 'student',
-            'isVerifiedCode' => $isVerifiedCode,
-            'expires_at' => $expires_at,
+            'passwordToken' => $passwordToken,
+            'token_expired_at' => $token_expired_at,
         ]);
 
-        $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $isVerifiedCode;
+        $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $passwordToken;
 
         \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
             $message->to($request->email)
@@ -184,20 +184,20 @@ class AuthController extends Controller
         $previous_time = now()->subMinutes(5);
         \Log::info($previous_time);
 
-        if(User::where('email', $request->email)->where('isVerifiedCode', $request->otp)->count()==0){
+        if(User::where('email', $request->email)->where('passwordToken', $request->otp)->count()==0){
             User::where('email', $request->email)->update([
-                'isVerifiedCode' => null,
-                'expires_at' => null,
+                'passwordToken' => null,
+                'token_expired_at' => null,
             ]);
             return response()->json([
                 'success' => false,
                 'msg' => 'Invalid Token!!'
             ], 401);
         }
-        if(User::where('email', $request->email)->whereBetween('expires_at', [$previous_time, $time_now])->count()==0){
+        if(User::where('email', $request->email)->whereBetween('token_expired_at', [$previous_time, $time_now])->count()==0){
             User::where('email', $request->email)->update([
-                'isVerifiedCode' => null,
-                'expires_at' => null,
+                'passwordToken' => null,
+                'token_expired_at' => null,
             ]);
             return response()->json([
                 'success' => false,
@@ -207,119 +207,129 @@ class AuthController extends Controller
         
         else {
             User::where('email', $request->email)->update([
-                'isEmailVerified' => 1,
-                'isVerifiedCode' => null,
+                'isActive' => 1,
+                'passwordToken' => null,
             ]);
-            return response()->json(['msg' => 'Email verified successfully!!', 'status' => 'success'], 200);
+            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                return response()->json(['msg' => 'Email verified successfully. You are logged in!', 'status' => 'success'], 200);
+            } 
         }
     }
 
     
-        public function login(Request $request)
-        {
-            $request->validate([
-                'email' => 'bail|required|email|exists:users,email',
-                'password' => 'bail|required|min:2|max:20',
-            ], ['email.exists' => 'No account found for this email']);
+        // public function login(Request $request)
+        // {
+        //     $request->validate([
+        //         'email' => 'bail|required|email|exists:users,email',
+        //         'password' => 'bail|required|min:2|max:20',
+        //     ], ['email.exists' => 'No account found for this email']);
     
-            // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
-            // 
-            //             return response()->json([
-            //                 'success' => false,
-            //                 'admin' => 'not-found'
-            //             ], 401);
-            //         }
+        //     // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
+        //     // 
+        //     //             return response()->json([
+        //     //                 'success' => false,
+        //     //                 'admin' => 'not-found'
+        //     //             ], 401);
+        //     //         }
     
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                return response()->json([
-                    'success' => true,
-                    'msg' => 'You are logged in',
-                ], 200);
+        //     if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        //         return response()->json([
+        //             'success' => true,
+        //             'msg' => 'You are logged in',
+        //         ], 200);
+        //     } else {
+        //         return response()->json([
+        //             'msg' => 'Incorrect Password!!',
+        //             'success' => false
+        //         ], 401);
+        //     }
+        // }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'bail|required|email|exists:users,email',
+            'password' => 'bail|required|min:2|max:20',
+        ], ['email.exists' => 'No account found for this email']);
+
+        // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
+        // 
+        //             return response()->json([
+        //                 'success' => false,
+        //                 'admin' => 'not-found'
+        //             ], 401);
+        //         }
+
+        // $checkUser = User::where('email', $request->email)->where(Hash::check('password', $request->password))->count();
+        $input = $request->all();
+        $data = User::select('id', 'email', 'password')->where('email', $input['email'])->first();
+        // \Log::info($data);
+
+        //The makeVisible method returns the model instance
+        $data->makeVisible('password')->toArray();
+
+        // return $data;
+        $checkUser = Hash::check($input['password'], $data->password);
+        if ($checkUser) {
+            $check = User::where('email', $request->email)->where('isActive', 1)->count();
+            if ($check == 1) {
+                // $passwordToken = rand(100000, 999999);
+                // $token_expired_at = now();
+                // \Log::info($token_expired_at);
+                // User::where('email', $request->email)->update([
+                //     'passwordToken' => $passwordToken,
+                //     'token_expired_at' => $token_expired_at,
+                // ]);
+                // $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Two factor authentication is: ' . $passwordToken;
+
+                // \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
+                //     $message->to($request->email)
+                //         ->from('noreply@lurc.com', 'LURC')
+                //         ->subject('Two Factor Authentication');
+                // });
+
+                // return response()->json([
+                //     'success' => true,
+                //     'msg' => 'We have sent a two factor authentication code to your email.'
+                // ], 200);
+                if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                            return response()->json([
+                                'success' => true,
+                                'msg' => 'You are logged in',
+                            ], 200);
+                        } 
             } else {
+                $passwordToken = rand(100000, 999999);
+                $token_expired_at = now();
+                User::where('email', $request->email)->update([
+                    'passwordToken' => $passwordToken,
+                    'token_expired_at' => $token_expired_at,
+                ]);
+                $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $passwordToken;
+
+                \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
+                    $message->to($request->email)
+                        ->from('noreply@lurc.com', 'LURC')
+                        ->subject('Email Verification');
+                });
+
                 return response()->json([
-                    'msg' => 'Incorrect Password!!',
-                    'success' => false
-                ], 401);
+                    'success' => false,
+                    'msg' => 'Your email is not verified!!  We have sent an OTP to your email. Submit your OTP to verify your account.'
+                ], 402);
             }
+        } else {
+            return response()->json([
+                'success' => false,
+                'msg' => 'Incorrect Password',
+            ], 401);
         }
-
-    // public function login(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'bail|required|email|exists:users,email',
-    //         'password' => 'bail|required|min:2|max:20',
-    //     ], ['email.exists' => 'No account found for this email']);
-
-    //     // if (User::where('email', $request->email)->where('userType', '!=', 0)->count() == 0) {
-    //     // 
-    //     //             return response()->json([
-    //     //                 'success' => false,
-    //     //                 'admin' => 'not-found'
-    //     //             ], 401);
-    //     //         }
-
-    //     // $checkUser = User::where('email', $request->email)->where(Hash::check('password', $request->password))->count();
-    //     $input = $request->all();
-    //     $data = User::select('id', 'email', 'password')->where('email', $input['email'])->first();
-    //     // \Log::info($data);
-
-    //     //The makeVisible method returns the model instance
-    //     $data->makeVisible('password')->toArray();
-
-    //     // return $data;
-    //     $checkUser = Hash::check($input['password'], $data->password);
-    //     if ($checkUser) {
-    //         $check = User::where('email', $request->email)->where('isEmailVerified', 1)->count();
-    //         if ($check == 1) {
-    //             $twoFactorCode = rand(100000, 999999);
-    //             $expires_at = now();
-    //             \Log::info($expires_at);
-    //             User::where('email', $request->email)->update([
-    //                 'twoFactorCode' => $twoFactorCode,
-    //                 'expires_at' => $expires_at,
-    //             ]);
-    //             $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Two factor authentication is: ' . $twoFactorCode;
-
-    //             \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
-    //                 $message->to($request->email)
-    //                     ->from('noreply@lurc.com', 'LURC')
-    //                     ->subject('Two Factor Authentication');
-    //             });
-
-    //             return response()->json([
-    //                 'success' => true,
-    //                 'msg' => 'We have sent a two factor authentication code to your email.'
-    //             ], 200);
-    //         } else {
-    //             $isVerifiedCode = rand(100000, 999999);
-    //             User::where('email', $request->email)->update([
-    //                 'isVerifiedCode' => $isVerifiedCode,
-    //             ]);
-    //             $body = 'You have created an <b>LURC<b> account associated with ' . $request->email . '. Your OTP for Email verification is: ' . $isVerifiedCode;
-
-    //             \Mail::send('email-template', ['body' => $body], function ($message) use ($request) {
-    //                 $message->to($request->email)
-    //                     ->from('noreply@lurc.com', 'LURC')
-    //                     ->subject('Email Verification');
-    //             });
-
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'msg' => 'Your email is not verified!!  We have sent an OTP to your email. Submit your OTP to verify your account.'
-    //             ], 402);
-    //         }
-    //     } else {
-    //         return response()->json([
-    //             'success' => false,
-    //             'msg' => 'Incorrect Password',
-    //         ], 401);
-    //     }
-    // }
+    }
 
     public function submitTwoFactorCode(Request $request)
     {
         $request->validate([
-            'twoFactorCode' => 'required',
+            'passwordToken' => 'required',
         ]);
 
         $time_now = now();
@@ -329,17 +339,17 @@ class AuthController extends Controller
         $previous_time = now()->subMinutes(5);
         \Log::info($previous_time);
 
-        if(User::where('email', $request->email)->where('twoFactorCode', $request->twoFactorCode)->count()==0){
+        if(User::where('email', $request->email)->where('passwordToken', $request->passwordToken)->count()==0){
             
             return response()->json([
                 'success' => false,
                 'msg' => 'Invalid Token!!'
             ], 401);
         }
-        if(User::where('email', $request->email)->whereBetween('expires_at', [$previous_time, $time_now])->count()==0){
+        if(User::where('email', $request->email)->whereBetween('token_expired_at', [$previous_time, $time_now])->count()==0){
             User::where('email', $request->email)->update([
-                'twoFactorCode' => null,
-                'expires_at' => null,
+                'passwordToken' => null,
+                'token_expired_at' => null,
             ]);
             return response()->json([
                 'success' => false,
@@ -349,8 +359,8 @@ class AuthController extends Controller
         
         if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password])) {
             User::where('email', $request->email)->update([
-                'twoFactorCode' => null,
-                'expires_at' => null,
+                'passwordToken' => null,
+                'token_expired_at' => null,
             ]);
             return response()->json([
                 'success' => true,
@@ -373,10 +383,10 @@ class AuthController extends Controller
         ]);
 
         $otp = rand(100000, 999999);
-        $expires_at = now();
+        $token_expired_at = now();
         User::where('email', $request->email)->update([
-            'reset_pass_otp' => $otp,
-            'expires_at' => $expires_at,
+            'passwordToken' => $otp,
+            'token_expired_at' => $token_expired_at,
         ]);
 
         //$action_link = redirect('/reset')->route( ['token' => $token, 'email' => $request->email]);
@@ -405,20 +415,20 @@ class AuthController extends Controller
         $previous_time = now()->subMinutes(5);
         \Log::info($previous_time);
 
-        if(User::where('email', $request->email)->where('reset_pass_otp', $request->otp)->count()==0){
+        if(User::where('email', $request->email)->where('passwordToken', $request->otp)->count()==0){
             User::where('email', $request->email)->update([
-                'reset_pass_otp' => null,
-                'expires_at' => null,
+                'passwordToken' => null,
+                'token_expired_at' => null,
             ]);
             return response()->json([
                 'success' => false,
                 'msg' => 'Invalid Token!!'
             ], 401);
         }
-        if(User::where('email', $request->email)->whereBetween('expires_at', [$previous_time, $time_now])->count()==0){
+        if(User::where('email', $request->email)->whereBetween('token_expired_at', [$previous_time, $time_now])->count()==0){
             User::where('email', $request->email)->update([
-                'reset_pass_otp' => null,
-                'expires_at' => null,
+                'passwordToken' => null,
+                'token_expired_at' => null,
             ]);
             return response()->json([
                 'success' => false,
@@ -437,12 +447,12 @@ class AuthController extends Controller
             'password' => 'required|confirmed|min:2|max:20',
             'password_confirmation' => 'required',
         ]);
-        $check = User::where('email', $request->email)->where('reset_pass_otp', $request->otp)->count();
+        $check = User::where('email', $request->email)->where('passwordToken', $request->otp)->count();
         if ($check == 1) {
             User::where('email', $request->email)->update([
                 'password' => \Hash::make($request->password),
-                'reset_pass_otp' => null,
-                'expires_at' => null,
+                'passwordToken' => null,
+                'token_expired_at' => null,
             ]);
             return response()->json(['msg' => 'Password updated successfully', 'status' => 'success'], 200);
         } else {

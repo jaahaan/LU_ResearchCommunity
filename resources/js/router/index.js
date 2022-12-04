@@ -24,6 +24,7 @@ import publication from "../pages/profile/_id/publication";
 //description
 import post_description from "../pages/post_description";
 
+import research from "../pages/research";
 
 //Admin
 import teachers from "../pages/Admin/teachers";
@@ -205,7 +206,7 @@ export default new Router({
             name: "post_description",
             component: post_description,
             meta: {
-                allowed: authRoute,
+                allowed: publicRoute,
                 title: "Post details",
                 pageName: "post_description",
             },
@@ -230,5 +231,16 @@ export default new Router({
         //         pageName: "post_comments",
         //     },
         // },
+
+        {
+            path: "/research",
+            name: "research",
+            component: research,
+            meta: {
+                allowed: publicRoute,
+                title: "Research",
+                pageName: "research",
+            },
+        },
     ],
 });

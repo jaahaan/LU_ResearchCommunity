@@ -57,24 +57,25 @@ Route::prefix('/api')->group(function () {
         // Route::get('/view_attachment/{id}', [PostController::class, 'viewAttachment']);
         Route::post('/update_post', [PostController::class, 'updatePost']);
         Route::post('/delete_post', [PostController::class, 'deletePost']);
-        Route::get('/post_details/{slug}', [PostController::class, 'postDetails']);
         // Route::get('/post_abstract/{slug}', [PostController::class, 'postAbstract']);
 
         Route::post('/up_vote', [PostController::class, 'upVote']);
         Route::post('/down_vote', [PostController::class, 'downVote']);
         Route::post('/read/{id}', [PostController::class, 'read']);
         Route::post('/like', [PostController::class, 'like']);
+        Route::get('/get_liked_user', [PostController::class, 'getLikedUser']);
 
         //Comments
         Route::get('/get_comments/{slug}', [CommentController::class, 'getComments']);
         Route::post('/add_comment', [CommentController::class, 'addComment']);
         Route::post('/comment_like', [CommentController::class, 'commentLike']);
+        Route::get('/get_comment_liked_user', [CommentController::class, 'getCommentLikedUser']);
+        Route::post('/add_comment_reply', [CommentController::class, 'addCommentReply']);
 
         //search
         Route::get('/search', [HomeController::class, 'search']);
 
         //get departments
-        Route::get('/get_departments', [HomeController::class, 'getDepartments']);
 
         //get people you may know
         Route::get('/get_all_user', [HomeController::class, 'getUserInfo']);
@@ -128,12 +129,14 @@ Route::prefix('/api')->group(function () {
         Route::post('/login', [AuthController::class, 'login']);
         Route::post('/submit_twoFactor_otp', [AuthController::class, 'submitTwoFactorCode']);
     
-        Route::post('/api/login', [AuthController::class, 'login']);
-        Route::post('/api/submit_twoFactor_otp', [AuthController::class, 'submitTwoFactorCode']);
         //For Reset password
         Route::post('/send_reset_password_otp', [AuthController::class, 'sendResetPassOtp']);
         Route::post('/submit_reset_password_otp', [AuthController::class, 'submitResetPassOtp']);
         Route::post('/reset_password', [AuthController::class, 'resetPassword']);
+        
+        Route::get('/get_all_research', [PostController::class, 'getAllResearch']);
+        Route::get('/get_departments', [HomeController::class, 'getDepartments']);
+        Route::get('/post_details/{slug}', [PostController::class, 'postDetails']);
     
     });
 });

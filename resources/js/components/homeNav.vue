@@ -34,15 +34,7 @@
                                 >Research</router-link
                             >
                         </li>
-                        <li class="nav-item">
-                            <router-link
-                                class="nav-link"
-                                aria-current="page"
-                                v-if="authUser.userType == 'admin'"
-                                to="/teachers"
-                                >Add Teacher</router-link
-                            >
-                        </li>
+
                         <li class="nav-item dropdown">
                             <a
                                 class="nav-link dropdown-toggle"
@@ -77,6 +69,15 @@
                                     >
                                 </li>
                             </ul>
+                        </li>
+                        <li class="nav-item">
+                            <router-link
+                                class="nav-link"
+                                aria-current="page"
+                                v-if="authUser.userType == 'admin'"
+                                to="/teachers"
+                                >Add Teacher</router-link
+                            >
                         </li>
                     </ul>
                 </div>
@@ -176,15 +177,7 @@
                                     >Research</router-link
                                 >
                             </li>
-                            <li class="nav-item">
-                                <router-link
-                                    class="nav-link"
-                                    aria-current="page"
-                                    v-if="authUser.userType == 'admin'"
-                                    to="/teachers"
-                                    >Add Teacher</router-link
-                                >
-                            </li>
+
                             <li class="nav-item dropdown">
                                 <a
                                     class="nav-link dropdown-toggle"
@@ -228,6 +221,15 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li class="nav-item">
+                                <router-link
+                                    class="nav-link"
+                                    aria-current="page"
+                                    v-if="authUser.userType == 'admin'"
+                                    to="/teachers"
+                                    >Add Teacher</router-link
+                                >
+                            </li>
                         </ul>
                     </div>
 
@@ -245,8 +247,7 @@
                                     <span class="navbar-action__badge">3</span>
                                 </div>
                             </li>
-                            <!-- <li><i class="lni lni-alarm"></i></li> -->
-                            <li>
+                            <li class="nav-item dropdown">
                                 <router-link
                                     :to="`/profile/${authUser.slug}/${authUser.id}`"
                                     ><img
@@ -254,7 +255,26 @@
                                         alt="img"
                                         class="img-fluid nav-profile-img m-auto"
                                 /></router-link>
+                                <ul
+                                    class="dropdown-menu"
+                                    aria-labelledby="navbarDropdown"
+                                >
+                                    <li>
+                                        <a class="dropdown-item" @click="logout"
+                                            >Log Out</a
+                                        >
+                                    </li>
+                                </ul>
                             </li>
+                            <!-- <li>
+                                <router-link
+                                    :to="`/profile/${authUser.slug}/${authUser.id}`"
+                                    ><img
+                                        :src="authUser.image"
+                                        alt="img"
+                                        class="img-fluid nav-profile-img m-auto"
+                                /></router-link>
+                            </li> -->
                             <li>
                                 <button v-on:click="showSidebar()">
                                     <i class="d-lg-none"

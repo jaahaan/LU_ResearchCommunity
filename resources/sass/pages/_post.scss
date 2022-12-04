@@ -35,10 +35,12 @@ a {
 }
 
 .vote {
-    font-size: 3rem;
-    color: #cdcdcd;
+    margin: auto;
     text-align: center;
     i {
+        font-size: 2rem;
+        color: #cdcdcd;
+        margin: 2px 0px;
         cursor: pointer;
     }
     .upActive {

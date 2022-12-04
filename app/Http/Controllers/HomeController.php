@@ -26,8 +26,11 @@ class HomeController extends Controller
     }
     public function getDepartments(Request $request)
     {
-        // $limit = $request->limit? $request->limit : 3;
-        return Department::get();
+        $data = Department::get();
+        return response()->json([
+            'success'=> true,
+            'data'=>$data,
+        ],200);
     }
     //     public function index(Request $request)
     //     {

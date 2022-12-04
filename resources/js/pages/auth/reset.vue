@@ -14,7 +14,7 @@
 
                 <div class="col-md-6 my-md-auto justify-content-center">
                     <div class="container-fluid">
-                        <div class="container-fluid card rt col-10 p-5">
+                        <div class="container-fluid rt col-10 p-5">
                             <h2 class="p-3 text-center">Reset Password</h2>
                             <div class="mb-2">
                                 Email Address
@@ -60,9 +60,9 @@
                                 <button
                                     :class="[
                                         data.email && data.password
-                                            ? 'btn main-btn-change col-12'
-                                            : 'btn main-btn col-12',
-                                        'btn main-btn col-12',
+                                            ? ' main-btn-change col-12'
+                                            : ' main-btn col-12',
+                                        ' main-btn col-12',
                                     ]"
                                     @click="submit"
                                     :disabled="isSubmitting"

@@ -2,7 +2,7 @@
 @use "../abstracts/variables" as *;
 @use "../abstracts/mixins" as *;
 
-.cart {
+.teacher {
     &-section {
         max-width: 990px;
         margin-left: auto;
@@ -38,78 +38,13 @@
                 }
             }
         }
-        &--coupon {
-            display: flex;
-            input {
-                border: 1px solid #e3e3e3;
-                padding: 15px;
-                border-radius: 5px;
-                max-width: 220px;
-                &::placeholder {
-                    font-size: 16px;
-                }
-            }
-            button {
-                margin-left: 20px;
-                max-width: 220px;
-                padding: 15px 50px;
-                color: #ffffff;
-                background-color: $secondaryColor;
-                border-radius: 5px;
-                border: 1px solid transparent;
-            }
-        }
-        &--bill {
-            max-width: 565px;
-            margin-left: auto;
-            padding-bottom: 50px;
-            h4 {
-                margin-bottom: 25px;
-            }
-            .subtotal {
-                display: flex;
-                justify-content: space-between;
-                padding: 18px 40px;
-                border: 1px solid #e3e3e3;
-                h5 {
-                    font-size: 18px;
-                    font-weight: 400;
-                    color: #3e3e3e;
-                }
-            }
-            .total {
-                display: flex;
-                justify-content: space-between;
-                padding: 18px 40px;
-                border-left: 1px solid #e3e3e3;
-                border-right: 1px solid #e3e3e3;
-                border-bottom: 1px solid #e3e3e3;
-                margin-bottom: 30px;
-                h5 {
-                    font-size: 18px;
-                    font-weight: 400;
-                    color: #3e3e3e;
-                }
-            }
-            .checkoutButton {
-                max-width: 260px;
-                margin-left: auto;
-                button {
-                    padding: 15px 50px;
-                    color: #ffffff;
-                    background-color: $secondaryColor;
-                    border-radius: 5px;
-                    border: 1px solid transparent;
-                }
-            }
-        }
     }
 }
 
 // Responsive
 
 @include breakpoint-max(767px) {
-    .cart {
+    .teacher {
         &-section {
             &--table {
                 .table {
@@ -124,76 +59,6 @@
                         i {
                             font-size: 18px;
                         }
-                    }
-                }
-            }
-            &--coupon {
-                margin-bottom: 30px;
-                input {
-                    &::placeholder {
-                        font-size: 14px;
-                    }
-                }
-                button {
-                    font-size: 14px;
-                }
-            }
-            &--bill {
-                max-width: 565px;
-                padding-bottom: 0;
-                h4 {
-                    margin-bottom: 15px;
-                    font-size: 20px;
-                }
-                .subtotal {
-                    padding: 16px;
-                    h5 {
-                        font-size: 14px;
-                    }
-                }
-                .total {
-                    padding: 16px;
-                    margin-bottom: 25px;
-                    h5 {
-                        font-size: 14px;
-                    }
-                }
-                .checkoutButton {
-                    max-width: 200px;
-                    font-size: 14px;
-                    button {
-                        padding: 15px 30px;
-                    }
-                }
-            }
-        }
-    }
-}
-@include breakpoint-max(480px) {
-    .cart {
-        &-section {
-            &--coupon {
-                margin-bottom: 25px;
-                input {
-                    max-width: 150px;
-                    padding: 10px 20px;
-                    &::placeholder {
-                        font-size: 12px;
-                    }
-                }
-                button {
-                    max-width: 150px;
-                    padding: 10px 25px;
-                    font-size: 12px;
-                    margin-left: 10px;
-                }
-            }
-            &--bill {
-                .checkoutButton {
-                    max-width: 170px;
-                    font-size: 13px;
-                    button {
-                        padding: 12px 20px;
                     }
                 }
             }

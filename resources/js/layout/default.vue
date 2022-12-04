@@ -36,9 +36,9 @@
             </div>
         </div>
         <div v-else>
-            <Navbar />
+            <Navbar v-if="isHeaderShow == true" />
             <router-view />
-            <bottomContainer />
+            <bottomContainer v-if="isFooterShow == true" />
         </div>
     </div>
 </template>
@@ -62,9 +62,40 @@ export default {
         postHeader,
     },
     data() {
-        return {};
+        return {
+            isHeaderShow: true,
+            isFooterShow: true,
+        };
     },
-    methods: {},
+    methods: {
+        isHeaderShowChange() {
+            if (
+                this.$route.name == "login" ||
+                this.$route.name == "registration" ||
+                this.$route.name == "index" ||
+                this.$route.name == "research"
+            ) {
+                this.isHeaderShow = true;
+            } else this.isHeaderShow = false;
+        },
+        isFooterShowChange() {
+            if (
+                this.$route.name == "login" ||
+                this.$route.name == "index" ||
+                this.$route.name == "register"
+            ) {
+                this.isFooterShow = true;
+            } else this.isFooterShow = false;
+        },
+    },
+    watch: {
+        "$route.name": function (newVal, oldVal) {
+            // watch it
+
+            this.isHeaderShowChange();
+            this.isFooterShowChange();
+        },
+    },
     async created() {
         console.log("auth", window.authUser);
         await this.$store.commit("setUpdateUser", window.authUser);

@@ -86,15 +86,7 @@
 .navbar.navbar-expand-lg .nav-item:hover .nav-link:after {
     width: 100%;
 }
-.router-link-exact-active {
-    color: #34c5d9 !important;
-    border-bottom: 1px solid;
-}
-.navbar-item__action li i .router-link-exact-active {
-    color: #ffffff !important;
-    background-color: #34c5d9;
-    border-radius: 50%;
-}
+
 .navbar.navbar-expand-lg .nav-link.dropdown-toggle {
     padding-right: 16px;
 }

@@ -1,131 +1,179 @@
 <template>
-    <section class="post__section">
-        <div class="container mt-3 col-md-10">
-            <div class="row">
-                <!-- first Card -->
-                <!--Suggested research-->
-                <div class="col-lg-8">
-                    <div
-                        class="row"
-                        v-for="(post, index) in posts"
-                        :key="index"
-                        v-if="posts.length"
-                    >
-                        <div class="col-1 m-auto vote">
-                            <i
-                                @click="upVote(index)"
-                                :class="[
-                                    post.authUserVote == 'up'
-                                        ? 'fa-solid fa-caret-up upActive'
-                                        : 'fa-solid fa-caret-up',
-                                    'fa-solid fa-caret-up',
-                                ]"
-                            ></i>
-                            <h6>{{ post.avgVote }}</h6>
-                            <i
-                                @click="downVote(index)"
-                                :class="[
-                                    post.authUserVote == 'down'
-                                        ? 'fa-solid fa-caret-down downActive'
-                                        : 'fa-solid fa-caret-down',
-                                    'fa-solid fa-caret-down',
-                                ]"
-                            ></i>
-                        </div>
-                        <div class="col-11">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="d-block m-auto">
-                                        <img
-                                            :src="post.image"
-                                            alt="img"
-                                            class="img-fluid profile-img float-start me-2"
-                                        />
-                                        <div class="float-start">
-                                            <h6>
-                                                <router-link
-                                                    :to="`/profile/${post.user_slug}/${post.user_id}`"
-                                                >
-                                                    {{ post.name }}
-                                                </router-link>
-                                            </h6>
-                                            <p>
-                                                {{ post.designation }}
-                                                .
-                                                {{ post.department }}
-                                            </p>
-                                        </div>
-                                        <div
-                                            v-if="post.user_id != authUser.id"
-                                            class="btn-edit mx-2 float-end"
-                                            @click="reset()"
+    <div>
+        <div v-if="isLoading == false">
+            <section class="container pt-4 pb-4 col-lg-8">
+                <div class="home-post-section">
+                    <!-- post description -->
+                    <div class="post-description menu-item">
+                        <div
+                            class="menu-item-box"
+                            v-for="(post, index) in posts"
+                            :key="index"
+                            v-if="posts.length"
+                        >
+                            <div class="vote">
+                                <span @click="upVote(index)">
+                                    <i
+                                        :class="[
+                                            post.authUserVote == 'up'
+                                                ? 'fa-solid fa-caret-up upActive'
+                                                : 'fa-solid fa-caret-up',
+                                            'fa-solid fa-caret-up',
+                                        ]"
+                                    ></i>
+                                </span>
+                                <h6>{{ post.avgVote }}</h6>
+                                <span @click="downVote(index)">
+                                    <i
+                                        :class="[
+                                            post.authUserVote == 'down'
+                                                ? 'fa-solid fa-caret-down downActive'
+                                                : 'fa-solid fa-caret-down',
+                                            'fa-solid fa-caret-down',
+                                        ]"
+                                    ></i>
+                                </span>
+                            </div>
+                            <div class="post-details">
+                                <div class="header">
+                                    <img :src="post.image" alt="img" />
+                                    <div class="header-content">
+                                        <router-link
+                                            :to="`/profile/${post.slug}/${post.user_id}`"
                                         >
-                                            <a>Follow</a>
-                                        </div>
+                                            {{ post.name }}
+                                        </router-link>
+                                        <!-- . {{ item.created_at }} -->
+
+                                        <p>
+                                            {{ post.designation }} .
+                                            {{ post.department }}
+                                        </p>
                                     </div>
                                 </div>
-                                <div class="card-body">
-                                    <!-- <div class="d-block">
-                                        <img
-                                            :src="'images/blockchain.jpg'"
-                                            alt="img"
-                                            class="img-fluid home-img"
-                                        /><img
-                                            :src="'images/java-oops.png'"
-                                            alt="img"
-                                            class="img-fluid home-img"
-                                        /><img
-                                            :src="'images/success.jpg'"
-                                            alt="img"
-                                            class="img-fluid home-img"
-                                        />
-                                    </div> -->
-                                    <!-- <div class="row mb-3">
-                                        <div class="d-block my-auto">
-                                            <img
-                                                :src="post.image"
-                                                alt="img"
-                                                class="img-fluid profile-img float-start me-2"
-                                            />
-                                            <div class="float-start">
-                                                <h6>
-                                                    <router-link
-                                                        :to="`/profile/${post.user_slug}/${post.user_id}`"
-                                                    >
-                                                        {{ post.name }}
-                                                    </router-link>
-                                                </h6>
-                                                <p>
-                                                    {{ post.designation }}
-                                                    .
-                                                    {{ post.department }}
-                                                </p>
-                                            </div>
-                                            <div class="float-end my-auto">
-                                                <a>Follow</a>
-                                            </div>
-                                        </div>
-                                    </div> -->
-                                    <h3>
-                                        {{ post.title }}
-                                    </h3>
-                                    <p v-if="post.abstract != null">
-                                        {{ post.abstract.substring(0, 190) }}
-                                        ...
-                                        <router-link
-                                            :to="`/description/${post.slug}`"
-                                            >See more</router-link
-                                        >
-                                    </p>
+                                <h5 class="menu-item--title">
+                                    {{ post.title }}
+                                </h5>
+                                <div class="mt-2 mb-2">
+                                    <router-link
+                                        :to="`/description/${post.slug}`"
+                                        class="main-btn main-btn__border d-inline-block text-center"
+                                    >
+                                        {{ post.type }}</router-link
+                                    >
+                                </div>
+                                <p v-if="post.abstract != null">
+                                    {{ post.abstract.substring(0, 190) }}
+                                    ...
+                                    <router-link
+                                        :to="`/description/${post.slug}`"
+                                        >See more</router-link
+                                    >
+                                </p>
 
-                                    <div class="mt-2 mb-2">
-                                        <router-link
-                                            :to="`/description/${post.slug}`"
-                                            class="main-btn main-btn__border d-inline-block text-center"
+                                <div v-if="post.authors.length">
+                                    <p
+                                        v-if="
+                                            post.authors.length > 1 &&
+                                            post.type != 'Project'
+                                        "
+                                        class="mt-2"
+                                    >
+                                        Authors:
+                                        <span v-for="author in post.authors">
+                                            <router-link
+                                                :to="`/profile/${author.slug}/${author.id}`"
+                                                class="authors"
+                                                >{{ author.name }}</router-link
+                                            >
+                                        </span>
+                                    </p>
+                                    <p
+                                        v-else-if="
+                                            post.authors.length > 1 &&
+                                            post.type == 'Project'
+                                        "
+                                        class="mt-2"
+                                    >
+                                        Team Members:
+                                        <span v-for="author in post.authors">
+                                            <router-link
+                                                :to="`/profile/${author.slug}/${author.id}`"
+                                                class="authors"
+                                                >{{ author.name }}</router-link
+                                            >
+                                        </span>
+                                    </p>
+                                    <p
+                                        class="mt-2"
+                                        v-else-if="
+                                            post.authors.length == 1 &&
+                                            post.type == 'Project'
+                                        "
+                                    >
+                                        Team Member:
+                                        <span v-for="author in post.authors">
+                                            <router-link
+                                                :to="`/profile/${author.slug}/${author.id}`"
+                                                class="authors"
+                                                >{{ author.name }}</router-link
+                                            >
+                                        </span>
+                                    </p>
+                                    <p
+                                        class="mt-2"
+                                        v-else-if="
+                                            post.authors.length == 1 &&
+                                            post.type != 'Project'
+                                        "
+                                    >
+                                        Author:
+                                        <span v-for="author in post.authors">
+                                            <router-link
+                                                :to="`/profile/${author.slug}/${author.id}`"
+                                                class="authors"
+                                                >{{ author.name }}</router-link
+                                            >
+                                        </span>
+                                    </p>
+                                </div>
+                                <div
+                                    v-else-if="
+                                        post.authors.length &&
+                                        post.type == 'Project'
+                                    "
+                                >
+                                    <p
+                                        v-if="post.authors.length > 1"
+                                        class="mt-2"
+                                    >
+                                        Team Members:
+                                        <span
+                                            v-for="author in post.authors"
+                                            v-if="post.authors.length"
                                         >
-                                            {{ post.type }}</router-link
+                                            <router-link
+                                                :to="`/profile/${author.slug}/${author.id}`"
+                                                class="authors"
+                                                >{{ author.name }}</router-link
+                                            >
+                                        </span>
+                                    </p>
+                                    <p class="mt-2" v-else>
+                                        Team Member:
+                                        <span
+                                            v-for="author in post.authors"
+                                            v-if="post.authors.length"
                                         >
-                                    </div>
+                                            <router-link
+                                                :to="`/profile/${author.slug}/${author.id}`"
+                                                class="authors"
+                                                >{{ author.name }}</router-link
+                                            >
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="sub-title">
                                     <p>
                                         {{ post.created_at }}
                                         .
@@ -137,131 +185,15 @@
                                         . <a>{{ post.upVote }} UpVote</a> .
                                         <a>{{ post.downVote }} DownVote</a>
                                     </p>
-                                    <div v-if="post.authors.length">
-                                        <p
-                                            v-if="
-                                                post.authors.length > 1 &&
-                                                post.type != 'Project'
-                                            "
-                                            class="mt-2"
-                                        >
-                                            Authors:
-                                            <span
-                                                v-for="author in post.authors"
-                                            >
-                                                <router-link
-                                                    :to="`/profile/${author.slug}/${author.id}`"
-                                                    class="authors"
-                                                    >{{
-                                                        author.name
-                                                    }}</router-link
-                                                >
-                                            </span>
-                                        </p>
-                                        <p
-                                            v-else-if="
-                                                post.authors.length > 1 &&
-                                                post.type == 'Project'
-                                            "
-                                            class="mt-2"
-                                        >
-                                            Team Members:
-                                            <span
-                                                v-for="author in post.authors"
-                                            >
-                                                <router-link
-                                                    :to="`/profile/${author.slug}/${author.id}`"
-                                                    class="authors"
-                                                    >{{
-                                                        author.name
-                                                    }}</router-link
-                                                >
-                                            </span>
-                                        </p>
-                                        <p
-                                            class="mt-2"
-                                            v-else-if="
-                                                post.authors.length == 1 &&
-                                                post.type == 'Project'
-                                            "
-                                        >
-                                            Team Member:
-                                            <span
-                                                v-for="author in post.authors"
-                                            >
-                                                <router-link
-                                                    :to="`/profile/${author.slug}/${author.id}`"
-                                                    class="authors"
-                                                    >{{
-                                                        author.name
-                                                    }}</router-link
-                                                >
-                                            </span>
-                                        </p>
-                                        <p
-                                            class="mt-2"
-                                            v-else-if="
-                                                post.authors.length == 1 &&
-                                                post.type != 'Project'
-                                            "
-                                        >
-                                            Author:
-                                            <span
-                                                v-for="author in post.authors"
-                                            >
-                                                <router-link
-                                                    :to="`/profile/${author.slug}/${author.id}`"
-                                                    class="authors"
-                                                    >{{
-                                                        author.name
-                                                    }}</router-link
-                                                >
-                                            </span>
-                                        </p>
-                                    </div>
-                                    <div
-                                        v-else-if="
-                                            post.authors.length &&
-                                            post.type == 'Project'
-                                        "
+                                    <a
+                                        v-if="post.like_count"
+                                        @click="getLikedUser(index)"
                                     >
-                                        <p
-                                            v-if="post.authors.length > 1"
-                                            class="mt-2"
-                                        >
-                                            Team Members:
-                                            <span
-                                                v-for="author in post.authors"
-                                                v-if="post.authors.length"
-                                            >
-                                                <router-link
-                                                    :to="`/profile/${author.slug}/${author.id}`"
-                                                    class="authors"
-                                                    >{{
-                                                        author.name
-                                                    }}</router-link
-                                                >
-                                            </span>
-                                        </p>
-                                        <p class="mt-2" v-else>
-                                            Team Member:
-                                            <span
-                                                v-for="author in post.authors"
-                                                v-if="post.authors.length"
-                                            >
-                                                <router-link
-                                                    :to="`/profile/${author.slug}/${author.id}`"
-                                                    class="authors"
-                                                    >{{
-                                                        author.name
-                                                    }}</router-link
-                                                >
-                                            </span>
-                                        </p>
-                                    </div>
+                                        {{ post.like_count }}
+                                        <i class="fa-solid fa-thumbs-up"></i>
+                                    </a>
                                 </div>
-
-                                <div class="card-footer text-muted">
+                                <div class="footer">
                                     <span>
                                         <button class="main-btn main-btn__bg">
                                             Download
@@ -292,328 +224,52 @@
                                                     post.authUserLike == 'yes',
                                             }"
                                         >
-                                            <span v-if="post.like_count > 1"
-                                                >{{
-                                                    post.like_count
-                                                }}
-                                                Likes</span
-                                            >
-                                            <span v-if="post.like_count <= 1"
-                                                >{{
-                                                    post.like_count
-                                                }}
-                                                Like</span
-                                            >
+                                            Like
                                         </a>
-                                        <!-- <a
-                                            ><img
-                                                src="https://img.icons8.com/small/16/null/topic--v1.png"
-                                            />
-                                            <router-link
-                                                :to="`/description/${post.slug}`"
-                                                >Comment</router-link
-                                            >
-                                        </a> -->
                                     </span>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div v-if="isLoading == true">
-                        <h2 class="text-center pt-50">Loading...</h2>
-                    </div>
                 </div>
-
-                <!-- second Card -->
-                <div class="col-lg-4">
-                    <!-- <div class="shop-searchBy--radio">
-                        <h4 class="shop-head">Department</h4>
-                        <div
-                            class="form-check"
-                            v-for="(department, index) in departments"
-                            :key="index"
-                        >
-                            <input
-                                class="form-check-input"
-                                type="radio"
-                                name="flexRadioDefault"
-                                id="flexRadioDefault1"
-                                :value="department.id"
-                                v-model="filter.department"
-                                @change="filterPosts"
-                            />
-                            <label
-                                class="form-check-label"
-                                for="flexRadioDefault1"
-                            >
-                                {{ department.department_name }}
-                            </label>
-                        </div>
-                    </div> -->
-                    <!--People you may know-->
-                    <div
-                        class="card mb-3"
-                        v-if="users != '' && isLoading == false"
-                    >
-                        <div class="card-header">
-                            <div class="d-block">
-                                <div class="float-start">
-                                    <h6>People you may know</h6>
-                                </div>
-                                <div
-                                    class="btn-edit float-end"
-                                    @click="reset()"
-                                >
-                                    <i class="fa-solid fa-ellipsis"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            v-for="(user, index) in users"
-                            v-if="authUser.id != user.id && index < 4"
-                            :key="index"
-                        >
-                            <div
-                                class="card-body"
-                                v-if="authUser.id != user.id"
-                            >
-                                <div class="d-block my-auto">
-                                    <img
-                                        :src="user.image"
-                                        alt="img"
-                                        class="img-fluid profile-img float-start me-2"
-                                    />
-                                    <div class="float-start">
-                                        <h6 @click="getUser(user)">
-                                            {{ user.name }}
-                                        </h6>
-                                        <p>
-                                            {{ user.designation }} .
-                                            {{ user.department }}
-                                        </p>
-                                    </div>
-                                    <div class="float-end my-auto">
-                                        <a>Follow</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-footer text-muted text-center">
-                            <div class="d-block">
-                                <a class="mx-2 text-dark">
-                                    View all researchers
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- People with similar skills -->
-                    <div
-                        class="card mb-3"
-                        v-if="users != '' && isLoading == false"
-                    >
-                        <div class="card-header">
-                            <div class="d-block pb-4">
-                                <div class="float-start">
-                                    <h6>People with similar skills</h6>
-                                </div>
-                                <div
-                                    class="btn-edit mx-2 float-end"
-                                    @click="reset()"
-                                >
-                                    <i class="fa-solid fa-ellipsis"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            v-for="(user, index) in users"
-                            v-if="authUser.id != user.id && index < 4"
-                            :key="index"
-                        >
-                            <div class="card-body">
-                                <div class="d-block my-auto">
-                                    <img
-                                        :src="user.image"
-                                        alt="img"
-                                        class="img-fluid profile-img float-start me-2"
-                                    />
-                                    <div class="float-start">
-                                        <h6 @click="getUser(user)">
-                                            {{ user.name }}
-                                        </h6>
-                                        <p>
-                                            {{ user.designation }} .
-                                            {{ user.department }}
-                                        </p>
-                                    </div>
-                                    <div class="float-end my-auto">
-                                        <a>Follow</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer text-muted text-center">
-                            <div class="d-block">
-                                <a class="mx-2 text-dark">
-                                    View all related researchers
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- loader1 -->
-                    <div class="card mb-3" v-if="isLoading == true">
-                        <div class="card-header p-3">
-                            <div class="loader">
-                                <h6 />
-                            </div>
-                        </div>
-
-                        <div class="m-2">
-                            <div class="d-block my-auto">
-                                <img
-                                    :src="'/public/profileImages/download.jpg'"
-                                    alt="img"
-                                    class="img-fluid float-start me-2 image-loader"
-                                />
-                                <div class="float-start loader">
-                                    <h6 />
-                                    <p class="d-inline-block" />
-
-                                    <p class="d-inline-block" />
-                                </div>
-                                <div class="float-end my-auto loader">
-                                    <p />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="m-2">
-                            <div class="d-block my-auto">
-                                <img
-                                    :src="'/public/profileImages/download.jpg'"
-                                    alt="img"
-                                    class="img-fluid float-start me-2 image-loader"
-                                />
-                                <div class="float-start loader">
-                                    <h6 />
-                                    <p class="d-inline-block" />
-
-                                    <p class="d-inline-block" />
-                                </div>
-                                <div class="float-end my-auto loader">
-                                    <p />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="m-2">
-                            <div class="d-block my-auto">
-                                <img
-                                    :src="'/public/profileImages/download.jpg'"
-                                    alt="img"
-                                    class="img-fluid float-start me-2 image-loader"
-                                />
-                                <div class="float-start loader">
-                                    <h6 />
-                                    <p class="d-inline-block" />
-
-                                    <p class="d-inline-block" />
-                                </div>
-                                <div class="float-end my-auto loader">
-                                    <p />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div
-                            class="card-footer text-muted d-block text-center p-3"
-                        >
-                            <div class="loader">
-                                <h6 />
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- loader2 -->
-                    <div class="card mb-3" v-if="isLoading == true">
-                        <div class="card-header p-3">
-                            <div class="loader">
-                                <h6 />
-                            </div>
-                        </div>
-
-                        <div class="m-2">
-                            <div class="d-block my-auto">
-                                <img
-                                    :src="'/public/profileImages/download.jpg'"
-                                    alt="img"
-                                    class="img-fluid float-start me-2 image-loader"
-                                />
-                                <div class="float-start loader">
-                                    <h6 />
-                                    <p class="d-inline-block" />
-
-                                    <p class="d-inline-block" />
-                                </div>
-                                <div class="float-end my-auto loader">
-                                    <p />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="m-2">
-                            <div class="d-block my-auto">
-                                <img
-                                    :src="'/public/profileImages/download.jpg'"
-                                    alt="img"
-                                    class="img-fluid float-start me-2 image-loader"
-                                />
-                                <div class="float-start loader">
-                                    <h6 />
-                                    <p class="d-inline-block" />
-
-                                    <p class="d-inline-block" />
-                                </div>
-                                <div class="float-end my-auto loader">
-                                    <p />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="m-2">
-                            <div class="d-block my-auto">
-                                <img
-                                    :src="'/public/profileImages/download.jpg'"
-                                    alt="img"
-                                    class="img-fluid float-start me-2 image-loader"
-                                />
-                                <div class="float-start loader">
-                                    <h6 />
-                                    <p class="d-inline-block" />
-
-                                    <p class="d-inline-block" />
-                                </div>
-                                <div class="float-end my-auto loader">
-                                    <p />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-footer text-muted text-center p-3">
-                            <div class="d-block text-center loader">
-                                <h6 />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </section>
         </div>
-    </section>
+
+        <!--***** Liked User Modal *****-->
+        <Modal
+            v-model="likedUserModal"
+            title="People Who Liked"
+            :mask-closable="true"
+            :closable="true"
+        >
+            <div class="comment-liked" v-for="user in likedUser">
+                <img :src="user.image" alt="img" />
+                <router-link :to="`/profile/${user.slug}/${user.user_id}`">
+                    {{ user.name }}
+                </router-link>
+            </div>
+            <div slot="footer"></div>
+        </Modal>
+
+        <!-- <Modal
+            v-model="likedUserModal"
+            title="People Who Liked"
+            :mask-closable="true"
+            :closable="true"
+            :variant="hidden"
+        >
+            <div class="comment-liked" v-for="user in likedUser">
+                <img :src="user.image" alt="img" />
+                <router-link :to="`/profile/${user.slug}/${user.user_id}`">
+                    {{ user.name }}
+                </router-link>
+            </div>
+        </Modal> -->
+
+        <div v-if="isLoading == true">
+            <h2 class="text-center pt-50">Loading...</h2>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -626,10 +282,12 @@ export default {
     // and will be exposed on `this`.
     data() {
         return {
+            likedUserModal: false,
             isLoading: true,
             users: [],
             posts: [],
             departments: [],
+            likedUser: [],
             url: "",
             user_id: "",
             id: "",
@@ -650,40 +308,107 @@ export default {
             this.$router.push(`/profile/${this.user_slug}/${this.user_id}`);
             this.keyword = "";
         },
+
         async upVote(index) {
-            if (this.posts[index].user_id != this.authUser.id) {
-                let obj = {
-                    id: this.posts[index].id,
-                    upVote: 1,
-                };
-                console.log(obj);
-                const res = await this.callApi("post", "/api/up_vote", obj);
-                if (this.res.status == 200) {
-                    this.posts[index].upVote -= 1;
-                    this.posts[index].avgVote -= 1;
-                    this.posts[index].authUserVote = "none";
-                } else if (this.res.status == 201) {
-                    this.posts[index].upVote += 1;
-                    this.posts[index].avgVote += 1;
-                    this.posts[index].authUserVote = "up";
-                } else if (this.res.data == "deleted down") {
-                    this.posts[index].upVote += 1;
-                    this.posts[index].avgVote += 1;
-                    this.posts[index].downVote -= 1;
-                    this.posts[index].authUserVote = "up";
+            if (
+                this.authUser.userType == "teacher" ||
+                this.authUser.userType == "admin"
+            ) {
+                if (this.posts[index].user_id != this.authUser.id) {
+                    let upVoteCount1 = parseInt(this.posts[index].upVote, 10);
+                    let avgVoteCount1 = parseInt(this.posts[index].avgVote, 10);
+                    let downVoteCount1 = parseInt(
+                        this.posts[index].downVote,
+                        10
+                    );
+                    let obj = {
+                        id: this.posts[index].id,
+                        upVote: 1,
+                    };
+                    console.log(obj);
+                    const res = await this.callApi("post", "/api/up_vote", obj);
+                    if (res.status == 200) {
+                        this.posts[index].upVote = upVoteCount1 - 1;
+                        this.posts[index].avgVote =
+                            upVoteCount1 - 1 - downVoteCount1;
+                        this.posts[index].authUserVote = "";
+                    }
+                    if (res.status == 201) {
+                        this.posts[index].upVote = upVoteCount1 + 1;
+                        this.posts[index].avgVote =
+                            upVoteCount1 + 1 - (downVoteCount1 - 1);
+                        this.posts[index].downVote = downVoteCount1 - 1;
+                        this.posts[index].authUserVote = "up";
+                    }
+                    if (res.status == 202) {
+                        this.posts[index].upVote = upVoteCount1 + 1;
+                        this.posts[index].avgVote =
+                            upVoteCount1 + 1 - downVoteCount1;
+                        this.posts[index].authUserVote = "up";
+                    }
+                } else {
+                    this.i("You can't vote your own post!");
                 }
+            } else {
+                this.i(
+                    "Thanks for the feedback! You are not eligible to cast a vote, but your feedback has been recorded."
+                );
             }
         },
+
         async downVote(index) {
-            if (this.posts[index].user_id != this.authUser.id) {
-                let obj = {
-                    id: this.posts[index].id,
-                    downVote: 1,
-                };
-                console.log(obj);
-                const res = await this.callApi("post", "/api/down_vote", obj);
+            if (
+                this.authUser.userType == "teacher" ||
+                this.authUser.userType == "admin"
+            ) {
+                if (this.posts[index].user_id != this.authUser.id) {
+                    let upVoteCount1 = parseInt(this.posts[index].upVote, 10);
+                    let avgVoteCount1 = parseInt(this.posts[index].avgVote, 10);
+                    let downVoteCount1 = parseInt(
+                        this.posts[index].downVote,
+                        10
+                    );
+
+                    let obj = {
+                        id: this.posts[index].id,
+                        downVote: 1,
+                    };
+                    console.log(obj);
+                    const res = await this.callApi(
+                        "post",
+                        "/api/down_vote",
+                        obj
+                    );
+                    if (res.status == 200) {
+                        this.posts[index].avgVote =
+                            upVoteCount1 - (downVoteCount1 - 1);
+                        this.posts[index].downVote = downVoteCount1 - 1;
+                        this.posts[index].authUserVote = "";
+                    }
+                    if (res.status == 201) {
+                        this.posts[index].upVote = upVoteCount1 - 1;
+                        this.posts[index].downVote = downVoteCount1 + 1;
+                        this.posts[index].avgVote =
+                            upVoteCount1 - 1 - (downVoteCount1 + 1);
+                        this.posts[index].authUserVote = "down";
+                    }
+
+                    if (res.status == 202) {
+                        this.posts[index].avgVote =
+                            upVoteCount1 - (downVoteCount1 + 1);
+                        this.posts[index].downVote = downVoteCount1 + 1;
+                        this.posts[index].authUserVote = "down";
+                    }
+                } else {
+                    this.i("You can't vote your own post!");
+                }
+            } else {
+                this.i(
+                    "Thanks for the feedback! You are not eligible to cast a vote, but your feedback has been recorded."
+                );
             }
         },
+
         async like(index) {
             // if (this.posts[index].user_id != this.authUser.id) {
             let obj = {
@@ -700,6 +425,23 @@ export default {
                 this.posts[index].authUserLike = "no";
             }
             // }
+        },
+
+        async getLikedUser(index) {
+            let obj = {
+                id: this.posts[index].id,
+            };
+            console.log(this.posts[index].id);
+            const res = await this.callApi(
+                "get",
+                `/api/get_liked_user?id=${this.posts[index].id}`
+            );
+            if (res.status == 200) {
+                this.likedUser = res.data.data;
+                this.likedUserModal = true;
+            } else {
+                this.swr();
+            }
         },
         async download(post) {
             this.url = post.attachment;

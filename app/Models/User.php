@@ -37,13 +37,10 @@ class User extends Authenticatable
         'skills',
         'interests',
         'honors_and_awards',
-        'isVerifiedCode',
-        'isEmailVerified',
-        'isVerifiedByAdmin',
         'userType',
-        'reset_pass_otp',
-        'twoFactorCode',
-        'expires_at',
+        'passwordToken',
+        'isActive', 
+        'token_expired_at'
     ];
     public function setPasswordAttribute($password)
     {
@@ -101,13 +98,13 @@ class User extends Authenticatable
     ];
 
 
-    public function post(): HasMany{
-        return $this->hasMany(Post::class, 'user_id');
-    }
-    public function comment(): HasMany
-    {
-        return $this->hasMany(Comment::class, 'user_id');
-    }
+    // public function post(): HasMany{
+    //     return $this->hasMany(Post::class, 'user_id');
+    // }
+    // public function comment(): HasMany
+    // {
+    //     return $this->hasMany(Comment::class, 'user_id');
+    // }
     // public function teams(): HasMany{
     //     return $this->hasMany(Team::class, 'owner_id','id');
     // }

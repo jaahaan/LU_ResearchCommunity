@@ -1,90 +1,151 @@
 <template>
     <div>
         <div v-if="isLoading == false">
-            <div class="post">
-                <div class="container col-md-9 post-head">
-                    <div class="row post-head-main-body">
-                        <div class="col-1 m-auto vote">
-                            <span @click="upVote">
-                                <i
-                                    :class="[
-                                        authUserVoteCount == 'up'
-                                            ? 'fa-solid fa-caret-up upActive'
-                                            : 'fa-solid fa-caret-up',
-                                        'fa-solid fa-caret-up',
-                                    ]"
-                                ></i>
-                            </span>
-                            <h6>{{ avgVoteCount }}</h6>
-                            <span @click="downVote">
-                                <i
-                                    :class="[
-                                        authUserVoteCount == 'down'
-                                            ? 'fa-solid fa-caret-down downActive'
-                                            : 'fa-solid fa-caret-down',
-                                        'fa-solid fa-caret-down',
-                                    ]"
-                                ></i>
-                            </span>
-                        </div>
-                        <div class="col-11">
-                            <div>
-                                <!-- <div class="d-block">
-                                        <img
-                                            :src="'images/blockchain.jpg'"
-                                            alt="img"
-                                            class="img-fluid home-img"
-                                        /><img
-                                            :src="'images/java-oops.png'"
-                                            alt="img"
-                                            class="img-fluid home-img"
-                                        /><img
-                                            :src="'images/success.jpg'"
-                                            alt="img"
-                                            class="img-fluid home-img"
-                                        />
-                                    </div> -->
-                                <div class="row mb-3">
-                                    <div class="d-block my-auto">
-                                        <img
-                                            :src="details.image"
-                                            alt="img"
-                                            class="img-fluid profile-img float-start me-2"
-                                        />
-                                        <div class="float-start">
-                                            <h6>
-                                                <router-link
-                                                    :to="`/profile/${details.slug}/${details.user_id}`"
-                                                >
-                                                    {{ details.name }}
-                                                </router-link>
-                                            </h6>
-                                            <p>
-                                                {{ details.designation }}
-                                                .
-                                                {{ details.department }}
-                                            </p>
-                                        </div>
-                                        <div class="float-end my-auto">
-                                            <a>Follow</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr class="my-2" />
+            <section class="container pt-4 pb-4">
+                <div class="post-section">
+                    <div class="post-menu">
+                        <figure>
+                            <img :src="details.image" alt="" />
+                        </figure>
+                        <router-link
+                            :to="`/profile/${details.slug}/${details.user_id}`"
+                        >
+                            <h4 class="header">
+                                {{ details.name }}
+                            </h4>
+                        </router-link>
 
-                                <h3>
+                        <p>
+                            {{ details.designation }}
+                            .
+                            {{ details.department }}
+                        </p>
+                        <ul class="post-menu--list">
+                            <li class="post-menu--list---item">
+                                <a
+                                    class="menu-link"
+                                    aria-current="page"
+                                    v-bind:class="{
+                                        active: isPostInfoIndex === 1,
+                                    }"
+                                    v-on:click="showPostInfo(1)"
+                                >
+                                    <h4>Overview</h4></a
+                                >
+                            </li>
+                            <li class="post-menu--list---item" v-if="authUser">
+                                <a
+                                    class="menu-link"
+                                    aria-current="page"
+                                    v-bind:class="{
+                                        active: isPostInfoIndex === 2,
+                                    }"
+                                    v-on:click="showPostInfo(2)"
+                                >
+                                    <h4>Comments</h4></a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- post description -->
+                    <div class="post-description menu-item">
+                        <div class="menu-item-box">
+                            <div class="post-details">
+                                <h4 class="menu-item--title">
                                     {{ details.title }}
-                                </h3>
-                                <p>
+                                </h4>
+                                <h5 class="sub-title">
                                     {{ details.type }}
-                                </p>
-                                <p v-if="details.type == 'Conference Paper'">
+                                </h5>
+                                <h5
+                                    class="sub-title"
+                                    v-if="details.type == 'Conference Paper'"
+                                >
                                     Conference: 2021 International Conference on
                                     Science & Contemporary Technologies (ICSCT)
-                                </p>
+                                </h5>
 
-                                <p>
-                                    {{ details.created_at }} .
+                                <div
+                                    v-if="details.authors != null"
+                                    v-for="author in details.authors"
+                                >
+                                    <h5
+                                        class="sub-title"
+                                        v-if="
+                                            details.authors.length > 1 &&
+                                            details.type != 'Project'
+                                        "
+                                    >
+                                        Authors:
+                                        <span>
+                                            <router-link
+                                                :to="`/profile/${author.slug}/${author.id}`"
+                                                class="authors"
+                                                v-if="authUser"
+                                                >{{ author.name }}</router-link
+                                            >
+                                            <a v-else>{{ author.name }}</a>
+                                        </span>
+                                    </h5>
+                                    <h5
+                                        class="sub-title"
+                                        v-else-if="
+                                            details.authors.length > 1 &&
+                                            details.type == 'Project'
+                                        "
+                                    >
+                                        Team Members:
+                                        <span>
+                                            <router-link
+                                                :to="`/profile/${author.slug}/${author.id}`"
+                                                class="authors"
+                                                v-if="authUser"
+                                                >{{ author.name }}</router-link
+                                            >
+                                            <a v-else>{{ author.name }}</a>
+                                        </span>
+                                    </h5>
+                                    <h5
+                                        class="sub-title"
+                                        v-else-if="
+                                            details.authors.length == 1 &&
+                                            details.type == 'Project'
+                                        "
+                                    >
+                                        Team Member:
+                                        <span>
+                                            <router-link
+                                                :to="`/profile/${author.slug}/${author.id}`"
+                                                class="authors"
+                                                v-if="authUser"
+                                                >{{ author.name }}</router-link
+                                            >
+                                            <a v-else>{{ author.name }}</a>
+                                        </span>
+                                    </h5>
+                                    <h5
+                                        class="sub-title"
+                                        v-else-if="
+                                            details.authors.length == 1 &&
+                                            details.type != 'Project'
+                                        "
+                                    >
+                                        Author:
+                                        <span>
+                                            <router-link
+                                                :to="`/profile/${author.slug}/${author.id}`"
+                                                class="authors"
+                                                v-if="authUser"
+                                                >{{ author.name }}</router-link
+                                            >
+                                            <a v-else>{{ author.name }}</a>
+                                        </span>
+                                    </h5>
+                                </div>
+
+                                <h6>
+                                    <!-- {{ details.created_at }} . -->
                                     <a v-if="details.read_count > 1"
                                         >{{ details.read_count }} Reads</a
                                     ><a v-else-if="details.read_count <= 1"
@@ -92,102 +153,7 @@
                                     >
                                     . <a>{{ upVoteCount }} UpVote</a> .
                                     <a>{{ downVoteCount }} DownVote</a>
-                                </p>
-                                <div v-if="details.authors != null">
-                                    <p
-                                        v-if="
-                                            details.authors.length > 1 &&
-                                            details.type != 'Project'
-                                        "
-                                    >
-                                        Authors:
-                                        <span v-for="author in details.authors">
-                                            <router-link
-                                                :to="`/profile/${author.slug}/${author.id}`"
-                                                class="authors"
-                                                >{{ author.name }}</router-link
-                                            >
-                                        </span>
-                                    </p>
-                                    <p
-                                        v-else-if="
-                                            details.authors.length > 1 &&
-                                            details.type == 'Project'
-                                        "
-                                    >
-                                        Team Members:
-                                        <span v-for="author in details.authors">
-                                            <router-link
-                                                :to="`/profile/${author.slug}/${author.id}`"
-                                                class="authors"
-                                                >{{ author.name }}</router-link
-                                            >
-                                        </span>
-                                    </p>
-                                    <p
-                                        v-else-if="
-                                            details.authors.length == 1 &&
-                                            details.type == 'Project'
-                                        "
-                                    >
-                                        Team Member:
-                                        <span v-for="author in details.authors">
-                                            <router-link
-                                                :to="`/profile/${author.slug}/${author.id}`"
-                                                class="authors"
-                                                >{{ author.name }}</router-link
-                                            >
-                                        </span>
-                                    </p>
-                                    <p
-                                        v-else-if="
-                                            details.authors.length == 1 &&
-                                            details.type != 'Project'
-                                        "
-                                    >
-                                        Author:
-                                        <span v-for="author in details.authors">
-                                            <router-link
-                                                :to="`/profile/${author.slug}/${author.id}`"
-                                                class="authors"
-                                                >{{ author.name }}</router-link
-                                            >
-                                        </span>
-                                    </p>
-                                </div>
-                                <div
-                                    v-else-if="
-                                        details.authors != null &&
-                                        details.type == 'Project'
-                                    "
-                                >
-                                    <p v-if="details.authors.length > 1">
-                                        Team Members:
-                                        <span
-                                            v-for="author in details.authors"
-                                            v-if="details.authors.length"
-                                        >
-                                            <router-link
-                                                :to="`/profile/${author.slug}/${author.id}`"
-                                                class="authors"
-                                                >{{ author.name }}</router-link
-                                            >
-                                        </span>
-                                    </p>
-                                    <p v-else>
-                                        Team Member:
-                                        <span
-                                            v-for="author in details.authors"
-                                            v-if="details.authors.length"
-                                        >
-                                            <router-link
-                                                :to="`/profile/${author.slug}/${author.id}`"
-                                                class="authors"
-                                                >{{ author.name }}</router-link
-                                            >
-                                        </span>
-                                    </p>
-                                </div>
+                                </h6>
                                 <div class="mt-3">
                                     <button
                                         class="main-btn"
@@ -205,336 +171,239 @@
                                     </a>
                                 </div>
                             </div>
+                            <div class="vote" v-if="authUser">
+                                <span @click="upVote">
+                                    <i
+                                        :class="[
+                                            authUserVoteCount == 'up'
+                                                ? 'fa-solid fa-caret-up upActive'
+                                                : 'fa-solid fa-caret-up',
+                                            'fa-solid fa-caret-up',
+                                        ]"
+                                    ></i>
+                                </span>
+                                <h6>{{ avgVoteCount }}</h6>
+                                <span @click="downVote">
+                                    <i
+                                        :class="[
+                                            authUserVoteCount == 'down'
+                                                ? 'fa-solid fa-caret-down downActive'
+                                                : 'fa-solid fa-caret-down',
+                                            'fa-solid fa-caret-down',
+                                        ]"
+                                    ></i>
+                                </span>
+                            </div>
+                        </div>
 
-                            <!-- <div class="card-footer text-muted p-3">
-                                <div class="d-block">
-                                    <button class="main-btn mx-2 float-start">
-                                        Download
-                                    </button>
+                        <div class="menu-item-box">
+                            <div v-if="isPostInfoIndex === 1">
+                                <!-- <template v-if="details.abstract">
+                                        <div class="card mb-2 p-3">
+                                            <i class="lni lni-folder"></i>
+                                            Add Your Project
+                                        </div>
+                                    </template> -->
+                                <h4 class="menu-item--title">
+                                    {{
+                                        details.type != "Project"
+                                            ? "Abstract"
+                                            : "Description"
+                                    }}
+                                </h4>
 
-                                    <button
-                                            class="main-btn mx-2 float-start"
+                                <h4 class="sub-title" v-if="details.abstract">
+                                    {{ details.abstract }}
+                                </h4>
+                                <h4 class="sub-title" v-else>
+                                    {{
+                                        details.type != "Project"
+                                            ? "The abstract for this research item is not available."
+                                            : "The description for this project is not available."
+                                    }}
+                                </h4>
+                            </div>
+
+                            <div v-if="isPostInfoIndex === 2" class="comment">
+                                <h4 class="menu-item--title">Comments</h4>
+                                <div class="comment-box">
+                                    <img :src="authUser.image" alt="img" />
+                                    <textarea
+                                        v-model="data.comment"
+                                        class="form-control form-outline"
+                                        placeholder="Add a comment"
+                                        ref="textarea"
+                                        rows="1"
+                                        @focus="resizeTextarea"
+                                        @keyup="resizeTextarea"
+                                        @click="showButton"
+                                    ></textarea>
+                                    <Icon
+                                        type="md-send"
+                                        v-if="showbtn == true"
+                                        @click="addComment"
+                                    />
+                                </div>
+                                <div
+                                    class="comment-section"
+                                    v-for="(item, index) in comments"
+                                    :key="index"
+                                >
+                                    <img :src="item.image" alt="img" />
+                                    <div class="comment-section-content">
+                                        <div
+                                            class="comment-section-content-main"
                                         >
                                             <router-link
-                                                :to="`/post_description/${post.title}/${post.id}`"
+                                                :to="`/profile/${item.slug}/${item.user_id}`"
                                             >
-                                                View
+                                                {{ item.name }}
                                             </router-link>
-                                        </button>
-                                    <a
-                                        v-if="details.url != null"
-                                        class="main-btn text-center mx-2 float-start"
-                                        :href="`${details.url}`"
-                                    >
-                                        Link
-                                    </a>
-                                    <a class="mx-2 float-end text-dark">
-                                        Share
-                                    </a>
-                                    <a class="mx-2 float-end text-dark">
-                                        Comment
-                                    </a>
-                                </div>
-                            </div> -->
-                        </div>
-                    </div>
-                    <hr />
-                    <section class="tab-section">
-                        <div class="section-header__action">
-                            <ul class="section-header__action--tab">
-                                <li
-                                    v-bind:class="{
-                                        active: isProductInfoIndex === 1,
-                                    }"
-                                    v-on:click="showProductInfo(1)"
-                                >
-                                    Overview
-                                </li>
-                                <li
-                                    v-bind:class="{
-                                        active: isProductInfoIndex === 2,
-                                    }"
-                                    v-on:click="showProductInfo(2)"
-                                >
-                                    Comments
-                                </li>
-                                <li
-                                    v-on:click="like"
-                                    v-bind:class="{
-                                        active: details.authUserLike === 'yes',
-                                    }"
-                                >
-                                    <span v-if="details.like_count > 1"
-                                        >{{ details.like_count }} Likes
-                                    </span>
-                                    <span v-if="details.like_count <= 1"
-                                        >{{ details.like_count }} Like</span
-                                    >
-                                </li>
-                            </ul>
-                        </div>
-                    </section>
-                </div>
-            </div>
-            <hr />
-            <div class="container mt-3 col-md-9">
-                <section class="tab-section">
-                    <div class="overview-tab" v-if="isProductInfoIndex === 1">
-                        <div class="overview-tab--details">
-                            <div class="row">
-                                <!-- first Card -->
-                                <!--Abstract-->
-                                <div class="col-lg-8">
-                                    <div
-                                        class="card mb-2"
-                                        v-if="
-                                            details.abstract &&
-                                            isLoading == false
-                                        "
-                                    >
-                                        <div class="card-header">
-                                            <div class="d-block">
-                                                <div class="float-start">
-                                                    <h5
-                                                        v-if="
-                                                            details.type !=
-                                                            'Project'
-                                                        "
-                                                    >
-                                                        Abstract
-                                                    </h5>
-                                                    <h5
-                                                        v-else-if="
-                                                            details.type ==
-                                                            'Project'
-                                                        "
-                                                    >
-                                                        Description
-                                                    </h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-body">
-                                            <p>{{ details.abstract }}</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                            <!-- . {{ item.created_at }} -->
 
-                                <!-- second Card -->
-                                <!-- Related Research -->
-                                <div class="col-lg-4">
-                                    <!--People you may know-->
-                                    <div class="card mb-2">
-                                        <div class="card-header">
-                                            <div class="d-block">
-                                                <div class="float-start">
-                                                    <h5>Related Research</h5>
-                                                </div>
-                                            </div>
+                                            <p>
+                                                {{ item.comment }}
+                                            </p>
                                         </div>
-                                        <div class="card-body">
-                                            <p>Hello</p>
-                                        </div>
-                                        <div class="card-footer text-muted">
-                                            View all researchers
-                                            <i
-                                                class="fa-solid fa-arrow-right"
-                                            ></i>
-                                        </div>
-                                    </div>
-                                    <!-- loader1 -->
-                                    <div
-                                        class="card mb-3"
-                                        v-if="isLoading == true"
-                                    >
-                                        <div class="card-header">
-                                            <div class="loader">
-                                                <h6 />
-                                            </div>
-                                        </div>
-
-                                        <div class="m-2">
-                                            <div class="d-block my-auto">
-                                                <img
-                                                    :src="'/public/profileImages/download.jpg'"
-                                                    alt="img"
-                                                    class="img-fluid float-start me-2 image-loader"
-                                                />
-                                                <div class="float-start loader">
-                                                    <h6 />
-                                                    <p class="d-inline-block" />
-
-                                                    <p class="d-inline-block" />
-                                                </div>
-                                                <div
-                                                    class="float-end my-auto loader"
-                                                >
-                                                    <p />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="m-2">
-                                            <div class="d-block my-auto">
-                                                <img
-                                                    :src="'/public/profileImages/download.jpg'"
-                                                    alt="img"
-                                                    class="img-fluid float-start me-2 image-loader"
-                                                />
-                                                <div class="float-start loader">
-                                                    <h6 />
-                                                    <p class="d-inline-block" />
-
-                                                    <p class="d-inline-block" />
-                                                </div>
-                                                <div
-                                                    class="float-end my-auto loader"
-                                                >
-                                                    <p />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="m-2">
-                                            <div class="d-block my-auto">
-                                                <img
-                                                    :src="'/public/profileImages/download.jpg'"
-                                                    alt="img"
-                                                    class="img-fluid float-start me-2 image-loader"
-                                                />
-                                                <div class="float-start loader">
-                                                    <h6 />
-                                                    <p class="d-inline-block" />
-
-                                                    <p class="d-inline-block" />
-                                                </div>
-                                                <div
-                                                    class="float-end my-auto loader"
-                                                >
-                                                    <p />
-                                                </div>
-                                            </div>
-                                        </div>
-
                                         <div
-                                            class="card-footer text-muted d-block text-center p-3"
+                                            class="comment-section-content-like"
                                         >
-                                            <div class="loader">
-                                                <h6 />
+                                            <div>
+                                                <span>
+                                                    <a
+                                                        v-on:click="
+                                                            CommentLike(index)
+                                                        "
+                                                        v-bind:class="{
+                                                            active:
+                                                                item.authUserCommentLike ==
+                                                                'yes',
+                                                        }"
+                                                    >
+                                                        Like
+                                                    </a>
+                                                </span>
+                                                <a v-on:click="showReplyBox"
+                                                    >Reply</a
+                                                >
+                                            </div>
+                                            <div
+                                                v-if="item.comment_like_count"
+                                                @click="
+                                                    getCommentLikedUser(index)
+                                                "
+                                            >
+                                                {{ item.comment_like_count }}
+                                                <i
+                                                    class="fa-solid fa-thumbs-up"
+                                                ></i>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- <div
-                            class="overview-tab--details container"
-                            v-html="details.abstract"
-                        ></div> -->
-                    </div>
-                    <div class="overview-tab" v-if="isProductInfoIndex === 2">
-                        <div class="overview-tab--details">
-                            <div class="row">
-                                <div class="col-lg-8">
-                                    <div class="card mb-2">
-                                        <h5 class="card-header">Comments</h5>
-                                        <div class="card-body">
-                                            <div class="comment">
-                                                <div class="comment-box">
-                                                    <img
-                                                        :src="authUser.image"
-                                                        alt="img"
-                                                    />
-                                                    <textarea
-                                                        v-model="data.comment"
-                                                        class="form-control form-outline"
-                                                        placeholder="Add a comment"
-                                                        ref="textarea"
-                                                        rows="1"
-                                                        @focus="resizeTextarea"
-                                                        @keyup="resizeTextarea"
-                                                        @click="showButton"
-                                                    ></textarea>
-                                                    <Icon
-                                                        type="md-send"
-                                                        v-if="showbtn == true"
-                                                        @click="addComment"
-                                                    />
+                                <div
+                                    class="reply"
+                                    v-if="showcommentreplies == false"
+                                >
+                                    <span class="reply-item"
+                                        ><i
+                                            data-visualcompletion="css-img"
+                                            class="x1b0d499 x1d69dk1"
+                                            style="
+                                                background-image: url('https://static.xx.fbcdn.net/rsrc.php/v3/y6/r/LuI9mMlkMfm.png?_nc_eui2=AeHodVwwG5T1njR17oQGXXcMMyVdDR0OFnwzJV0NHQ4WfDrFp5XeVake6Gk9eA4jRqS77wkkIlDeyGr5Id_cI0_d');
+                                                background-position: 0px -672px;
+                                                background-size: auto;
+                                                width: 16px;
+                                                height: 16px;
+                                                background-repeat: no-repeat;
+                                                display: inline-block;
+                                            "
+                                        ></i></span
+                                    ><span class="reply-item"
+                                        ><a
+                                            class="reply-item-count"
+                                            v-on:click="showCommentReplies"
+                                            >4 Replies</a
+                                        ></span
+                                    >
+                                </div>
+                                <div class="comment-reply">
+                                    <div
+                                        class="comment-reply-box"
+                                        v-if="showreplybox == true"
+                                    >
+                                        <img :src="authUser.image" alt="img" />
+                                        <textarea
+                                            v-model="data.commentReply"
+                                            class="form-outline"
+                                            placeholder="Add a comment"
+                                            ref="textarea"
+                                            rows="1"
+                                            @focus="resizeTextarea"
+                                            @keyup="resizeTextarea"
+                                        ></textarea>
+                                        <Icon
+                                            type="md-send"
+                                            @click="addCommentReply(index)"
+                                        />
+                                    </div>
+                                    <div
+                                        class="comment-reply-section"
+                                        v-if="showcommentreplies == true"
+                                        v-for="(item, index) in comments"
+                                        :key="index"
+                                    >
+                                        <img :src="item.image" alt="img" />
+                                        <div
+                                            class="comment-reply-section-content"
+                                        >
+                                            <div
+                                                class="comment-reply-section-content-main"
+                                            >
+                                                <router-link
+                                                    :to="`/profile/${item.slug}/${item.user_id}`"
+                                                >
+                                                    {{ item.name }}
+                                                </router-link>
+                                                <!-- . {{ item.created_at }} -->
+
+                                                <p>
+                                                    {{ item.comment }}
+                                                </p>
+                                            </div>
+                                            <div
+                                                class="comment-reply-section-content-like"
+                                            >
+                                                <div>
+                                                    <a
+                                                        v-on:click="
+                                                            CommentLike(index)
+                                                        "
+                                                        v-bind:class="{
+                                                            active:
+                                                                item.authUserCommentLike ==
+                                                                'yes',
+                                                        }"
+                                                    >
+                                                        Like
+                                                    </a>
                                                 </div>
                                                 <div
-                                                    class="comment-section"
-                                                    v-for="(
-                                                        item, index
-                                                    ) in comments"
-                                                    :key="index"
+                                                    v-if="
+                                                        item.comment_like_count
+                                                    "
+                                                    @click="
+                                                        getCommentLikedUser(
+                                                            index
+                                                        )
+                                                    "
                                                 >
-                                                    <img
-                                                        :src="item.image"
-                                                        alt="img"
-                                                    />
-                                                    <div
-                                                        class="comment-section-content"
-                                                    >
-                                                        <div
-                                                            class="comment-section-content-main"
-                                                        >
-                                                            <router-link
-                                                                :to="`/profile/${item.slug}/${item.user_id}`"
-                                                            >
-                                                                {{ item.name }}
-                                                            </router-link>
-                                                            .
-                                                            {{
-                                                                item.created_at
-                                                            }}
-
-                                                            <p>
-                                                                {{
-                                                                    item.comment
-                                                                }}
-                                                            </p>
-                                                        </div>
-                                                        <div
-                                                            class="comment-section-content-like"
-                                                        >
-                                                            <span>
-                                                                <a
-                                                                    v-on:click="
-                                                                        CommentLike(
-                                                                            index
-                                                                        )
-                                                                    "
-                                                                    v-bind:class="{
-                                                                        active:
-                                                                            item.authUserCommentLike ==
-                                                                            'yes',
-                                                                    }"
-                                                                >
-                                                                    <span
-                                                                        v-if="
-                                                                            item.comment_like_count >
-                                                                            1
-                                                                        "
-                                                                        >{{
-                                                                            item.comment_like_count
-                                                                        }}
-                                                                        Likes</span
-                                                                    >
-                                                                    <span
-                                                                        v-if="
-                                                                            item.comment_like_count <=
-                                                                            1
-                                                                        "
-                                                                        >{{
-                                                                            item.comment_like_count
-                                                                        }}
-                                                                        Like</span
-                                                                    >
-                                                                </a>
-                                                            </span>
-                                                            <a>Reply</a>
-                                                        </div>
-                                                    </div>
+                                                    {{
+                                                        item.comment_like_count
+                                                    }}
+                                                    <i
+                                                        class="fa-solid fa-thumbs-up"
+                                                    ></i>
                                                 </div>
                                             </div>
                                         </div>
@@ -542,14 +411,75 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div
-                            class="overview-tab--details container"
-                            v-html="details.abstract"
-                        ></div> -->
+                    </div>
+                </div>
+                <!--***************Related Research Section****************-->
+
+                <section class="related-research__section">
+                    <div class="container">
+                        <div class="section-header">
+                            <h2>Related Research</h2>
+                        </div>
+
+                        <hooper
+                            :settings="hooperTrendingOffer"
+                            :wheelControl="false"
+                        >
+                            <slide>
+                                <div class="related_research--section">
+                                    <h5>
+                                        A Bangla Text-to-Speech System using
+                                        Deep Neural Networks
+                                    </h5>
+                                    <h6>Conference Paper</h6>
+                                    <h6>Author: Prithwiraj Bhattacharjee</h6>
+                                </div>
+                            </slide>
+                            <slide>
+                                <div class="related_research--section">
+                                    <h5>
+                                        A Bangla Text-to-Speech System using
+                                        Deep Neural Networks
+                                    </h5>
+                                    <h6>Conference Paper</h6>
+                                    <h6>Author: Prithwiraj Bhattacharjee</h6>
+                                </div> </slide
+                            ><slide>
+                                <div class="related_research--section">
+                                    <h5>
+                                        A Bangla Text-to-Speech System using
+                                        Deep Neural Networks
+                                    </h5>
+                                    <h6>Conference Paper</h6>
+                                    <h6>Author: Prithwiraj Bhattacharjee</h6>
+                                </div>
+                            </slide>
+                            <hooper-navigation
+                                slot="hooper-addons"
+                                class="hooper-relatedResearch_button"
+                            ></hooper-navigation>
+                        </hooper>
                     </div>
                 </section>
-            </div>
+            </section>
         </div>
+
+        <!--***** Comment Liked User Modal *****-->
+        <Modal
+            v-model="commentLikedUserModal"
+            title="People Who Liked"
+            :mask-closable="true"
+            :closable="true"
+        >
+            <div class="comment-liked" v-for="user in commentLikedUser">
+                <img :src="user.image" alt="img" />
+                <router-link :to="`/profile/${user.slug}/${user.user_id}`">
+                    {{ user.name }}
+                </router-link>
+            </div>
+            <div slot="footer"></div>
+        </Modal>
+
         <div v-if="isLoading == true">
             <h2 class="text-center pt-50">Loading...</h2>
         </div>
@@ -557,79 +487,150 @@
 </template>
 
 <script>
+import {
+    Hooper,
+    Slide,
+    Progress as HooperProgress,
+    Pagination as HooperPagination,
+    Navigation as HooperNavigation,
+} from "hooper";
+import "hooper/dist/hooper.css";
 export default {
-    components: {},
+    components: {
+        Hooper,
+        Slide,
+        HooperProgress,
+        HooperPagination,
+        HooperNavigation,
+    },
     data() {
         return {
             details: [],
             comments: [],
+            commentReplies: [],
+            commentLikedUser: [],
             post_slug: "",
             post_id: "",
-            isProductInfoIndex: 1,
+            isPostInfoIndex: 1,
             isLoading: true,
             upVoteCount: 0,
             downVoteCount: 0,
             avgVoteCount: 0,
             authUserVoteCount: "",
             showbtn: false,
+            showreplybox: false,
+            showcommentreplies: false,
             data: {
                 comment: "",
+                commentReply: "",
             },
             comment_like_count: 0,
             authUserCommentLike: "",
+            commentLikedUserModal: false,
+            hooperTrendingOffer: {
+                itemsToShow: 1,
+                centerMode: false,
+                breakpoints: {
+                    768: {
+                        centerMode: false,
+                        itemsToShow: 2,
+                    },
+                },
+            },
         };
     },
     methods: {
-        showProductInfo(index) {
-            this.isProductInfoIndex = index;
+        showPostInfo(index) {
+            this.isPostInfoIndex = index;
         },
 
         async upVote() {
-            if (this.details.user_id != this.authUser.id) {
-                if (this.authUserVoteCount == "down") {
-                    this.upVoteCount += 1;
-                    this.avgVoteCount += 1;
-                    this.downVoteCount -= 1;
-                    this.authUserVoteCount = "up";
-                } else if (this.authUserVoteCount == "up") {
-                    this.upVoteCount -= 1;
-                    this.avgVoteCount -= 1;
-                    this.authUserVoteCount = "none";
-                } else if (this.authUserVoteCount == "none") {
-                    this.upVoteCount += 1;
-                    this.avgVoteCount += 1;
-                    this.authUserVoteCount = "up";
+            if (
+                this.authUser.userType == "teacher" ||
+                this.authUser.userType == "admin"
+            ) {
+                if (this.details.user_id != this.authUser.id) {
+                    let upVoteCount1 = parseInt(this.upVoteCount, 10);
+                    let avgVoteCount1 = parseInt(this.avgVoteCount, 10);
+                    let downVoteCount1 = parseInt(this.downVoteCount, 10);
+                    let obj = {
+                        id: this.details.id,
+                        upVote: 1,
+                    };
+                    console.log(obj);
+                    const res = await this.callApi("post", "/api/up_vote", obj);
+                    if (res.status == 200) {
+                        this.upVoteCount = upVoteCount1 - 1;
+                        this.avgVoteCount = upVoteCount1 - 1 - downVoteCount1;
+                        this.authUserVoteCount = "";
+                    }
+                    if (res.status == 201) {
+                        this.upVoteCount = upVoteCount1 + 1;
+                        this.avgVoteCount =
+                            upVoteCount1 + 1 - (downVoteCount1 - 1);
+                        this.downVoteCount = downVoteCount1 - 1;
+                        this.authUserVoteCount = "up";
+                    }
+                    if (res.status == 202) {
+                        this.upVoteCount = upVoteCount1 + 1;
+                        this.avgVoteCount = upVoteCount1 + 1 - downVoteCount1;
+                        this.authUserVoteCount = "up";
+                    }
+                } else {
+                    this.i("You can't vote your own post!");
                 }
-                let obj = {
-                    id: this.details.id,
-                    upVote: 1,
-                };
-                console.log(obj);
-                const res = await this.callApi("post", "/api/up_vote", obj);
+            } else {
+                this.i(
+                    "Thanks for the feedback! You are not eligible to cast a vote, but your feedback has been recorded."
+                );
             }
         },
         async downVote() {
-            if (this.details.user_id != this.authUser.id) {
-                if (this.authUserVoteCount == "up") {
-                    this.upVoteCount -= 1;
-                    this.avgVoteCount -= 1;
-                    this.downVoteCount += 1;
-                    this.authUserVoteCount = "down";
-                } else if (this.authUserVoteCount == "down") {
-                    this.downVoteCount -= 1;
-                    this.avgVoteCount += 1;
-                    this.authUserVoteCount = "";
-                } else if (this.authUserVoteCount == "none") {
-                    this.avgVoteCount -= 1;
-                    this.downVoteCount += 1;
-                    this.authUserVoteCount = "down";
+            if (
+                this.authUser.userType == "teacher" ||
+                this.authUser.userType == "admin"
+            ) {
+                if (this.details.user_id != this.authUser.id) {
+                    let upVoteCount1 = parseInt(this.upVoteCount, 10);
+                    let avgVoteCount1 = parseInt(this.avgVoteCount, 10);
+                    let downVoteCount1 = parseInt(this.downVoteCount, 10);
+
+                    let obj = {
+                        id: this.details.id,
+                        // user_id: authUser.id,
+                        downVote: 1,
+                    };
+                    console.log(obj);
+                    const res = await this.callApi(
+                        "post",
+                        "/api/down_vote",
+                        obj
+                    );
+                    if (res.status == 200) {
+                        this.avgVoteCount = upVoteCount1 - (downVoteCount1 - 1);
+                        this.downVoteCount = downVoteCount1 - 1;
+                        this.authUserVoteCount = "";
+                    }
+                    if (res.status == 201) {
+                        this.upVoteCount = upVoteCount1 - 1;
+                        this.downVoteCount = downVoteCount1 + 1;
+                        this.avgVoteCount =
+                            upVoteCount1 - 1 - (downVoteCount1 + 1);
+                        this.authUserVoteCount = "down";
+                    }
+
+                    if (res.status == 202) {
+                        this.avgVoteCount = upVoteCount1 - (downVoteCount1 + 1);
+                        this.downVoteCount = downVoteCount1 + 1;
+                        this.authUserVoteCount = "down";
+                    }
+                } else {
+                    this.i("You can't vote your own post!");
                 }
-                let obj = {
-                    id: this.details.id,
-                    downVote: 1,
-                };
-                console.log(obj);
-                const res = await this.callApi("post", "/api/down_vote", obj);
+            } else {
+                this.i(
+                    "Thanks for the feedback! You are not eligible to cast a vote, but your feedback has been recorded."
+                );
             }
         },
 
@@ -650,23 +651,6 @@ export default {
             // }
         },
 
-        async CommentLike(index) {
-            // if (this.posts[index].user_id != this.authUser.id) {
-            let obj = {
-                id: this.comments[index].id,
-            };
-
-            const res = await this.callApi("post", "/api/comment_like", obj);
-            if (res.status == 201) {
-                this.comments[index].comment_like_count += 1;
-                this.comments[index].authUserCommentLike = "yes";
-            } else {
-                this.comments[index].comment_like_count -= 1;
-                this.comments[index].authUserCommentLike = "no";
-            }
-            // }
-        },
-
         async addComment() {
             if (this.data.comment.trim() == "")
                 return this.e("Comment field is empty!!!");
@@ -675,25 +659,26 @@ export default {
                 comment: this.data.comment,
             };
 
-            var today = new Date();
-            var date =
-                today.getFullYear() +
-                "-" +
-                (today.getMonth() + 1) +
-                "-" +
-                today.getDate();
-            var time =
-                today.getHours() +
-                ":" +
-                today.getMinutes() +
-                ":" +
-                today.getSeconds();
+            // var today = new Date();
+            // var date =
+            //     today.getFullYear() +
+            //     "-" +
+            //     (today.getMonth() + 1) +
+            //     "-" +
+            //     today.getDate();
+            // var time =
+            //     today.getHours() +
+            //     ":" +
+            //     today.getMinutes() +
+            //     ":" +
+            //     today.getSeconds();
             let data = {
                 id: this.details.id,
+                user_id: this.authUser.id,
                 comment: this.data.comment,
                 image: this.authUser.image,
                 name: this.authUser.name,
-                created_at: date + " " + time,
+                // created_at: date + " " + time,
                 comment_like_count: 0,
             };
 
@@ -708,6 +693,76 @@ export default {
             }
         },
 
+        async addCommentReply(index) {
+            if (this.data.commentReply.trim() == "")
+                return this.e("Field is empty!!!");
+            let obj = {
+                post_id: this.details.id,
+                comment_id: this.comments[index].id,
+                commentReply: this.data.commentReply,
+            };
+            let data = {
+                id: this.details.id,
+                user_id: this.authUser.id,
+                commentReply: this.data.commentReply,
+                image: this.authUser.image,
+                name: this.authUser.name,
+                // comment_like_count: 0,
+            };
+
+            const res = await this.callApi(
+                "post",
+                "/api/add_comment_reply",
+                obj
+            );
+            if (res.status == 201) {
+                this.commentReplies.unshift(data);
+
+                this.data.commentReply = "";
+                this.s(this.data.msg);
+            } else {
+                this.swr();
+            }
+        },
+
+        async CommentLike(index) {
+            if (this.comments[index].user_id != this.authUser.id) {
+                let obj = {
+                    id: this.comments[index].id,
+                };
+
+                const res = await this.callApi(
+                    "post",
+                    "/api/comment_like",
+                    obj
+                );
+                if (res.status == 201) {
+                    this.comments[index].comment_like_count += 1;
+                    this.comments[index].authUserCommentLike = "yes";
+                } else {
+                    this.comments[index].comment_like_count -= 1;
+                    this.comments[index].authUserCommentLike = "no";
+                }
+            } else {
+                this.i("You can't like your own comment");
+            }
+        },
+        async getCommentLikedUser(index) {
+            let obj = {
+                id: this.comments[index].id,
+            };
+            console.log(this.comments[index].id);
+            const res = await this.callApi(
+                "get",
+                `/api/get_comment_liked_user?id=${this.comments[index].id}`
+            );
+            if (res.status == 200) {
+                this.commentLikedUser = res.data.data;
+                this.commentLikedUserModal = true;
+            } else {
+                this.swr();
+            }
+        },
         resizeTextarea(e) {
             let area = e.target;
             area.style.height = "auto";
@@ -717,6 +772,12 @@ export default {
         },
         showButton() {
             this.showbtn = true;
+        },
+        showReplyBox() {
+            this.showreplybox = true;
+        },
+        showCommentReplies() {
+            this.showcommentreplies = true;
         },
         hideButton() {
             this.showbtn = false;
@@ -730,10 +791,15 @@ export default {
             "get",
             `/api/post_details/${this.post_slug}`
         );
-        const res1 = await this.callApi(
-            "get",
-            `/api/get_comments/${this.post_slug}`
-        );
+        if (authUser) {
+            const res1 = await this.callApi(
+                "get",
+                `/api/get_comments/${this.post_slug}`
+            );
+            if (res1.status == 200) {
+                this.comments = res1.data.data;
+            }
+        }
         if (res.status == 200) {
             this.details = res.data.data[0];
             this.upVoteCount = this.details.upVote;
@@ -741,13 +807,12 @@ export default {
             this.avgVoteCount = this.details.avgVote;
             this.authUserVoteCount = this.details.authUserVote;
             this.post_id = this.details.id;
-            const res1 = await this.callApi(
-                "post",
-                `/api/read/${this.details.id}`
-            );
-        }
-        if (res1.status == 200) {
-            this.comments = res1.data.data;
+            if (this.authUser) {
+                const res1 = await this.callApi(
+                    "post",
+                    `/api/read/${this.details.id}`
+                );
+            }
         } else {
             this.swr();
         }
@@ -768,12 +833,10 @@ export default {
     &-enter {
         overflow: hidden;
         max-height: 0;
-
         &-to {
             max-height: 500px;
             overflow: hidden;
         }
-
         &-active {
             -moz-transition-duration: 0.5s;
             -webkit-transition-duration: 0.5s;
@@ -785,14 +848,11 @@ export default {
             transition-timing-function: ease-in;
         }
     }
-
     &-leave {
         @extend .slide-enter-to;
-
         &-to {
             @extend .slide-enter;
         }
-
         &-active {
             -moz-transition-duration: 0.5s;
             -webkit-transition-duration: 0.5s;

@@ -195,14 +195,12 @@ export default {
                         this.errors = res.data.errors;
                         // this.e(res.data.errors[i][0]);
                     }
-                }
-                // else if (res.status == 402) {
-                //     this.e(res.data.msg);
-                //     this.$router.push(
-                //         `/emailVerifyOtp?email=${this.data.email}`
-                //     );
-                // }
-                else {
+                } else if (res.status == 402) {
+                    this.e(res.data.msg);
+                    this.$router.push(
+                        `/emailVerifyOtp?email=${this.data.email}`
+                    );
+                } else {
                     this.swr();
                 }
             }
