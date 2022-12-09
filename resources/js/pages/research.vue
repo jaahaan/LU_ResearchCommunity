@@ -1,130 +1,49 @@
 <template>
     <div>
-        <section
-            class="container pt-4 pb-4 m-auto"
-            v-if="isDataLoading == false"
-        >
+        <section class="container research" v-if="isDataLoading == false">
             <div class="row">
-                <div
-                    class="research-filter--mobile--wrapper d-lg-none"
-                    v-bind:class="{ active: isFilter }"
-                >
-                    <div class="research-filter--mobile">
-                        <div class="research-filter--mobile-head">
-                            <h4>Filter By :</h4>
-                            <button type="button" v-on:click="hideFilter()">
-                                <i class="las la-times"></i>
-                            </button>
-                        </div>
-                        <div class="research-filter--searchBy">
-                            <div class="research-searchBy--radio">
-                                <h4 class="research-head">Department</h4>
-                                <div
-                                    class="form-check"
-                                    v-for="(department, index) in departments"
-                                    :key="index"
-                                >
-                                    <input
-                                        class="form-check-input"
-                                        type="radio"
-                                        name="flexRadioDefault"
-                                        id="flexRadioDefault1"
-                                        :value="department.id"
-                                        v-model="filter.department"
-                                        @change="filterPosts"
-                                    />
-                                    <label
-                                        class="form-check-label"
-                                        for="flexRadioDefault1"
-                                    >
-                                        {{ department.department_name }}
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- <div class="research-searchBy--tag pb-30">
-                                <h4 class="research-head">Choose Tag</h4>
-                                <div
-                                    class="research-searchBy--tag---list"
-                                    v-for="(
-                                        department, index
-                                    ) in departments.data"
-                                    :key="index"
-                                >
-                                    <div
-                                        class="tag-item"
-                                        @click="addToFilterTag(department)"
-                                        :class="
-                                            isTagInFilter(department.id) == true
-                                                ? 'active'
-                                                : ''
-                                        "
-                                    >
-                                        {{ department.department_name }}
-                                    </div>
-                                </div>
-                            </div> -->
+                <div class="col-lg-2 research-searchBy d-none d-lg-block">
+                    <div class="research-searchBy--radio">
+                        <h4 class="research-head">Departments</h4>
+                        <div
+                            class="form-check"
+                            v-for="(department, index) in departments"
+                            :key="index"
+                        >
+                            <input
+                                class="form-check-input"
+                                type="radio"
+                                name="flexRadioDefault"
+                                id="flexRadioDefault1"
+                                :value="department.id"
+                                v-model="filter.department"
+                                @change="filterPosts"
+                            />
+                            <label
+                                class="form-check-label"
+                                for="flexRadioDefault1"
+                            >
+                                {{ department.department_name }}
+                            </label>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-9 research-post">
-                    <div class="research-post--display">
-                        <div
-                            class="research-post--mobile d-lg-none"
-                            v-if="isSearchbar == false"
-                        >
-                            <div class="research-post--mobile---filter">
-                                <button v-on:click="showFilter()">
-                                    <i class="lni lni-text-align-justify"></i>
-                                    <span>Filter</span>
-                                </button>
-                            </div>
-                            <div class="research-post--mobile---dropdown">
-                                <div class="dropdown">
-                                    <button class="dropbtn">
-                                        View By<i
-                                            class="lni lni-chevron-down"
-                                        ></i>
-                                    </button>
-                                    <div class="dropdown-content">
-                                        <a href="#">
-                                            <div
-                                                class="research-post--display--icon"
-                                            >
-                                                <span>View:</span>
-                                                <i
-                                                    class="lni lni-grid icon active"
-                                                ></i>
-                                                <i
-                                                    class="lni lni-list icon"
-                                                ></i>
-                                            </div>
-                                        </a>
-                                        <a href="#">
-                                            <div
-                                                class="research-post--display--body"
-                                            >
-                                                <p>
-                                                    Showing 1-12 of 24 results
-                                                </p>
-                                            </div>
-                                        </a>
-                                        <a href="#">
-                                            <div
-                                                class="research-post--display--default"
-                                            >
-                                                <p>
-                                                    Default Sorting
-                                                    <i
-                                                        class="lni lni-chevron-down"
-                                                    ></i>
-                                                </p>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
+
+                    <!-- <div class="research-searchBy--tag">
+                        <h4 class="research-head">Choose Tag</h4>
+                        <div class="research-searchBy--tag---list">
+                            <div
+                                class="tag-item"
+                                v-for="(department, index) in departments"
+                                :key="index"
+                                @click="addToFilterTag(department)"
+                            >
+                                <span>{{ department.department_name }}</span>
                             </div>
                         </div>
+                    </div> -->
+                </div>
+                <div class="col-lg-10 research-post">
+                    <div class="research-post--display">
                         <div class="research-post--display--icon">
                             <button
                                 v-on:click="showSearchbar()"
@@ -136,6 +55,7 @@
 
                         <div
                             class="research-post--display--body d-none d-lg-block"
+                            v-if="isSearchbar == false"
                         >
                             <p v-if="isLoading == false && posts.length < 21">
                                 Showing {{ posts.length }} of
@@ -146,15 +66,6 @@
                             </p>
                         </div>
 
-                        <div
-                            class="research-post--display--default d-none d-lg-block"
-                            v-if="isSearchbar == false"
-                        >
-                            <p>
-                                Default Sorting
-                                <i class="lni lni-chevron-down"></i>
-                            </p>
-                        </div>
                         <!-- ****SearchBox**** -->
                         <div
                             class="research-post--display--body research-search"
@@ -172,6 +83,7 @@
                                     type="search"
                                     placeholder="Search..."
                                     v-model="search"
+                                    v-on:keyup="filterPosts"
                                 />
                                 <button type="button" class="search-button">
                                     <i class="lni lni-search-alt"></i>
@@ -182,30 +94,194 @@
                                 <button
                                     type="button"
                                     class="cancel-button"
-                                    v-on:click="cancelSearchBar()"
+                                    v-on:click="cancelSearchBar"
                                 >
                                     <i>
                                         <i class="lni lni-close"></i>
                                     </i>
                                 </button>
                             </div>
-                            <!-- <div class="research-search-result">
-                                <ul
-                                    class="search-list card list-group bg-dark w-100 c-pointer"
-                                    v-if="
-                                        Users.length > 0 && keyword.length > 0
-                                    "
-                                >
-                                    <li
-                                        class="list-group-item list-group-item-action list-group-item-dark"
-                                        v-for="user in Users"
-                                        v-if="authUser.id != user.id"
-                                        :key="user.id"
-                                        v-text="user.name"
-                                        @click="getSearchedUser(user)"
-                                    ></li>
-                                </ul>
-                            </div> -->
+                        </div>
+                        <div class="research-post--display--default">
+                            <div v-if="isSearchbar == false" class="mx-3">
+                                <Dropdown trigger="hover">
+                                    <span
+                                        ><span v-if="search == ''"> Type </span>
+                                        <span else>{{ search }}</span></span
+                                    >
+                                    <i class="lni lni-chevron-down"></i>
+                                    <DropdownMenu slot="list">
+                                        <DropdownItem
+                                            ><span
+                                                @click="
+                                                    addToFilterSearch('Article')
+                                                "
+                                                >Article</span
+                                            ></DropdownItem
+                                        >
+                                        <DropdownItem
+                                            ><span
+                                                @click="
+                                                    addToFilterSearch(
+                                                        'Conference Paper'
+                                                    )
+                                                "
+                                                >Conference Paper</span
+                                            ></DropdownItem
+                                        >
+                                        <DropdownItem
+                                            ><span
+                                                @click="
+                                                    addToFilterSearch('Data')
+                                                "
+                                                >Data</span
+                                            ></DropdownItem
+                                        >
+                                        <DropdownItem
+                                            ><span
+                                                @click="
+                                                    addToFilterSearch(
+                                                        'Resaerch'
+                                                    )
+                                                "
+                                                >Resaerch</span
+                                            ></DropdownItem
+                                        >
+                                        <DropdownItem
+                                            ><span
+                                                @click="
+                                                    addToFilterSearch('Project')
+                                                "
+                                                >Project</span
+                                            ></DropdownItem
+                                        >
+                                        <DropdownItem
+                                            ><span
+                                                @click="
+                                                    addToFilterSearch(
+                                                        'Presentation'
+                                                    )
+                                                "
+                                                >Presentation</span
+                                            ></DropdownItem
+                                        >
+                                        <DropdownItem
+                                            ><span
+                                                @click="
+                                                    addToFilterSearch(
+                                                        'Preprint'
+                                                    )
+                                                "
+                                                >Preprint</span
+                                            ></DropdownItem
+                                        >
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </div>
+                            <div class="d-lg-none" v-if="isSearchbar == false">
+                                <Dropdown trigger="hover">
+                                    <span
+                                        ><span v-if="departmentName == ''">
+                                            Departments
+                                        </span>
+                                        <span else>{{
+                                            departmentName
+                                        }}</span></span
+                                    >
+                                    <i class="lni lni-chevron-down"></i>
+                                    <!-- <span >category</span> -->
+                                    <DropdownMenu slot="list">
+                                        <div
+                                            v-for="(
+                                                department, index
+                                            ) in departments"
+                                            :key="index"
+                                        >
+                                            <DropdownItem
+                                                ><span
+                                                    @click="
+                                                        addToFilterDepartment(
+                                                            department
+                                                        )
+                                                    "
+                                                >
+                                                    {{
+                                                        department.department_name
+                                                    }}</span
+                                                ></DropdownItem
+                                            >
+                                        </div>
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </div>
+                            <div v-if="isSearchbar == false" class="mx-3">
+                                <Dropdown trigger="hover">
+                                    <!-- <span >sort by</span> -->
+                                    <span>
+                                        <span v-if="filter.default == 'id'">
+                                            Newest
+                                        </span>
+                                        <span
+                                            v-else-if="
+                                                filter.default == 'title' &&
+                                                filter.order == 'asc'
+                                            "
+                                        >
+                                            Ascending [A-Z]
+                                        </span>
+                                        <span
+                                            v-else-if="
+                                                filter.default == 'title' &&
+                                                filter.order == 'desc'
+                                            "
+                                        >
+                                            Descending [Z-A]
+                                        </span>
+                                        <span v-else>Default Sort</span>
+                                    </span>
+                                    <i class="lni lni-chevron-down"></i>
+                                    <DropdownMenu slot="list">
+                                        <DropdownItem
+                                            ><span
+                                                @click="
+                                                    removeFromSelectedFilterAll
+                                                "
+                                                >Default Sort</span
+                                            ></DropdownItem
+                                        >
+
+                                        <DropdownItem
+                                            ><span
+                                                @click="
+                                                    sortData(['id', 'desc'])
+                                                "
+                                                >Newest</span
+                                            ></DropdownItem
+                                        >
+                                        <DropdownItem
+                                            ><span
+                                                @click="
+                                                    sortData(['title', 'asc'])
+                                                "
+                                                >Ascending [A-Z]</span
+                                            ></DropdownItem
+                                        >
+                                        <DropdownItem
+                                            ><span
+                                                @click="
+                                                    sortData(['title', 'desc'])
+                                                "
+                                                >Descending [Z-A]</span
+                                            ></DropdownItem
+                                        >
+                                        <DropdownItem
+                                            ><span
+                                                >Top Research</span
+                                            ></DropdownItem
+                                        >
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </div>
                         </div>
                     </div>
                     <!-- post description -->
@@ -430,47 +506,19 @@
                                 <a> </a>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 research-searchBy d-none d-lg-block">
-                    <div class="research-searchBy--radio">
-                        <h4 class="research-head">Departments</h4>
-                        <div
-                            class="form-check"
-                            v-for="(department, index) in departments"
-                            :key="index"
-                        >
-                            <input
-                                class="form-check-input"
-                                type="radio"
-                                name="flexRadioDefault"
-                                id="flexRadioDefault1"
-                                :value="department.id"
-                                v-model="filter.department"
-                                @change="filterPosts"
-                            />
-                            <label
-                                class="form-check-label"
-                                for="flexRadioDefault1"
-                            >
-                                {{ department.department_name }}
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- <div class="research-searchBy--tag">
-                        <h4 class="research-head">Choose Tag</h4>
-                        <div class="research-searchBy--tag---list">
-                            <div
-                                class="tag-item"
-                                v-for="(department, index) in departments"
-                                :key="index"
-                                @click="addToFilterTag(department)"
-                            >
-                                <span>{{ department.department_name }}</span>
+                        <div class="research-post--skeleton">
+                            <div class="post-title-skeleton">
+                                <p></p>
+                            </div>
+                            <div class="post-sub-title-skeleton">
+                                <p></p>
+                            </div>
+                            <div class="footer">
+                                <a> </a>
+                                <a> </a>
                             </div>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </section>
@@ -523,29 +571,37 @@ export default {
             authUserLike: "",
             filter: {
                 department: "",
-
                 default: "",
+                order: "",
             },
             search: "",
+            departmentName: "",
+            type: "",
         };
     },
-    watch: {
-        search(after, before) {
-            this.filterPosts();
-        },
-    },
+    // watch: {
+    //     // search(after, before) {
+    //     //     this.filterPosts();
+    //     // },
+    // },
+    // computed: {
+    //     isAllFilterClear() {
+    //         let flag = true;
+    //         if (this.filter.department.length > 0) flag = false;
+    //         if (this.filter.default.length > 0) flag = false;
+    //         if (this.filter.order.length > 0) flag = false;
+    //         return flag;
+    //     },
+    // },
     methods: {
-        showFilter() {
-            this.isFilter = true;
-        },
-        hideFilter() {
-            this.isFilter = false;
-        },
         showSearchbar() {
             this.isSearchbar = true;
         },
         cancelSearchBar() {
             this.isSearchbar = false;
+            this.search = "";
+
+            // this.removeFromSelectedFilterAll();
         },
         hideSearchbar(e) {
             if (this.isSearchbar) {
@@ -565,24 +621,6 @@ export default {
                 this.mobileDropdownIndex = index;
             }
         },
-        async isTagInFilter(tag) {
-            let flag = 1;
-            let index = this.filter.tags.findIndex((d) => d == tag);
-            if (index == -1) {
-                flag = 2;
-            }
-
-            console.log("in isTagInFilter", tag.id, flag);
-
-            return flag;
-        },
-        // getUser(user) {
-        //     this.user_id = user.id;
-        //     this.user_slug = user.slug;
-
-        //     this.$router.push(`/profile/${this.user_slug}/${this.user_id}`);
-        //     this.keyword = "";
-        // },
 
         async upVote(index) {
             if (
@@ -737,26 +775,49 @@ export default {
                 this.s(res.data.msg);
             }
         },
-        async searchPost(query) {
-            this.isLoading = true;
-            console.log(query);
+        // async searchPost(query) {
+        //     this.isLoading = true;
+        //     console.log(query);
 
-            // const response = await this.callApi("get", `/api/get_all_research`);
-            const response = await this.callApi(
-                "get",
-                `/api/get_all_research?search=${query}`
-            );
-            if (response.status == 200) {
-                this.posts = response.data.data;
-            } else this.swr();
-            this.isLoading = false;
+        //     // const response = await this.callApi("get", `/api/get_all_research`);
+        //     const response = await this.callApi(
+        //         "get",
+        //         `/api/get_all_research?search=${query}`
+        //     );
+        //     if (response.status == 200) {
+        //         this.posts = response.data.data;
+        //     } else this.swr();
+        //     this.isLoading = false;
+        // },
+
+        sortData(key) {
+            this.filter.default = key[0];
+            this.filter.order = key[1];
+            this.filterPosts();
+        },
+        addToFilterDepartment(department) {
+            this.filter.department = department.id;
+            this.departmentName = department.department_name;
+            this.filterPosts();
+        },
+        addToFilterSearch(index) {
+            this.search = index;
+            this.filterPosts();
+        },
+        removeFromSelectedFilterAll() {
+            this.filter.department = "";
+            this.filter.default = "";
+            this.filter.order = "";
+            this.search = "";
+            this.departmentName = "";
+            this.filterPosts();
         },
         async filterPosts() {
             this.isLoading = true;
             // const response = await this.callApi("get", `/api/get_all_research`);
             const response = await this.callApi(
                 "get",
-                `/api/get_all_research?department=${this.filter.department}&search=${this.search}&default=${this.filter.default}`
+                `/api/get_all_research?department=${this.filter.department}&search=${this.search}&default=${this.filter.default}&order=${this.filter.order}`
             );
             if (response.status == 200) {
                 this.posts = response.data.data;

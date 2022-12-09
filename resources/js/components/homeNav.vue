@@ -247,7 +247,31 @@
                                     <span class="navbar-action__badge">3</span>
                                 </div>
                             </li>
-                            <li class="nav-item dropdown">
+                            <Dropdown trigger="hover">
+                                <span
+                                    ><router-link
+                                        :to="`/profile/${authUser.slug}/${authUser.id}`"
+                                        ><img
+                                            :src="authUser.image"
+                                            alt="img"
+                                            class="img-fluid nav-profile-img m-auto" /></router-link
+                                ></span>
+                                <i class="lni lni-chevron-down"></i>
+                                <!-- <span >category</span> -->
+                                <DropdownMenu slot="list">
+                                    <div>
+                                        <DropdownItem
+                                            ><span
+                                                @click="logout"
+                                                style="color: #000"
+                                            >
+                                                Log Out</span
+                                            ></DropdownItem
+                                        >
+                                    </div>
+                                </DropdownMenu>
+                            </Dropdown>
+                            <!-- <li class="nav-item dropdown">
                                 <router-link
                                     :to="`/profile/${authUser.slug}/${authUser.id}`"
                                     ><img
@@ -265,7 +289,7 @@
                                         >
                                     </li>
                                 </ul>
-                            </li>
+                            </li> -->
                             <!-- <li>
                                 <router-link
                                     :to="`/profile/${authUser.slug}/${authUser.id}`"

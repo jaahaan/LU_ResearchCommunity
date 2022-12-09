@@ -19,6 +19,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ResearchController;
+
 
 use App\Http\Controllers\TeacherController;
 
@@ -134,7 +136,7 @@ Route::prefix('/api')->group(function () {
         Route::post('/submit_reset_password_otp', [AuthController::class, 'submitResetPassOtp']);
         Route::post('/reset_password', [AuthController::class, 'resetPassword']);
         
-        Route::get('/get_all_research', [PostController::class, 'getAllResearch']);
+        Route::get('/get_all_research', [ResearchController::class, 'getAllResearch']);
         Route::get('/get_departments', [HomeController::class, 'getDepartments']);
         Route::get('/post_details/{slug}', [PostController::class, 'postDetails']);
     

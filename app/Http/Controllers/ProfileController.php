@@ -200,7 +200,7 @@ class ProfileController extends Controller
             'file' => 'required|mimes:jpeg,jpg,png',
         ]);
         $picName = time() . '.' . $request->file->extension();
-        $request->file->move(public_path('profileImages'), $picName);
+        $request->file->move(public_path('uploads'), $picName);
         return $picName;
     }
 

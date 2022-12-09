@@ -3,18 +3,20 @@
 @use "../abstracts/mixins" as *;
 
 .research {
+    padding: 2rem 8rem !important;
+    margin: auto;
     &-head {
-        margin: 12px 0px;
+        margin: 15px 0px;
         padding-bottom: 12px;
         // border-bottom: 1px solid $secondaryColor;
-        border-bottom: 1px solid #ededed;
+        border-bottom: 1px solid $secondaryColor;
     }
 
     &-searchBy {
         flex: 0 0 30%;
         &--radio {
             margin-bottom: 40px;
-            margin-left: 40px;
+            // margin-left: 40px;
             padding-bottom: 40px;
             .form-check {
                 &:not(:last-child) {
@@ -74,7 +76,6 @@
     }
 
     &-post {
-        // margin-bottom: 60px;
         &--display {
             display: flex;
             justify-content: space-between;
@@ -83,6 +84,7 @@
             margin: 15px;
             padding-bottom: 15px;
             border-bottom: 1px solid $secondaryColor;
+
             &--icon {
                 i {
                     font-weight: bolder;
@@ -101,18 +103,24 @@
             }
 
             &--default {
+                display: flex;
+                margin-left: 20px;
+                margin-bottom: 5px;
+                cursor: pointer;
+
                 p {
-                    i {
-                        padding-left: 20px;
-                        font-weight: 700;
-                    }
+                    padding-right: 10px;
+                    white-space: nowrap;
+                }
+                i {
+                    top: 50%;
+                    transform: translateY(4px);
                 }
             }
             &---dropdown {
                 .dropdown {
                     position: relative;
                     display: inline-block;
-
                     &:hover {
                         .dropdown-content {
                             display: block;
@@ -440,9 +448,16 @@
 }
 
 // Responsive
+@include breakpoint-max(1400px) {
+    .research {
+        padding: 1.5rem 1rem !important;
+    }
+}
 
 @include breakpoint-max(991px) {
     .research {
+        padding: 1.5rem 1rem !important;
+
         &-head {
             font-size: 18px;
             margin-bottom: 15px;
@@ -497,6 +512,8 @@
 
 @include breakpoint-max(767px) {
     .research {
+        padding: 1rem 0.5rem !important;
+
         &-post {
             padding: 0 10px;
 
@@ -587,6 +604,8 @@
 
 @include breakpoint-max(575px) {
     .research {
+        padding: 0.5rem 1rem !important;
+
         &-post {
             &--item {
                 .grid-item {
@@ -613,6 +632,8 @@
 
 @include breakpoint-max(400px) {
     .research {
+        padding: 0.5rem 1rem !important;
+
         &-search {
             &-input {
                 width: auto;
