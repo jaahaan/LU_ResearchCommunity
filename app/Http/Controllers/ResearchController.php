@@ -11,6 +11,7 @@ use Auth;
 // use App\Models\Author;
 // use App\Models\Attachment;
 use Illuminate\Http\Request;
+date_default_timezone_set('Asia/Dhaka');
 
 class ResearchController extends Controller
 {
@@ -23,7 +24,7 @@ class ResearchController extends Controller
         $default = $request->default;
         $order=$request->order;
 
-        $query =  Post::with('user', 'read', 'vote', 'like', 'authors', 'department', 'attachments');
+        $query =  Post::where('type', '!=', 'post')->with('user', 'read', 'vote', 'like', 'authors', 'department', 'images');
 
         if($search){
             $query->where(function ($queryy) use ($search){
@@ -41,7 +42,6 @@ class ResearchController extends Controller
         }
 
         $data = $query->limit($limit)->get();
-
 
         $formattedData = [];
         foreach($data as $value){
@@ -78,6 +78,7 @@ class ResearchController extends Controller
             $post['user_slug'] = $post->user->slug;
             $post['department'] = $post->user->department;
             $post['designation'] = $post->user->designation;
+            $post['formatedDateTime'] = date('M Y', strtotime($post->created_at));
 
             if(!$check){
                 $post['read_count'] = 0;
@@ -108,4 +109,38 @@ class ResearchController extends Controller
         ],200);
     }
 
+    public function getRelatedResearch(Request $request)
+    {
+
+        // $post= Post::where('slug', $request->slug)->first();
+        $query =  Post::with('authors')->where('slug','!=', $request->slug);
+        $limit = $request->limit? $request->limit : 4;
+        
+        $data = $query->where('type', $request->type)->limit($limit)->get();
+
+        $formattedData = [];
+        foreach($data as $value){
+            $post = $value;
+            unset($post['abstract']);
+            unset($post['start_date']);
+            unset($post['url']);
+            unset($post['user_id']);
+            unset($post['approved_at']);
+            unset($post['attachment']);
+            unset($post['department_id']);
+            unset($post['end_date']);
+            unset($post['isApproved']);
+            unset($post['publication_date']);
+            unset($post['count']);
+            unset($post['user_id']);
+            unset($post['updated_at']);
+            unset($post['created_at']);
+
+            array_push($formattedData, $post);
+        }
+        return response()->json([
+            'success'=> true,
+            'data'=>$formattedData,
+        ],200);
+    }
 }

@@ -1,0 +1,105 @@
+// Add variables here
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.teacher {
+  &-section {
+    max-width: 990px;
+    margin-left: auto;
+    margin-right: auto;
+    &--table {
+      overflow: hidden;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+
+      .table {
+        padding: 0;
+        margin: 0;
+        border-radius: 10px;
+        background-color: #fff;
+        th {
+          text-align: center;
+          white-space: nowrap;
+        }
+        td {
+          white-space: nowrap;
+          text-align: center;
+          font-size: 16px;
+          color: #3e3e3e;
+          vertical-align: middle;
+          img {
+            max-width: 100px;
+            height: auto;
+          }
+          i {
+            font-size: 20px;
+            color: $primaryColor;
+            font-weight: 700;
+            cursor: pointer;
+          }
+        }
+      }
+
+      &--skeleton {
+        h4 {
+          border-radius: 5px;
+          width: 28%;
+          height: 35px;
+          background-color: #c0c0c0;
+        }
+        button {
+          border-radius: 20px;
+          min-width: 170px;
+          height: 40px;
+          background-color: #c0c0c0 !important;
+        }
+        .table {
+          padding: 0;
+          margin: 0;
+          border-radius: 5px;
+          th {
+            text-align: center;
+            white-space: nowrap;
+            width: 20%;
+            height: 35px;
+            background-color: #c0c0c0;
+          }
+          td {
+            white-space: nowrap;
+            text-align: center;
+            width: 20%;
+            height: 35px;
+            background-color: #c0c0c0;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Responsive
+
+@include breakpoint-max(767px) {
+  .teacher {
+    &-section {
+      &--table {
+        .table {
+          th {
+            font-size: 14px;
+          }
+          td {
+            font-size: 14px;
+            img {
+              max-width: 80px;
+            }
+            i {
+              font-size: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

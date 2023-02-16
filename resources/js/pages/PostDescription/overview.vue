@@ -1,140 +1,27 @@
 <template>
-    <div class="container mt-3 col-md-9">
-        <section class="tab-section">
-            <div class="overview-tab">
-                <div class="overview-tab--details">
-                    <div class="row">
-                        <!-- first Card -->
-                        <!--Abstract-->
-                        <div class="col-lg-8">
-                            <div
-                                class="card mb-2"
-                                v-if="abstract.abstract && isLoading == false"
-                            >
-                                <div class="card-header">
-                                    <div class="d-block">
-                                        <div class="float-start">
-                                            <h5
-                                                v-if="
-                                                    abstract.type != 'Project'
-                                                "
-                                            >
-                                                Abstract
-                                            </h5>
-                                            <h5
-                                                v-else-if="
-                                                    abstract.type == 'Project'
-                                                "
-                                            >
-                                                Description
-                                            </h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <p>{{ abstract.abstract }}</p>
-                                </div>
-                            </div>
-                        </div>
+    <div>
+        <h4 class="menu-item--title">
+            {{ abstract.type != "Project" ? "Abstract" : "Description" }}
+        </h4>
 
-                        <!-- second Card -->
-                        <!-- Related Research -->
-                        <div class="col-lg-4">
-                            <!--People you may know-->
-                            <div class="card mb-2" v-if="isLoading == false">
-                                <div class="card-header">
-                                    <div class="d-block">
-                                        <div class="float-start">
-                                            <h5>Related Research</h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <p>Hello</p>
-                                </div>
-                                <div class="card-footer text-muted">
-                                    View all researchers
-                                    <i class="fa-solid fa-arrow-right"></i>
-                                </div>
-                            </div>
-                            <!-- loader1 -->
-                            <div class="card mb-3" v-if="isLoading == true">
-                                <div class="card-header">
-                                    <div class="loader">
-                                        <h6 />
-                                    </div>
-                                </div>
+        <div v-if="isLoading" class="loader">
+            <h1 class="mb-1" />
+            <h1 class="mb-1" />
+            <h1 />
+        </div>
 
-                                <div class="m-2">
-                                    <div class="d-block my-auto">
-                                        <img
-                                            :src="'/public/profileImages/download.jpg'"
-                                            alt="img"
-                                            class="img-fluid float-start me-2 image-loader"
-                                        />
-                                        <div class="float-start loader">
-                                            <h6 />
-                                            <p class="d-inline-block" />
-
-                                            <p class="d-inline-block" />
-                                        </div>
-                                        <div class="float-end my-auto loader">
-                                            <p />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="m-2">
-                                    <div class="d-block my-auto">
-                                        <img
-                                            :src="'/public/profileImages/download.jpg'"
-                                            alt="img"
-                                            class="img-fluid float-start me-2 image-loader"
-                                        />
-                                        <div class="float-start loader">
-                                            <h6 />
-                                            <p class="d-inline-block" />
-
-                                            <p class="d-inline-block" />
-                                        </div>
-                                        <div class="float-end my-auto loader">
-                                            <p />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="m-2">
-                                    <div class="d-block my-auto">
-                                        <img
-                                            :src="'/public/profileImages/download.jpg'"
-                                            alt="img"
-                                            class="img-fluid float-start me-2 image-loader"
-                                        />
-                                        <div class="float-start loader">
-                                            <h6 />
-                                            <p class="d-inline-block" />
-
-                                            <p class="d-inline-block" />
-                                        </div>
-                                        <div class="float-end my-auto loader">
-                                            <p />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div
-                                    class="card-footer text-muted d-block text-center p-3"
-                                >
-                                    <div class="loader">
-                                        <h6 />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <div v-else>
+            <h4 class="sub-title" v-if="abstract.abstract">
+                {{ abstract.abstract }}
+            </h4>
+            <h4 class="sub-title" v-else>
+                {{
+                    abstract.type != "Project"
+                        ? "The abstract for this research item is not available."
+                        : "The description for this project is not available."
+                }}
+            </h4>
+        </div>
     </div>
 </template>
 <script>
@@ -152,8 +39,8 @@ export default {
     async created() {
         // this.token = window.Laravel.csrfToken;
         this.post_slug = this.$route.params.slug;
-        isLoading = true;
         console.log(this.post_slug);
+        this.isLoading = true;
         const res = await this.callApi(
             "get",
             `/api/post_abstract/${this.post_slug}`
@@ -163,7 +50,6 @@ export default {
         } else {
             this.swr();
         }
-
         this.isLoading = false;
     },
 };

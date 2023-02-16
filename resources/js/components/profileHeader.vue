@@ -1,265 +1,486 @@
 <template>
-    <div class="mt-3 mb-2">
-        <!--****** Profile edit for Teacher ******-->
-        <template v-if="editModal && isLoading == false">
-            <div
-                class="profile__info-bottom-border container"
-                v-if="
-                    profileInfo.userType == 'teacher' ||
-                    profileInfo.userType == 'admin'
-                "
-            >
-                <div class="profile-header m-lg-auto" v-if="editData.image">
-                    <img
-                        :src="`${editData.image}`"
-                        class="img-fluid"
-                        type="file"
-                    />
-                    <div class="profile-header-cover" @click="deleteImage()">
-                        <i class="lni lni-trash-can"></i>
-                    </div>
-                </div>
-
-                <div class="mt-3 mb-3">
-                    <Upload
-                        ref="editDataUploads"
-                        type="drag"
-                        :headers="{
-                            'x-csrf-token': token,
-                            'X-Requested-With': 'XMLHttpRequest',
-                        }"
-                        :on-success="handleSuccess"
-                        :on-error="handleError"
-                        :format="['jpg', 'jpeg', 'png']"
-                        :max-size="2048"
-                        :on-format-error="handleFormatError"
-                        :on-exceeded-size="handleMaxSize"
-                        action="/api/upload"
-                    >
-                        <div class="profile-main-btn">
-                            <i class="fa-solid fa-cloud-arrow-up"></i>
-                            Upload Image
-                        </div>
-                    </Upload>
-                </div>
-
-                <div class="plr-1rem">
-                    <div class="mb-2">
-                        <Input
-                            type="text"
-                            v-model="editData.name"
-                            placeholder="Name"
-                        />
-                        <span class="text-danger" v-if="errors.name">{{
-                            errors.name[0]
-                        }}</span>
-                    </div>
-                    <div class="mb-2">
-                        <Select
-                            v-model="editData.designation"
-                            placeholder="Designation"
-                        >
-                            <Option value="Head">Head</Option>
-                            <Option value="Professor">Professor</Option>
-                            <Option value="Associate Professor"
-                                >Associate Professor</Option
+    <div>
+        <section class="container">
+            <div class="profile-section">
+                <div class="profile-menu">
+                    <div v-if="isLoading == false">
+                        <!--****** Profile edit for Teacher ******-->
+                        <template v-if="editModal && isLoading == false">
+                            <div
+                                class="container"
+                                v-if="
+                                    profileInfo.userType == 'teacher' ||
+                                    profileInfo.userType == 'admin'
+                                "
                             >
-                            <Option value="Assistant Professor"
-                                >Assistant Professor</Option
-                            >
-                            <Option value="Lecturer">Lecturer</Option>
-                        </Select>
-                        <span class="text-danger" v-if="errors.designation">{{
-                            errors.designation[0]
-                        }}</span>
-                    </div>
-                    <div class="mb-2">
-                        <Select
-                            v-model="editData.department"
-                            placeholder="Department"
-                        >
-                            <Option value="CSE">CSE</Option>
-                            <Option value="EEE">EEE</Option>
-                            <Option value="ARCH">ARCH</Option>
-                            <Option value="CE">CE</Option>
-                            <Option value="BuA">BuA</Option>
-                            <Option value="ENG">ENG</Option>
-                        </Select>
-                        <span class="text-danger" v-if="errors.department">{{
-                            errors.department[0]
-                        }}</span>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <button
-                            class="profile-main-btn col-6"
-                            @click="closeEditModal()"
-                        >
-                            Cancel
-                        </button>
-                        <button class="profile-main-btn col-6" @click="save()">
-                            <i class="fa-solid fa-floppy-disk"></i> Save
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </template>
-        <!--****** Profile edit for Student ******-->
-        <template v-if="editModal && isLoading == false">
-            <div
-                class="profile__info-bottom-border container"
-                v-if="profileInfo.userType == 'student'"
-            >
-                <div class="profile-header m-lg-auto" v-if="editData.image">
-                    <img
-                        :src="`${editData.image}`"
-                        class="img-fluid"
-                        type="file"
-                    />
-                    <div class="profile-header-cover" @click="deleteImage()">
-                        <i class="lni lni-trash-can"></i>
-                    </div>
-                </div>
-                <div class="d-flex mt-3 mb-3">
-                    <div class="col-6">
-                        <Upload
-                            ref="editDataUploads"
-                            type="drag"
-                            :headers="{
-                                'x-csrf-token': token,
-                                'X-Requested-With': 'XMLHttpRequest',
-                            }"
-                            :on-success="handleSuccess"
-                            :on-error="handleError"
-                            :format="['jpg', 'jpeg', 'png']"
-                            :max-size="2048"
-                            :on-format-error="handleFormatError"
-                            :on-exceeded-size="handleMaxSize"
-                            action="/api/upload"
-                        >
-                            <div class="profile-main-btn">
-                                <i class="fa-solid fa-cloud-arrow-up"></i>
-                                Upload Image
+                                <div
+                                    class="profile-header m-auto"
+                                    v-if="editData.image"
+                                >
+                                    <img
+                                        :src="`${editData.image}`"
+                                        class="img-fluid"
+                                        type="file"
+                                    />
+                                    <div
+                                        class="profile-header-cover"
+                                        @click="deleteImage()"
+                                    >
+                                        <i class="lni lni-trash-can"></i>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 mb-3">
+                                    <Upload
+                                        ref="editDataUploads"
+                                        type="drag"
+                                        :headers="{
+                                            'x-csrf-token': token,
+                                            'X-Requested-With':
+                                                'XMLHttpRequest',
+                                        }"
+                                        :on-success="handleSuccess"
+                                        :on-error="handleError"
+                                        :format="['jpg', 'jpeg', 'png']"
+                                        :max-size="2048"
+                                        :on-format-error="handleFormatError"
+                                        :on-exceeded-size="handleMaxSize"
+                                        action="http://localhost:8000/api/upload_profile_image"
+                                    >
+                                        <div class="profile-main-btn">
+                                            <i
+                                                class="fa-solid fa-cloud-arrow-up"
+                                            ></i>
+                                            Upload Image
+                                        </div>
+                                    </Upload>
+                                </div>
+
+                                <div class="plr-1rem">
+                                    <div class="mb-2">
+                                        <Input
+                                            type="text"
+                                            v-model="editData.name"
+                                            placeholder="Name"
+                                        />
+                                        <span
+                                            class="text-danger"
+                                            v-if="errors.name"
+                                            >{{ errors.name[0] }}</span
+                                        >
+                                    </div>
+                                    <div class="mb-2">
+                                        <Select
+                                            v-model="editData.designation"
+                                            placeholder="Designation"
+                                        >
+                                            <Option value="Head">Head</Option>
+                                            <Option value="Professor"
+                                                >Professor</Option
+                                            >
+                                            <Option value="Associate Professor"
+                                                >Associate Professor</Option
+                                            >
+                                            <Option value="Assistant Professor"
+                                                >Assistant Professor</Option
+                                            >
+                                            <Option value="Lecturer"
+                                                >Lecturer</Option
+                                            >
+                                        </Select>
+                                        <span
+                                            class="text-danger"
+                                            v-if="errors.designation"
+                                            >{{ errors.designation[0] }}</span
+                                        >
+                                    </div>
+                                    <div class="mb-2">
+                                        <Select
+                                            v-model="editData.department"
+                                            placeholder="Department"
+                                        >
+                                            <Option
+                                                v-for="(
+                                                    department, index
+                                                ) in departmentInfo"
+                                                :key="index"
+                                                :value="department.id"
+                                                >{{
+                                                    department.department_name
+                                                }}</Option
+                                            >
+                                        </Select>
+                                        <span
+                                            class="text-danger"
+                                            v-if="errors.department"
+                                            >{{ errors.department[0] }}</span
+                                        >
+                                    </div>
+                                    <div class="d-flex mb-2">
+                                        <button
+                                            class="profile-main-btn col-6"
+                                            @click="closeEditModal()"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            class="profile-main-btn col-6"
+                                            @click="save()"
+                                        >
+                                            <i
+                                                class="fa-solid fa-floppy-disk"
+                                            ></i>
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                        </Upload>
+                        </template>
+                        <!--****** Profile edit for Student ******-->
+                        <template v-if="editModal && isLoading == false">
+                            <div
+                                class="container"
+                                v-if="profileInfo.userType == 'student'"
+                            >
+                                <div
+                                    class="profile-header m-auto"
+                                    v-if="editData.image"
+                                >
+                                    <img
+                                        :src="`${editData.image}`"
+                                        class="img-fluid"
+                                        type="file"
+                                    />
+                                    <div
+                                        class="profile-header-cover"
+                                        @click="deleteImage()"
+                                    >
+                                        <i class="lni lni-trash-can"></i>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 mb-3">
+                                    <Upload
+                                        ref="editDataUploads"
+                                        type="drag"
+                                        :headers="{
+                                            'x-csrf-token': token,
+                                            'X-Requested-With':
+                                                'XMLHttpRequest',
+                                        }"
+                                        :on-success="handleSuccess"
+                                        :on-error="handleError"
+                                        :format="['jpg', 'jpeg', 'png']"
+                                        :max-size="2048"
+                                        :on-format-error="handleFormatError"
+                                        :on-exceeded-size="handleMaxSize"
+                                        action="http://localhost:8000/api/upload_profile_image"
+                                    >
+                                        <div class="profile-main-btn">
+                                            <i
+                                                class="fa-solid fa-cloud-arrow-up"
+                                            ></i>
+                                            Upload Image
+                                        </div>
+                                    </Upload>
+                                </div>
+
+                                <div class="plr-1rem">
+                                    <div class="mb-2">
+                                        <Input
+                                            type="text"
+                                            v-model="editData.name"
+                                            placeholder="Name"
+                                        />
+                                        <span
+                                            class="text-danger"
+                                            v-if="errors.name"
+                                            >{{ errors.name[0] }}</span
+                                        >
+                                    </div>
+                                    <div class="mb-2">
+                                        <Select
+                                            v-model="editData.department"
+                                            placeholder="Department"
+                                        >
+                                            <Option
+                                                v-for="(
+                                                    department, index
+                                                ) in departmentInfo"
+                                                :key="index"
+                                                :value="department.id"
+                                                >{{
+                                                    department.department_name
+                                                }}</Option
+                                            >
+                                        </Select>
+                                        <span
+                                            class="text-danger"
+                                            v-if="errors.department"
+                                            >{{ errors.department[0] }}</span
+                                        >
+                                    </div>
+                                    <div class="d-flex mb-2">
+                                        <button
+                                            class="profile-main-btn col-6"
+                                            @click="closeEditModal()"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            class="profile-main-btn col-6"
+                                            @click="save()"
+                                        >
+                                            <i
+                                                class="fa-solid fa-floppy-disk"
+                                            ></i>
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <!--****** Profile Info ******-->
+                        <template v-else>
+                            <div class="profile-header m-auto">
+                                <img
+                                    :src="profileInfo.image"
+                                    alt="img"
+                                    class="img-fluid"
+                                />
+                                <div
+                                    class="profile-header-cover"
+                                    @click="showEditModal(profileInfo)"
+                                    v-if="
+                                        authUser.slug == this.$route.params.slug
+                                    "
+                                >
+                                    <i class="fa-solid fa-camera"></i>
+                                </div>
+                            </div>
+                            <h4 class="header">
+                                {{ profileInfo.name
+                                }}<span
+                                    v-if="
+                                        authUser.slug == this.$route.params.slug
+                                    "
+                                    class="btn-edit m-2"
+                                    @click="showEditModal()"
+                                >
+                                    <i class="fa-solid fa-pen" />
+                                </span>
+                            </h4>
+                            <p id="not">
+                                {{ profileInfo.designation }}
+                                .
+                                {{ profileInfo.department.department_name }}
+                            </p>
+                            <p>{{ profileInfo.email }}</p>
+
+                            <div
+                                class="footer"
+                                v-if="
+                                    this.authUser.slug !==
+                                    this.$route.params.slug
+                                "
+                            >
+                                <button
+                                    class="main-btn main-btn__bg col-5 mx-1"
+                                    v-if="sendRequest"
+                                    @click="ignoreConnection"
+                                >
+                                    <i
+                                        class="fa-solid fa-clock-rotate-left"
+                                    ></i>
+                                    Pending
+                                </button>
+                                <button
+                                    class="main-btn main-btn__bg col-5 mx-1"
+                                    v-else-if="receivedRequest"
+                                    @click="
+                                        showResponseModal(
+                                            'Are you want to accept '
+                                        )
+                                    "
+                                >
+                                    <i class="fa-solid fa-user-check"></i>
+                                    Response
+                                </button>
+                                <button
+                                    class="main-btn main-btn__bg col-5 mx-1"
+                                    v-else-if="approvedRequest"
+                                    @click="showRemoveModal"
+                                >
+                                    <i class="fa-solid fa-user-check"></i>
+                                    Connected
+                                </button>
+                                <button
+                                    class="main-btn main-btn__border col-5 mx-1"
+                                    @click="connect"
+                                    v-else
+                                >
+                                    <!-- <i class="fa-solid fa-user-check"></i> -->
+                                    <i class="fa-solid fa-user-plus"></i>
+                                    Connect
+                                </button>
+                                <!-- <button class="main-btn main-btn__border col-5 mx-1">
+                  <i class="fa-solid fa-paper-plane"></i>
+                  Message
+                </button> -->
+                            </div>
+                        </template>
                     </div>
-                    <div class="text-center col-6" @click="deleteImage()">
-                        <div class="profile-main-btn">
-                            <i class="fa-solid fa-trash"></i>
-                            Delete Image
+                    <!---******* loader *******--->
+                    <div class="container mb-2" v-if="isLoading == true">
+                        <div class="profile-header-skeleton m-auto">
+                            <img class="img-fluid m-auto" />
+                        </div>
+                        <div class="p-3 profile-info-skeleton">
+                            <h4 class="mt-1 mb-1" />
+                            <p class="mb-1" />
+                            <p />
                         </div>
                     </div>
+                    <div class="d-lg-block d-none">
+                        <ul class="profile-menu--list">
+                            <li class="profile-menu--list---item">
+                                <router-link
+                                    class="menu-link"
+                                    aria-current="page"
+                                    :to="`/profile/${this.$route.params.slug}/overview`"
+                                    ><i class="fa-solid fa-user"></i>
+                                    <h4>Profile</h4></router-link
+                                >
+                            </li>
+                            <li
+                                class="profile-menu--list---item"
+                                v-if="authUser"
+                            >
+                                <router-link
+                                    class="menu-link"
+                                    aria-current="page"
+                                    :to="`/profile/${this.$route.params.slug}/research`"
+                                    ><i
+                                        class="fa-regular fa-folder-open"
+                                        v-if="
+                                            $route.name ==
+                                            'profile-slug-research'
+                                        "
+                                    ></i
+                                    ><i class="fa-solid fa-folder" v-else></i>
+                                    <h4>Research</h4></router-link
+                                >
+                            </li>
+                            <li
+                                class="profile-menu--list---item"
+                                v-if="authUser"
+                            >
+                                <router-link
+                                    class="menu-link"
+                                    aria-current="page"
+                                    :to="`/profile/${this.$route.params.slug}/project`"
+                                    ><i
+                                        class="fa-regular fa-folder-open"
+                                        v-if="
+                                            $route.name ==
+                                            'profile-slug-project'
+                                        "
+                                    ></i
+                                    ><i class="fa-solid fa-folder" v-else></i>
+                                    <h4>Projects</h4></router-link
+                                >
+                            </li>
+                            <li
+                                class="profile-menu--list---item"
+                                v-if="authUser"
+                            >
+                                <router-link
+                                    class="menu-link"
+                                    aria-current="page"
+                                    :to="`/profile/${this.$route.params.slug}/connection`"
+                                    ><i class="fa-solid fa-users"></i>
+                                    <h4>Connections</h4></router-link
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="d-lg-none">
+                        <profileNav />
+                    </div>
                 </div>
 
-                <div class="plr-1rem">
-                    <div class="mb-2">
-                        <Input
-                            type="text"
-                            v-model="editData.name"
-                            placeholder="Name"
-                        />
-                        <span class="text-danger" v-if="errors.name">{{
-                            errors.name[0]
-                        }}</span>
-                    </div>
-                    <div class="mb-2">
-                        <Select
-                            v-model="editData.department"
-                            placeholder="Department"
-                        >
-                            <Option value="CSE">CSE</Option>
-                            <Option value="EEE">EEE</Option>
-                            <Option value="ARCH">ARCH</Option>
-                            <Option value="CE">CE</Option>
-                            <Option value="BuA">BuA</Option>
-                            <Option value="ENG">ENG</Option>
-                        </Select>
-                        <span class="text-danger" v-if="errors.department">{{
-                            errors.department[0]
-                        }}</span>
-                    </div>
-                    <div class="d-flex mb-2">
-                        <button
-                            class="profile-main-btn col-6"
-                            @click="closeEditModal()"
-                        >
-                            Cancel
-                        </button>
-                        <button class="profile-main-btn col-6" @click="save()">
-                            <i class="fa-solid fa-floppy-disk"></i> Save
-                        </button>
+                <!-- profile description -->
+                <div class="profile-description menu-item">
+                    <div class="menu-item-box">
+                        <router-view />
                     </div>
                 </div>
             </div>
-        </template>
-
-        <!--****** Profile Info ******-->
-        <template v-else>
-            <div
-                class="profile__info-bottom-border container"
-                v-if="profileInfo && isLoading == false"
-            >
-                <div class="profile-header m-lg-auto">
-                    <img :src="profileInfo.image" alt="img" class="img-fluid" />
-                    <div
-                        class="profile-header-cover"
-                        @click="showEditModal(profileInfo)"
-                        v-if="authUser.id == this.$route.params.id"
+        </section>
+        <div v-if="isLoading == false">
+            <Modal v-model="responseModal">
+                <p slot="header" style="color: #7da2a9; text-align: center">
+                    <Icon type="close"></Icon>
+                    <span>Response</span>
+                </p>
+                <div style="text-align: center">
+                    <b>{{ this.connection_title }}</b
+                    >?
+                </div>
+                <div slot="footer" class="justify-content-center d-flex">
+                    <Button
+                        class="main-btn main-btn__border"
+                        :loading="sending"
+                        @click="acceptConnection"
                     >
-                        <i class="fa-solid fa-camera"></i>
-                    </div>
+                        <span v-if="!sending">Accept</span>
+                        <span v-else>Accepting...</span>
+                    </Button>
+                    <Button
+                        class="main-btn main-btn__border"
+                        :loading="sending"
+                        @click="ignoreConnection"
+                    >
+                        <span v-if="!sending">Ignore</span>
+                        <span v-else>Ignoring...</span>
+                    </Button>
                 </div>
-                <div class="p-3">
-                    <div class="d-flex">
-                        <h4>
-                            {{ profileInfo.name }}
-                        </h4>
-                        <span
-                            v-if="authUser.id == this.$route.params.id"
-                            class="btn-edit m-2"
-                            @click="showEditModal(profileInfo)"
-                        >
-                            <i class="fa-solid fa-pen" />
-                        </span>
-                    </div>
-                    <div>
-                        <span>{{ profileInfo.designation }} .</span>
-                        <span> {{ profileInfo.department }} .</span>
-                        <span> Leading University </span>
-                    </div>
-                    <p>{{ profileInfo.email }}</p>
+            </Modal>
+            <Modal v-model="removeModal">
+                <p slot="header" style="color: #7da2a9; text-align: center">
+                    <Icon type="close"></Icon>
+                    <span>Response</span>
+                </p>
+                <div style="text-align: center">
+                    <b>{{ this.connection_title }}</b>
                 </div>
-            </div>
-        </template>
-
-        <!---******* loader *******--->
-        <div
-            class="profile-info-bottom-border container mb-2"
-            v-if="isLoading == true"
-        >
-            <div class="profile-header-skeleton m-lg-auto">
-                <img
-                    :src="'/public/profileImages/download.jpg'"
-                    alt="img"
-                    class="img-fluid m-auto"
-                />
-            </div>
-            <div class="p-3 profile-info-skeleton">
-                <h4 />
-                <p />
-                <p />
-            </div>
+                <div slot="footer">
+                    <Button
+                        class="main-btn main-btn__border"
+                        long
+                        :loading="sending"
+                        @click="ignoreConnection"
+                    >
+                        <span v-if="!sending">Remove</span>
+                        <span v-else>Removing...</span>
+                    </Button>
+                </div>
+            </Modal>
         </div>
     </div>
 </template>
 <script>
 import ProfileNav from "./profileNav";
+const { io } = require("socket.io-client");
 
 export default {
     name: "Profile",
 
     data() {
         return {
-            isLoading: true,
+            socket: null,
+
+            isLoading: false,
             data: {
                 image: "",
                 name: "",
@@ -272,9 +493,8 @@ export default {
                 Skills: "",
             },
             editModal: false,
-
-            isAdding: false,
-            profileInfo: "",
+            // departments: [],
+            profileInfo: [],
             editData: {
                 image: "",
                 name: "",
@@ -285,10 +505,18 @@ export default {
                 interests: "",
             },
             index: -1,
-            user_id: -1,
+            user_slug: "",
             token: "",
+            connection_id: "",
+            connection_title: "",
             isIconImageNew: false,
             isEditingItem: false,
+            sendRequest: false,
+            receivedRequest: false,
+            approvedRequest: false,
+            responseModal: false,
+            removeModal: false,
+            sending: false,
             errors: [],
         };
     },
@@ -297,27 +525,25 @@ export default {
     },
     methods: {
         async save() {
-            // if (this.editData.name.trim() == "")
-            //     return this.e("Name is required");
-            // if (this.editData.designation.trim() == "")
-            //     return this.e("Designation is required");
-            // if (this.editData.department.trim() == "")
-            //     return this.e("Department is required");
-            this.user_id = this.$route.params.id;
+            if (this.editData.name.trim() == "")
+                return this.e("Name is required");
+            if (this.editData.designation == "")
+                return this.e("Designation is required");
+            if (this.editData.department == "")
+                return this.e("Department is required");
             const res = await this.callApi(
                 "post",
-                `/api/edit_profile/${this.user_id}`,
+                `/api/edit_profile`,
                 this.editData
             );
             if (res.status === 200) {
                 this.profileInfo.name = this.editData.name;
                 this.profileInfo.designation = this.editData.designation;
-                this.profileInfo.department = this.editData.department;
-                this.reset();
-                this.u("Profile has been updated successfully!");
+                this.profileInfo.department_id = this.editData.department;
+                this.getProfileInfo();
+                this.s("Profile has been updated successfully!");
                 this.editModal = false;
                 this.errors = [];
-
                 // window.location = `/profile/${this.profileInfo.id}`;
             } else {
                 if (res.status == 422) {
@@ -330,23 +556,24 @@ export default {
                 }
             }
         },
-        showEditModal(profileInfo) {
+        showEditModal() {
             let obj = {
-                id: profileInfo.id,
-                image: profileInfo.image,
-                name: profileInfo.name,
-                designation: profileInfo.designation,
-                department: profileInfo.department,
+                id: this.profileInfo.id,
+                image: this.profileInfo.image,
+                name: this.profileInfo.name,
+                designation: this.profileInfo.designation,
+                department: parseInt(this.profileInfo.department_id),
             };
-            console.log(profileInfo);
             this.editModal = true;
             this.editData = obj;
+            // this.departments.push(this.profileInfo.department);
             this.isEditingItem = true;
         },
         handleSuccess(res, file) {
-            res = `/profileImages/${res}`;
+            res = `http://localhost:8000/profileImages/${res}`;
             if (this.isEditingItem) {
                 console.log("inside");
+                this.$refs.editDataUploads.clearFiles();
                 return (this.editData.image = res);
             }
             console.log(res);
@@ -382,11 +609,16 @@ export default {
             // for editing....
             // this.isIconImageNew = true;
             image = this.editData.image;
-            this.editData.image = "/profileImages/download.jpg";
+            this.editData.image =
+                "http://localhost:8000/profileImages/download.jpg";
             this.$refs.editDataUploads.clearFiles();
-            const res = await this.callApi("post", "/api/delete_image", {
-                imageName: image,
-            });
+            const res = await this.callApi(
+                "post",
+                "/api/delete__profile_image",
+                {
+                    imageName: image,
+                }
+            );
             if (res.status != 200) {
                 this.data.image = image;
                 this.swr();
@@ -397,47 +629,141 @@ export default {
             this.editModal = false;
         },
 
-        async reset() {
-            this.token = window.Laravel.csrfToken;
-
-            this.user_id = this.$route.params.id;
-            const res = await this.callApi(
-                "get",
-                `/api/get_profile_info/${this.user_id}`
-            );
-
+        async getDepartments() {
+            const res = await this.callApi("get", "/api/get_departments");
             if (res.status == 200) {
-                this.profileInfo = res.data;
+                this.departments = res.data;
             } else {
                 this.swr();
             }
             this.isLoading = false;
         },
+        async connect() {
+            console.log("inside connect");
+            this.sendRequest = true;
+            const res = await this.callApi(
+                "post",
+                `/api/add_connection?id=${this.profileInfo.id}`
+            );
+            if (res.status == 201) {
+                this.connection = res.data.data;
+                this.callNotification();
+            } else {
+                this.sendRequest = false;
+            }
+        },
+        async acceptConnection() {
+            this.approvedRequest = true;
+            this.receivedRequest = false;
+            this.responseModal = false;
+            const res = await this.callApi(
+                "post",
+                `/api/accept_connection?id=${this.connection.id}&user_id=${this.connection.user1.id}`
+            );
+            if (res.status == 201) {
+                this.callNotification();
+            } else {
+                this.swr();
+            }
+        },
+        async ignoreConnection() {
+            // console.log(this.connection.user2.id);
+            this.approvedRequest = false;
+            this.receivedRequest = false;
+            this.approvedRequest = false;
+            this.sendRequest = false;
+            this.responseModal = false;
+            this.removeModal = false;
+            const res = await this.callApi(
+                "post",
+                `/api/ignore_connection?id=${this.connection.id}&user_id=${this.profileInfo.id}`
+            );
+            if (res.status == 201) {
+                console.log("success");
+                this.callNotification();
+            } else {
+                this.swr();
+            }
+        },
+        showResponseModal() {
+            this.connection_title =
+                "Are you sure you want to accept " +
+                this.connection.user1.name +
+                " as your connection";
+            this.responseModal = true;
+        },
+        showRemoveModal() {
+            this.connection_title =
+                "Are you sure you want to remove " +
+                this.connection.user1.name +
+                " from your connection?";
+            this.removeModal = true;
+        },
+        async connectionStatus() {
+            this.user_slug = this.$route.params.slug;
+            this.isLoading = true;
+
+            const res = await this.callApi(
+                "get",
+                `/api/connection_status?slug=${this.user_slug}`
+            );
+            if (res.status == 201) {
+                this.approvedRequest = true;
+            }
+            if (res.status == 202) {
+                this.receivedRequest = true;
+            }
+            if (res.status == 203) {
+                this.sendRequest = true;
+            }
+            this.connection = res.data.data;
+            this.isLoading = false;
+        },
+        async getProfileInfo() {
+            // this.token = window.Laravel.csrfToken;
+
+            this.user_slug = this.$route.params.slug;
+            this.isLoading = true;
+            const res = await this.callApi(
+                "get",
+                `/api/get_profile_header_info/${this.user_slug}`
+            );
+
+            if (res.status == 200) {
+                this.profileInfo = res.data.user;
+            } else {
+                this.swr();
+            }
+            this.isLoading = false;
+        },
+        callNotification() {
+            let notificationObj = {
+                id: this.profileInfo.id,
+            };
+            this.socket.emit("notification", notificationObj);
+        },
     },
 
     // to perform "side effects" in reaction to state changes
     watch: {
-        "$route.params"(oldValue, newValue) {
+        "$route.params.slug"(oldValue, newValue) {
             if (oldValue != newValue) {
                 console.log("route is changing!");
-                this.reset();
+                this.getProfileInfo();
+                this.connectionStatus();
             }
         },
     },
     async created() {
-        this.token = window.Laravel.csrfToken;
-
-        this.user_id = this.$route.params.id;
-        const res = await this.callApi(
-            "get",
-            `/api/get_profile_info/${this.user_id}`
-        );
-        if (res.status == 200) {
-            this.profileInfo = res.data;
-        } else {
-            this.swr();
-        }
-        this.isLoading = false;
+        this.getProfileInfo();
+        this.connectionStatus();
+    },
+    mounted() {
+        this.socket = io("http://localhost:5000", {
+            methods: ["GET", "POST"],
+            transports: ["websocket"],
+            credentials: true,
+        });
     },
 };
 </script>

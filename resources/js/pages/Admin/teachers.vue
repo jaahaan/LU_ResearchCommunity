@@ -1,242 +1,337 @@
 <template>
     <div>
-        <section class="container">
-            <div class="teacher-section">
-                <div class="teacher-section--table">
-                    <div class="d-block pt-5 pb-5">
-                        <h4 class="float-start">Faculty Members</h4>
-                        <button
-                            class="main-btn float-end"
-                            @click="addTeacherButton"
-                        >
-                            Add New Member
-                        </button>
+        <div v-if="isDataLoading == false">
+            <section class="container">
+                <div class="teacher-section">
+                    <div class="teacher-section--table">
+                        <div class="d-block pt-5 pb-5">
+                            <h4 class="float-start">Faculty Members</h4>
+                            <button
+                                class="main-btn float-end"
+                                @click="addTeacherButton"
+                            >
+                                Add New Member
+                            </button>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Designation</th>
+                                    <th scope="col">Department</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(teacher, index) in teachersInfo"
+                                    :key="index"
+                                >
+                                    <template v-if="editObj.id == teacher.id">
+                                        <td>
+                                            <input
+                                                type="email"
+                                                v-model="editObj.email"
+                                                placeholder="Email"
+                                                :ref="`teacher${teacher.id}`"
+                                            />
+                                            <span
+                                                class="text-danger"
+                                                v-if="errors.email"
+                                                >{{ errors.email[0] }}</span
+                                            >
+                                        </td>
+                                        <td>
+                                            <Select
+                                                v-model="editObj.designation"
+                                                placeholder="Designation"
+                                            >
+                                                <Option value="Head"
+                                                    >Head</Option
+                                                >
+                                                <Option value="Professor"
+                                                    >Professor</Option
+                                                >
+                                                <Option
+                                                    value="Associate Professor"
+                                                    >Associate Professor</Option
+                                                >
+                                                <Option
+                                                    value="Assistant Professor"
+                                                    >Assistant Professor</Option
+                                                >
+                                                <Option value="Lecturer"
+                                                    >Lecturer</Option
+                                                >
+                                            </Select>
+                                            <span
+                                                class="text-danger"
+                                                v-if="errors.designation"
+                                                >{{
+                                                    errors.designation[0]
+                                                }}</span
+                                            >
+                                        </td>
+                                        <td>
+                                            <Select
+                                                v-model="editObj.department"
+                                                placeholder="Department"
+                                            >
+                                                <Option value="CSE">CSE</Option>
+                                                <Option value="EEE">EEE</Option>
+                                                <Option value="ARCH"
+                                                    >ARCH</Option
+                                                >
+                                                <Option value="CE">CE</Option>
+                                                <Option value="BuA">BuA</Option>
+                                                <Option value="ENG">ENG</Option>
+                                            </Select>
+                                            <span
+                                                class="text-danger"
+                                                v-if="errors.department"
+                                                >{{
+                                                    errors.department[0]
+                                                }}</span
+                                            >
+                                        </td>
+                                        <td class="text-center">
+                                            <i
+                                                class="fa-solid fa-square-check"
+                                                @click="updateTeacher()"
+                                            ></i>
+                                            <i
+                                                class="fa-solid fa-xmark"
+                                                @click="reset()"
+                                            ></i>
+                                        </td>
+                                    </template>
+                                    <template v-else>
+                                        <td>{{ teacher.email }}</td>
+                                        <td>{{ teacher.designation }}</td>
+                                        <td>{{ teacher.department }}</td>
+                                        <td>
+                                            <i
+                                                class="fa-solid fa-pen-to-square"
+                                                @click="showEdit(index)"
+                                            ></i>
+                                            <i
+                                                class="lni lni-trash-can"
+                                                @click="showRemove(index)"
+                                            ></i>
+                                        </td>
+                                    </template>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">Email</th>
-                                <th scope="col">Designation</th>
-                                <th scope="col">Department</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(teacher, index) in teachersInfo"
-                                :key="index"
-                            >
-                                <template v-if="editObj.id == teacher.id">
-                                    <td>
-                                        <input
-                                            type="email"
-                                            v-model="editObj.email"
-                                            placeholder="Email"
-                                            :ref="`teacher${teacher.id}`"
-                                        />
-                                        <span
-                                            class="text-danger"
-                                            v-if="errors.email"
-                                            >{{ errors.email[0] }}</span
-                                        >
-                                    </td>
-                                    <td>
-                                        <Select
-                                            v-model="editObj.designation"
-                                            placeholder="Designation"
-                                        >
-                                            <Option value="Head">Head</Option>
-                                            <Option value="Professor"
-                                                >Professor</Option
-                                            >
-                                            <Option value="Associate Professor"
-                                                >Associate Professor</Option
-                                            >
-                                            <Option value="Assistant Professor"
-                                                >Assistant Professor</Option
-                                            >
-                                            <Option value="Lecturer"
-                                                >Lecturer</Option
-                                            >
-                                        </Select>
-                                        <span
-                                            class="text-danger"
-                                            v-if="errors.designation"
-                                            >{{ errors.designation[0] }}</span
-                                        >
-                                    </td>
-                                    <td>
-                                        <Select
-                                            v-model="editObj.department"
-                                            placeholder="Department"
-                                        >
-                                            <Option value="CSE">CSE</Option>
-                                            <Option value="EEE">EEE</Option>
-                                            <Option value="ARCH">ARCH</Option>
-                                            <Option value="CE">CE</Option>
-                                            <Option value="BuA">BuA</Option>
-                                            <Option value="ENG">ENG</Option>
-                                        </Select>
-                                        <span
-                                            class="text-danger"
-                                            v-if="errors.department"
-                                            >{{ errors.department[0] }}</span
-                                        >
-                                    </td>
-                                    <td class="text-center">
-                                        <i
-                                            class="fa-solid fa-square-check"
-                                            @click="updateTeacher()"
-                                        ></i>
-                                        <i
-                                            class="fa-solid fa-xmark"
-                                            @click="reset()"
-                                        ></i>
-                                    </td>
-                                </template>
-                                <template v-else>
-                                    <td>{{ teacher.email }}</td>
-                                    <td>{{ teacher.designation }}</td>
-                                    <td>{{ teacher.department }}</td>
-                                    <td>
-                                        <i
-                                            class="fa-solid fa-pen-to-square"
-                                            @click="showEdit(index)"
-                                        ></i>
-                                        <i
-                                            class="lni lni-trash-can"
-                                            @click="showRemove(index)"
-                                        ></i>
-                                    </td>
-                                </template>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <Modal v-model="addTeacherModal" width="400">
-            <p slot="header" style="color: #369; text-align: center">
-                <Icon type="plus"></Icon>
-                <span> Add New Photo with details</span>
-            </p>
-            <div style="">
-                <Form>
-                    <Row :gutter="24">
-                        <Col span="24">
-                            <FormItem
-                                label="Email"
-                                :error="errorMessages.email"
-                                :required="true"
-                            >
-                                <Input
-                                    type="text"
-                                    placeholder="email"
-                                    v-model="formValue.email"
-                                ></Input>
-                            </FormItem>
-                        </Col>
-                        <Col span="24">
-                            <FormItem
-                                label="Designation"
-                                :error="errorMessages.designation"
-                                :required="true"
-                            >
-                                <Select
-                                    v-model="formValue.designation"
-                                    placeholder="Select Designation"
-                                >
-                                    <Option value="Head">Head</Option>
-                                    <Option value="Professor">Professor</Option>
-                                    <Option value="Associate Professor"
-                                        >Associate Professor</Option
-                                    >
-                                    <Option value="Assistant Professor"
-                                        >Assistant Professor</Option
-                                    >
-                                    <Option value="Lecturer">Lecturer</Option>
-                                </Select>
-                                <!-- <span
-                                    class="text-danger"
-                                    v-if="errors.designation"
-                                    >{{ errors.designation[0] }}</span
-                                > -->
-                            </FormItem>
-                        </Col>
-                        <Col span="24">
-                            <FormItem
-                                label="Department"
-                                :error="errorMessages.department"
-                                :required="true"
-                            >
-                                <Select
-                                    v-model="formValue.department"
-                                    placeholder="Department"
-                                >
-                                    <Option value="CSE">CSE</Option>
-                                    <Option value="EEE">EEE</Option>
-                                    <Option value="ARCH">ARCH</Option>
-                                    <Option value="CE">CE</Option>
-                                    <Option value="BuA">BuA</Option>
-                                    <Option value="ENG">ENG</Option>
-                                </Select>
-                                <!-- <span
-                                    class="text-danger"
-                                    v-if="errors.department"
-                                    >{{ errors.department[0] }}</span
-                                > -->
-                            </FormItem>
-                        </Col>
-                    </Row>
-                </Form>
-            </div>
-            <div slot="footer">
-                <Button @click="addTeacherModal = false"> Cancel</Button>
-                <Button type="primary" :loading="loading" @click="addTeacher">
-                    <span v-if="!loading">Add</span>
-                    <span v-else>Adding...</span>
-                </Button>
-            </div>
-        </Modal>
+            <Modal v-model="addTeacherModal" :closable="false">
+                <div class="research-post--item" id="modal">
+                    <h5 class="post-title">
+                        <div>Add New Faculty Member</div>
+                        <div class="btn-edit text-danger" @click="closeModal">
+                            <i class="fa-solid fa-xmark"></i>
+                        </div>
+                    </h5>
+                    <Form>
+                        <FormItem
+                            label="Email"
+                            :error="errorMessages.email"
+                            :required="true"
+                        >
+                            <Input
+                                type="text"
+                                placeholder="email"
+                                v-model="formValue.email"
+                            ></Input>
+                            <span class="text-danger" v-if="errors.email">{{
+                                errors.email[0]
+                            }}</span>
+                        </FormItem>
 
-        <Modal v-model="deleteModal" width="360">
-            <p slot="header" style="color: #f60; text-align: center">
-                <Icon type="close"></Icon>
-                <span> Delete {{ deleteValue.email }}</span>
-            </p>
-            <div style="text-align: center">
-                Are you sure you want delete {{ deleteValue.email }}
-            </div>
-            <div slot="footer">
-                <Button
-                    type="error"
-                    size="large"
-                    long
-                    :loading="sending"
-                    @click="remove"
-                >
-                    <span v-if="!loading">Delete</span>
-                    <span v-else>Deleting...</span>
-                </Button>
-            </div>
-        </Modal>
+                        <FormItem
+                            label="Designation"
+                            :error="errorMessages.designation"
+                            :required="true"
+                        >
+                            <Select
+                                v-model="formValue.designation"
+                                placeholder="Select Designation"
+                            >
+                                <Option value="Head">Head</Option>
+                                <Option value="Professor">Professor</Option>
+                                <Option value="Associate Professor"
+                                    >Associate Professor</Option
+                                >
+                                <Option value="Assistant Professor"
+                                    >Assistant Professor</Option
+                                >
+                                <Option value="Lecturer">Lecturer</Option>
+                            </Select>
+                            <span
+                                class="text-danger"
+                                v-if="errors.designation"
+                                >{{ errors.designation[0] }}</span
+                            >
+                        </FormItem>
+
+                        <FormItem
+                            label="Department"
+                            :error="errorMessages.department"
+                            :required="true"
+                        >
+                            <Select
+                                v-model="formValue.department"
+                                placeholder="Department"
+                            >
+                                <Option value="CSE">CSE</Option>
+                                <Option value="EEE">EEE</Option>
+                                <Option value="ARCH">ARCH</Option>
+                                <Option value="CE">CE</Option>
+                                <Option value="BuA">BuA</Option>
+                                <Option value="ENG">ENG</Option>
+                            </Select>
+                            <span
+                                class="text-danger"
+                                v-if="errors.department"
+                                >{{ errors.department[0] }}</span
+                            >
+                        </FormItem>
+                    </Form>
+                </div>
+                <div slot="footer">
+                    <div>
+                        <Button
+                            class="main-btn main-btn__border"
+                            @click="closeModal"
+                        >
+                            Cancel</Button
+                        >
+                        <Button
+                            class="main-btn main-btn__bg"
+                            @click="addTeacher"
+                            :disabled="isAdding"
+                            :loading="isAdding"
+                        >
+                            {{ isAdding ? "Adding..." : "Add" }}</Button
+                        >
+                    </div>
+                </div>
+            </Modal>
+
+            <Modal v-model="deleteModal" width="360">
+                <p slot="header" style="color: #7da2a9; text-align: center">
+                    <Icon type="close"></Icon>
+                    <span> Delete {{ deleteValue.email }}</span>
+                </p>
+                <div style="text-align: center">
+                    Are you sure you want delete {{ deleteValue.email }}
+                </div>
+                <div slot="footer">
+                    <Button
+                        style="color: #7da2a9"
+                        size="large"
+                        long
+                        :loading="sending"
+                        @click="remove"
+                    >
+                        <span v-if="!sending">Delete</span>
+                        <span v-else>Deleting...</span>
+                    </Button>
+                </div>
+            </Modal>
+        </div>
+        <div v-else>
+            <section class="container">
+                <div class="teacher-section">
+                    <div class="teacher-section--table--skeleton">
+                        <div class="d-block pt-5 pb-5">
+                            <h4 class="float-start"></h4>
+                            <button class="float-end"></button>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                </tr>
+                                <tr>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                </tr>
+                                <tr>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                </tr>
+                                <tr>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                </tr>
+                                <tr>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                </tr>
+                                <tr>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                </tr>
+                                <tr>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                </tr>
+                                <tr>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                    <td scope="col"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
 </template>
 
 <script>
 export default {
+    middleware: "admin",
+
     data() {
         return {
             errors: [],
             search: "",
-            height: 30,
             addTeacherModal: false,
             editModal: false,
-            visible: false,
-            loading: false,
+            isDataLoading: true,
+            isAdding: false,
             sending: false,
-            isCollapsed: false,
+            teachersInfo: [],
             formValue: {
                 email: "",
                 designation: "",
@@ -247,7 +342,6 @@ export default {
                 designation: "",
                 department: "",
             },
-            listMethod: true,
             editObj: {
                 id: null,
                 email: "",
@@ -260,7 +354,6 @@ export default {
                 designation: "",
                 department: "",
             },
-            teachersInfo: [],
             UpdateValue: {
                 indexNumber: null,
                 id: null,
@@ -276,35 +369,23 @@ export default {
             deleteModal: false,
         };
     },
-    // async mounted() {
-    //     const res = await this.callApi("get", "/api/teachers");
 
-    //     if (res.status == 200) {
-    //         this.teachersInfo = res.data;
-    //     } else {
-    //         this.swr();
-    //     }
-
-    //     this.isLoading = false;
-    // },
-    computed: {
-        options() {
-            return {
-                height: this.height,
-                displayValue: false,
-            };
-        },
-
-        rotateIcon() {
-            return ["menu-icon", this.isCollapsed ? "rotate-icon" : ""];
-        },
-        menuitemClasses() {
-            return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
-        },
-    },
     methods: {
         addTeacherButton() {
             this.addTeacherModal = true;
+        },
+        async closeModal() {
+            this.addTeacherModal = false;
+            const res = await this.callApi("get", "/api/get_teachers");
+            if (res.status == 200) {
+                this.teachersInfo = res.data.data;
+            } else {
+                this.swr();
+            }
+            this.formValue.email = "";
+            this.formValue.designation = "";
+            this.formValue.department = "";
+            this.clearErrorMessage();
         },
         clearErrorMessage() {
             (this.editErrorMessages = {
@@ -322,7 +403,6 @@ export default {
         async addTeacher() {
             let validation = true;
             this.clearErrorMessage();
-
             if (this.formValue.email.trim() == "") {
                 this.errorMessages.email = "Email is required!";
                 validation = false;
@@ -331,31 +411,38 @@ export default {
                 this.errorMessages.designation = "Designation is required!";
                 validation = false;
             }
+            if (this.formValue.department.trim() == "") {
+                this.errorMessages.department = "Department is required!";
+                validation = false;
+            }
             if (validation == false)
                 return this.$Message.error("Validation Failed!");
             console.log("Failed");
-            this.loading = true;
             console.log(this.formValue);
-            try {
-                let { data } = await axios({
-                    method: "post",
-                    url: "/api/teachers",
-                    data: this.formValue,
-                });
-                this.teachersInfo.unshift(data);
-                this.s();
-
-                this.loading = false;
-                this.addTeacherModal = false;
-                this.imageUrl = "";
-                // this.formValue=null
-            } catch (e) {
-                this.loading = false;
-                this.swr();
+            this.isAdding = true;
+            const res = await this.callApi(
+                "post",
+                "/api/add_teacher",
+                this.formValue
+            );
+            if (res.status === 201) {
+                this.s("Email Added!!");
+                this.closeModal();
+            } else {
+                if (res.status == 422) {
+                    for (let i in res.data.errors) {
+                        this.errors = res.data.errors;
+                        // this.e(res.data.errors[i][0]);
+                    }
+                } else {
+                    this.swr();
+                }
             }
+            this.isAdding = false;
         },
         showEdit(index) {
             if (this.teachersInfo[index].id) {
+                this.UpdateValue.indexNumber = index;
                 this.editObj.id = this.teachersInfo[index].id;
                 this.editObj.email = this.teachersInfo[index].email;
                 this.editObj.designation = this.teachersInfo[index].designation;
@@ -370,7 +457,7 @@ export default {
                 });
             }
         },
-        async edit() {
+        async updateTeacher() {
             let validation = true;
             this.clearErrorMessage();
             if (this.editObj.email.trim() == "") {
@@ -381,27 +468,33 @@ export default {
                 return this.$Message.error("Validation Failed!");
 
             this.sending = true;
-            try {
-                let { data } = await axios({
-                    method: "post",
-                    url: "/api/teachers_update",
-                    data: this.editObj,
-                });
-                this.teachersInfo[this.UpdateValue.indexNumber].email =
-                    data.email;
-                this.teachersInfo[this.UpdateValue.indexNumber].designation =
-                    data.designation;
-                this.teachersInfo[this.UpdateValue.indexNumber].department =
-                    data.department;
-                this.s();
+            const res = await this.callApi(
+                "post",
+                "/api/teachers_update",
+                this.editObj
+            );
 
-                this.sending = false;
-                this.editModal = false;
-            } catch (e) {
-                this.sending = false;
-                this.editModal = false;
-                this.e("Oops!", "Something went wrong, please try again!");
+            if (res.status === 200) {
+                this.reset();
+                this.errors = [];
+                this.teachersInfo[this.UpdateValue.indexNumber].email =
+                    this.editObj.email;
+                this.teachersInfo[this.UpdateValue.indexNumber].designation =
+                    this.editObj.designation;
+                this.teachersInfo[this.UpdateValue.indexNumber].department =
+                    this.editObj.department;
+                this.s("Email Updated!!");
+            } else {
+                if (res.status == 422) {
+                    for (let i in res.data.errors) {
+                        this.errors = res.data.errors;
+                        // this.e(res.data.errors[i][0]);
+                    }
+                } else {
+                    this.swr();
+                }
             }
+            this.sending = false;
         },
         showRemove(index) {
             this.deleteValue.email = this.teachersInfo[index].email;
@@ -414,7 +507,6 @@ export default {
             let ob = {
                 id: this.deleteValue.id,
             };
-
             this.sending = true;
             const response = await this.callApi(
                 "post",
@@ -423,7 +515,7 @@ export default {
             );
             if (response.status == 200) {
                 this.teachersInfo.splice(this.deleteValue.indexNumber, 1);
-                this.s();
+                this.s("Email Deleted!!");
                 this.deleteModal = false;
                 this.sending = false;
             } else {
@@ -435,26 +527,19 @@ export default {
         },
 
         async getTeachers() {
-            this.loading = true;
-            const res = await this.callApi("get", "/api/teachers");
+            this.isDataLoading = true;
+            const res = await this.callApi("get", "/api/get_teachers");
             if (res.status == 200) {
                 this.teachersInfo = res.data.data;
             } else {
                 this.swr();
             }
-            this.loading = false;
+            this.isDataLoading = false;
         },
         async reset() {
             this.editObj.id = "";
+            this.clearErrorMessage();
             this.getTeachers();
-        },
-        async storeTeachers() {
-            this.ls();
-            const res = await this.callApi("post", "/api/teachers");
-            if (res.status == 201 || res.status == 200) {
-                this.s();
-                this.getTeachers();
-            }
         },
     },
 
@@ -467,7 +552,7 @@ export default {
 input {
     display: block;
     padding: 4px;
-    border-bottom: 0.5px solid #845007;
+    border-bottom: 0.5px solid;
     border-radius: 5px;
     color: #555;
     width: 100%;

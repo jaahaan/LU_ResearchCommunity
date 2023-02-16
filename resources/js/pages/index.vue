@@ -53,21 +53,42 @@
                             <div class="carousel-inner">
                                 <div class="carousel-item active">
                                     <img
-                                        :src="'/images/Coffee.png'"
+                                        :src="'/images/view8.jpeg'"
                                         alt="img"
                                         class="img-fluid slider"
                                     />
                                 </div>
                                 <div class="carousel-item">
                                     <img
-                                        :src="'/images/code.jpg'"
+                                        :src="'/images/view1.jpeg'"
                                         alt="img"
                                         class="img-fluid slider"
                                     />
                                 </div>
                                 <div class="carousel-item">
                                     <img
-                                        :src="'/images/Dreams.png'"
+                                        :src="'/images/view2.jpeg'"
+                                        alt="img"
+                                        class="img-fluid slider"
+                                    />
+                                </div>
+                                <div class="carousel-item">
+                                    <img
+                                        :src="'/images/view3.jpeg'"
+                                        alt="img"
+                                        class="img-fluid slider"
+                                    />
+                                </div>
+                                <div class="carousel-item">
+                                    <img
+                                        :src="'/images/view4.jpeg'"
+                                        alt="img"
+                                        class="img-fluid slider"
+                                    />
+                                </div>
+                                <div class="carousel-item">
+                                    <img
+                                        :src="'/images/view5.jpeg'"
                                         alt="img"
                                         class="img-fluid slider"
                                     />
@@ -380,6 +401,10 @@ export default {
 
 .hooper {
     height: 100%;
+}
+.slider {
+    width: 500px;
+    height: 300px;
 }
 @media (max-width: 768px) {
     .slider {

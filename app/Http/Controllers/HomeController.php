@@ -4,18 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Department;
+use App\Models\Banner;
+use App\Models\Connection;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+date_default_timezone_set('Asia/Dhaka');
 
 class HomeController extends Controller
 {
+    public function getBanner()
+    {
+        $data = Banner::get();
 
 
+        return response()->json([
+            'success'=> true,
+            'data'=>$data
+
+        ],200);
+    }
     public function search(Request $request){
         $searchString= $request->keyword;
+        $limit = $request->limit? $request->limit : 3;
 
-        $users = User::where('name', 'LIKE','%'.$searchString.'%')->get();
+        $users = User::where('name', 'LIKE','%'.$searchString.'%')->limit($limit)->get();
         return response()->json($users);
     }
 
@@ -27,31 +40,61 @@ class HomeController extends Controller
     public function getDepartments(Request $request)
     {
         $data = Department::get();
+        // return response()->json([
+        //     'success'=> true,
+        //     'data'=>$data,
+        // ],200);
+        return $data;
+    }
+    public function getPeopleYouMayKnow(Request $request)
+    {
+        $limit = $request->limit? $request->limit : 3;
+        $department_id=  $request->department_id;
+        $query = User::with('department');
+        
+        // if(!$department_id) {
+        //     $query->where('department_id', Auth::user()->department_id)
+        //     ->orWhere('designation', Auth::user()->designation);           
+        // } else if($department_id) {
+        //     $query->where('department_id', $request->department_id);
+        // } else if($query == []) {
+        //     $query->orWhere('designation', Auth::user()->designation);
+        // }
+        $data = $query->inRandomOrder()->get();
+        \Log::info('getPeopleYouMayKnow');
+        \Log::info($data);
+
+        $formattedData = [];
+        $formattedData1 = [];
+
+        foreach($data as $value){
+            $connected1 = Connection::
+                    where('from_id', Auth::user()->id)
+                    ->where('to_id', $value->id)->first();
+            $connected2 = Connection::
+                    where('from_id', $value->id)
+                    ->where('to_id', Auth::user()->id)->first();
+            \Log::info('connected1');
+            \Log::info($connected1);
+            \Log::info('connected2');
+            \Log::info($connected2);
+            $value['status'] = "connect";
+            
+            if($connected1 || $connected2 || $value->id == Auth::user()->id){
+                array_push($formattedData1, $value);
+            } else{
+                if (count($formattedData) > 2) {
+                    break;
+                }
+                array_push($formattedData, $value);
+            }
+        }
+        
         return response()->json([
             'success'=> true,
-            'data'=>$data,
+            'data'=>$formattedData,
         ],200);
     }
-    //     public function index(Request $request)
-    //     {
-    //         //first check if you are loggedin and admin user ...
-    //         if (!Auth::check() && $request->path() != 'login') {
-    //             return redirect('/login');
-    //         }
-    //         // if (!Auth::check() && $request->path() == 'login') {
-    //         //     return view('welcome');
-    //         // }
-    //         return view('home');
-    //
-    //         // // you are already logged in... so check for if you are an admin user..
-    //         // $user = Auth::user();
-    //         // if ($user->userType == 'User') {
-    //         //     return redirect('/login');
-    //         // }
-    //         // if ($request->path() == 'login') {
-    //         //     return redirect('/');
-    //         // }
-    //     }
     public function admin(Request $request)
     {
         //first check if you are loggedin and admin user ...
@@ -61,16 +104,4 @@ class HomeController extends Controller
         return view('admin');
     }
 
-
-    // public function uploadImages(Request $request)
-    // {
-    //     request()->file('img')->store('uploads');
-    //     $pic = $request->img->hashName();
-    //     // $pic = "/uploads/$pic";
-    //     $url = env('APP_URL');
-    //     $pic = $url . "uploads/$pic";
-    //     return response()->json([
-    //         'image' => $pic
-    //     ], 200);
-    // }
 }

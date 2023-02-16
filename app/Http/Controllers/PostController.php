@@ -5,31 +5,37 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Stroage;
 
+use App\Models\User;
 use App\Models\Post;
 use App\Models\Vote;
 use App\Models\Read;
 use App\Models\Like;
 use App\Models\Comment;
+use App\Models\Connection;
+use App\Models\Notification;
 
 use App\Models\Author;
+use App\Models\Image;
 use App\Models\Attachment;
 use Illuminate\Support\Facades\DB;
 use Auth;
+use DateTime;
+use App\Notifications\PostNotification;
+
+date_default_timezone_set('Asia/Dhaka');
+
 
 class PostController extends Controller
 {
     public function getAllPost(Request $request){
 
-        $limit = $request->limit? $request->limit : 5;
+        $limit = $request->limit? $request->limit : 4;
 
-        // $data =  Post::with(['user', 'read', 'vote', 'like', 'authors', 'attachments'])->orderBy('id', 'desc')->limit($limit)->get();
-        $data =  Post::with(['user', 'read', 'vote', 'like', 'authors', 'attachments'])->limit($limit)->get();
-
-        // $data = Post::with(['user', 'read', 'authors', 'attachments'])->orderBy('id', 'desc')->get();
-
+        $data =  Post::with(['user', 'read', 'vote', 'like', 'authors', 'images'])->orderBy('id', 'desc')->limit($limit)->get();
+        // $data =  Post::with(['user', 'read', 'vote', 'like', 'authors', 'attachments'])->inRandomOrder()->limit($limit)->get();
+        
         $formattedData = [];
-        foreach($data as $value){
-            $post = $value;
+        foreach($data as $post){
             $check = Read::where(['post_id'=>$post->id])->first();
             $voteCheck = Vote::where(['post_id'=>$post->id])->first();
             
@@ -48,8 +54,7 @@ class PostController extends Controller
                 $post['like_count'] =$post->like->like_count;
             } if($AuthLikeCheck){
                 $post['authUserLike'] = 'yes';
-            } 
-            if(!$likecheck){
+            } if(!$likecheck){
                 $post['like_count'] = 0;
             } if(!$AuthLikeCheck){
                 $post['authUserLike'] = 'no';
@@ -60,6 +65,17 @@ class PostController extends Controller
             $post['user_slug'] = $post->user->slug;
             $post['department'] = $post->user->department;
             $post['designation'] = $post->user->designation;
+            if($post['start_date']!=null){
+                $post['start_date'] = date('M Y', strtotime($post->start_date));
+            }
+            if($post['end_date']!=null){
+                $post['end_date'] = date('M Y', strtotime($post->end_date));
+            }
+            if($post['publication_date']!=null){
+                $post['publication_date'] = date('M Y', strtotime($post->publication_date));
+            }
+            
+            $post['formatedDateTime'] = date('M Y', strtotime($post->created_at));
 
             if(!$check){
                 $post['read_count'] = 0;
@@ -79,9 +95,17 @@ class PostController extends Controller
             unset($post['user']);
             unset($post['read']);
             unset($post['like']);
-
-            array_push($formattedData, $post);
-
+            $connected1 = Connection::with('user1', 'user2')
+                    ->where('from_id', Auth::user()->id)
+                    ->where('to_id', $post->user_id)
+                    ->where('connected', 1)->first();
+            $connected2 = Connection::with('user1', 'user2')
+                    ->where('from_id', $post->user_id)
+                    ->where('to_id', Auth::user()->id)
+                    ->where('connected', 1)->first();
+            if($connected1 || $connected2 || $post->user_id == Auth::user()->id){
+                array_push($formattedData, $post);
+            }
         }
         return response()->json([
             'success'=> true,
@@ -90,7 +114,7 @@ class PostController extends Controller
     }
 
     public function postDetails($slug){
-        $data = Post::where('slug',$slug)->with('user','read', 'vote', 'like', 'authors', 'attachments')->first();
+        $data = Post::where('slug',$slug)->with('user','read', 'vote', 'like', 'authors', 'images')->first();
         $check = Read::where(['post_id'=>$data->id])->first();
         $voteCheck = Vote::where(['post_id'=>$data->id])->first();
         if(Auth::check()){
@@ -154,7 +178,21 @@ class PostController extends Controller
         $data = Post::where('slug',$slug)->first();
     
         $formattedData = [];
+        unset($data['user_name']);
+        unset($data['department_id']);
         unset($data['user_id']);
+        unset($data['slug']);
+        unset($data['title']);
+        unset($data['url']);
+        unset($data['affiliation']);
+        unset($data['attachment']);
+        unset($data['conference']);
+        unset($data['publication_date']);
+        unset($data['isApproved']);
+        unset($data['approved_at']);
+        unset($data['end_date']);
+        unset($data['start_date']);
+        unset($data['updated_at']);
         unset($data['created_at']);
         
         array_push($formattedData, $data);
@@ -164,12 +202,8 @@ class PostController extends Controller
         ],200);
     }
 
-    public function getUserPost($id){
-        return Post::where('user_id', $id)->with(['authors', 'attachments'])->orderBy('id', 'desc')->get();
-    }
-
     //create post
-    public function savePost(Request $request, $id)
+    public function savePost(Request $request)
     {
         $this->validate($request, [
             'type' => 'required',
@@ -182,184 +216,59 @@ class PostController extends Controller
 
         DB::beginTransaction();
         try{
+        if($request->start_date){
+            
+        }
         $post = Post::create([
-            'user_id' => $id,
+            'user_id' => Auth::user()->id,
             'user_name' => Auth::user()->name,
+            'department_id' => Auth::user()->department_id,
             'type' => $request->type,
             'title' => $request->title,
             'abstract' => $request->abstract,
             'url' => $request->url,
             'affiliation'=> $request->affiliation,
             'attachment'=> $request->attachment,
+            'conference'=> $request->conference,
+            'publication_date' => $request->publication_date,
             'start_date' => $request->start_date,
             'end_date'=> $request->end_date,
+            
         ]);
 
         // insert authors
         foreach ($authors as $a) {
             array_push($publicationAuthors, ['post_id' => $post->id, 'user_id' => $a]);
+            
+            if($a!=Auth::user()->id){
+                $post = Post::where('id',$post->id)->first();
+                $authUser = Auth::user();
+                $user = User::where('id',$a)->first();
+                if($request->type=='project'){
+                    $msg = "make you a team member of a project";
+                } else{
+                    $msg = "make you an author";
+                }
+                $user->notify(new PostNotification($authUser, $post, $msg));
+            }
+            
         }
         Author::insert($publicationAuthors);
-        // Attachment::insert(['post_id' => $post->id,'type' => 'pdf', 'url' => $request->attachment]);
+
         // insert images
-        // foreach ($images as $i) {
-        //     array_push($postImages, ['post_id' => $post->id,'type' => 'image', 'attachments' => $i]);
-        // }
-        // Attachment::insert($postImages);
+        foreach ($images as $i) {
+            array_push($postImages, ['post_id' => $post->id,'image_name' => $i]);
+        }
+        Image::insert($postImages);
         DB::commit();
         return response()->json(['msg' => 'Added Successfully.', 'status' => $post], 200);
-    } 
+        } 
 
-    catch (\Throwable $e) {
-        DB::rollback();
-        return response()->json(['msg' => 'Unsuccessfull!!'], 401);
-    }   
+        catch (\Throwable $e) {
+            DB::rollback();
+            return response()->json(['msg' => 'Unsuccessfull!!'.$e], 401);
+        }   
     }
-
-    public function upVote(Request $request){
-        $checkUpVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'upVote'=>$request->upVote])->first();
-        $checkDownVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'downVote'=>$request->upVote])->first();
-
-        \Log::info('check');
-        \Log::info($checkUpVote);
-
-    	if ($checkUpVote) {
-    		$data = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'upVote'=>$request->upVote])->delete();
-    		return response()->json([
-                'success'=> true,
-                'data'=> 'del',
-            ],200);
-
-    	} else if($checkDownVote){
-    		Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'downVote'=>$request->upVote])->delete();
-            $data = Vote::create([
-                'user_id' => Auth::user()->id,
-	    	    'post_id' => $request->id,
-                'upVote'=> $request->upVote,
-            ]);
-            return response()->json([
-                'success'=> true,
-                'data'=> 'del_up',
-            ],201);
-        } else{
-	    	$data = Vote::create([
-                'user_id' => Auth::user()->id,
-	    	    'post_id' => $request->id,
-                'upVote'=> $request->upVote,
-            ]);
-            return response()->json([
-                'success'=> true,
-                'data'=> 'up',
-            ],202);
-    	}
-        
-        
-    }
-
-    public function downVote(Request $request){
-        $checkDownVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'downVote'=>$request->downVote])->first();
-        $checkUpVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'upVote'=>$request->downVote])->first();
-
-        \Log::info('$check');
-        \Log::info($checkDownVote);
-
-    	if ($checkDownVote) {
-    		$data = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'downVote'=>$request->downVote])->delete();
-    		return response()->json([
-                'success'=> true,
-                'data'=> 'del',
-            ],200);
-    	} else if($checkUpVote){
-    		Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'upVote'=>$request->downVote])->delete();
-
-	    	$data = Vote::create([
-                'user_id' => Auth::user()->id,
-	    	    'post_id' => $request->id,
-                'downVote'=> $request->downVote,
-            ]);
-            return response()->json([
-                'success'=> true,
-                'data'=> 'del_up',
-            ],201);
-    	} else{
-            $data = Vote::create([
-                'user_id' => Auth::user()->id,
-	    	    'post_id' => $request->id,
-                'downVote'=> $request->downVote,
-            ]);
-            return response()->json([
-                'success'=> true,
-                'data'=> 'up',
-            ],202);
-        }
-        
-        
-    }
-    public function read($id){
-        $check = Read::where(['user_id'=>Auth::user()->id,'post_id'=>$id])->first();
-    	if (!$check) {
-    		return Read::create([
-                'user_id' => Auth::user()->id,
-	    	    'post_id' => $id,
-            ]);
-    	}
-    }
-
-    public function like(Request $request){
-        $checkLike = Like::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id])->first();
-
-        \Log::info('$check');
-        \Log::info($checkLike);
-
-    	if ($checkLike) {
-    		Like::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id])->delete();
-    		return 'deleted';
-    	} else{
-            return Like::create([
-                'user_id' => Auth::user()->id,
-	    	    'post_id' => $request->id,
-            ]);
-        }
-        
-    }
-
-    public function getLikedUser(Request $request){
-        \Log::info($request);
-        $data = Like::where('post_id',$request->id)->with('user')->get();
-        
-        $formattedData = [];
-
-        foreach($data as $value){
-            $LikedUser = $value;
-
-            $LikedUser['image'] = $LikedUser->user->image;
-            $LikedUser['name'] = $LikedUser->user->name;
-            $LikedUser['user_slug'] = $LikedUser->user->slug;
-            unset($LikedUser['user']);
-            array_push($formattedData, $LikedUser);
-        }
-        return response()->json([
-            'success'=> true,
-            'data'=>$formattedData,
-        ],200);
-        
-    }
-    // public function downloadAttachment($url){
-    //     \Log::info($url);
-
-    //     $download = response()->download(public_path() . '/attachments/'. $url);
-    //     \Log::info($download);
-    //     return $download;
-    // }
-
-    // public function viewAttachment($id){
-    //     \Log::info($id);
-    //     $data = Post::find($id);
-    //     return redirect('/viewPost');
-
-    //     return view('welcome', compact('data')) ;
-
-    // }
 
     //upload attachment
     public function uploadAttachment(Request $request)
@@ -391,8 +300,35 @@ class PostController extends Controller
         }
         return;
     }
+    //image upload
+    public function upload(Request $request)
+    {
+        $this->validate($request, [
+            'file' => 'required|mimes:jpeg,jpg,png',
+        ]);
+        $fileName = time() . '_' . $request->file->getClientOriginalName();
+        $request->file->move('images', $fileName);
+        return $fileName;
+    }
+    public function deleteImage(Request $request)
+    {
+        $fileName = $request->imageName;
+        $this->deleteImageFromServer($fileName, false);
+        return 'done';
+    }
+    public function deleteImageFromServer($fileName, $hasFullPath = false)
+    {
+        if (!$hasFullPath) {
+            $filePath = public_path('images') .'\\'. $fileName;
+            \Log::info($filePath);
+        }
+        if (file_exists($filePath)) {
+            @unlink($filePath);
+        }
+        return;
+    }
     // update post
-    public function updateBlog(Request $request)
+    public function updatePost(Request $request)
     {
         $this->validate($request, [
             'type' => 'required',
@@ -403,58 +339,283 @@ class PostController extends Controller
         $publicationAuthors = [];
         $postImages = [];
         DB::beginTransaction();
-        try {
+        // try {
             $post = Post::where('id', $request->id)->update([
                 'user_id' => $request->user_id,
                 'type' => $request->type,
                 'title' => $request->title,
                 'abstract' => $request->abstract,
+                'attachment'=> $request->attachment,
                 'url' => $request->url,
                 'affiliation'=> $request->affiliation,
+                'conference'=> $request->conference,
+                // 'publication_date' => date('Y-m-d H:i:s' , strtotime($request->publication_date)),
+                // 'start_date' => date('Y-m-d H:i:s' , strtotime($request->start_date)),
+                // 'end_date'=> date('Y-m-d H:i:s' , strtotime($request->end_date)),
+                'publication_date' => $request->publication_date,
                 'start_date' => $request->start_date,
                 'end_date'=> $request->end_date,
                 ]);
-
-
             // insert 
             foreach ($authors as $a) {
-                array_push($publicationAuthors, ['post_id' => $post->id, 'author_id' => $a]);
+                array_push($publicationAuthors, ['post_id' => $request->id, 'user_id' => $a]);
             }
             // delete all previous authors
-            Author::where('post_id', $id)->delete();
+            Author::where('post_id', $request->id)->delete();
             Author::insert($publicationAuthors);
-            // insert 
+            // insert images
             foreach ($images as $i) {
-                array_push($postImages, ['post_id' => $post->id,'type' => 'image', 'attachments' => $i]);
+                array_push($postImages, ['post_id' => $request->id,'image_name' => $i]);
             }
-            Attachment::where('post_id', $id)->delete();
-            Attachment::insert($postImages);
+            Image::where('post_id', $request->id)->delete();
+            Image::insert($postImages);
             DB::commit();
             return response()->json(['msg' => 'Updated Successfully.', 'status' => $post], 200);
-        } catch (\Throwable $e) {
-            DB::rollback();
-            return response()->json(['msg' => 'Unsuccessfully.'], 401);
-        }
+        // } catch (\Throwable $e) {
+        //     DB::rollback();
+        //     return response()->json(['msg' => 'Unsuccessfully.'], 401);
+        // }
     }
 
     public function deletePost(Request $request)
     {
         $delete_post = Post::where('id', $request->id)->delete();
-        return response()->json(['msg' => 'Post Deleted Successfully.', 'status' => $delete_post], 200);
+        return response()->json(['msg' => 'Deleted Successfully.', 'status' => $delete_post], 200);
     }
 
-    // public function saveUpVote(request $request)
-    // {
-    // 	$likecheck = Vote::where(['user_id'=>Auth::id(),'post_id'=>$request->id])->first();
-    // 	if ($likecheck) {
-    // 		Vote::where(['user_id'=>Auth::id(),'post_id'=>$request->id])->delete();
-    // 		return 'deleted';
-    // 	}else{
-	//     	$like = new Vote;
-	//     	$like->user_id = Auth::id();
-	//     	$like->post_id = $request->id;
-    //         $like->upVote = '1';
-	//     	$like->save();
-    // 	}
-    // }
+    public function upVote(Request $request){
+        $checkUpVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'upVote'=>$request->upVote])->first();
+        $checkDownVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'downVote'=>$request->upVote])->first();
+        $post = Post::where('id',$request->id)->first();
+
+        \Log::info('check');
+        \Log::info($checkUpVote);
+
+    	if ($checkUpVote) {
+            $count = $post->count - 1;
+            Post::where('id', $post->id)->update([
+                'count' => $count,
+            ]);
+    		$data = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'upVote'=>$request->upVote])->delete();
+            Notification::where(['data->user_id'=>Auth::user()->id,'data->post_id'=>$request->id, 'data->msg'=>'up voted your'])->delete();
+
+    		return response()->json([
+                'success'=> true,
+                'data'=> 'del',
+            ],200);
+
+    	} else if($checkDownVote){
+            $count = $post->count + 2;
+            Post::where('id', $post->id)->update([
+                'count' => $count,
+            ]);
+    		Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'downVote'=>$request->upVote])->delete();
+            Notification::where(['data->user_id'=>Auth::user()->id,'data->post_id'=>$request->id, 'data->msg'=>'down voted your'])->delete();
+
+            $authUser = Auth::user();
+            $postUser = $post->user;
+            $msg = "up voted your";
+            $postUser->notify(new PostNotification($authUser, $post, $msg));
+            
+            $data = Vote::create([
+                'user_id' => Auth::user()->id,
+	    	    'post_id' => $request->id,
+                'upVote'=> $request->upVote,
+            ]);
+            return response()->json([
+                'success'=> true,
+                'data'=> 'del_up',
+            ],201);
+        } else{
+            $count = $post->count + 1;
+            Post::where('id', $post->id)->update([
+                'count' => $count,
+            ]);
+	    	$data = Vote::create([
+                'user_id' => Auth::user()->id,
+	    	    'post_id' => $request->id,
+                'upVote'=> $request->upVote,
+            ]);
+            $authUser = Auth::user();
+            $postUser = $post->user;
+            $msg = "up voted your";
+            $postUser->notify(new PostNotification($authUser, $post, $msg));
+            
+            return response()->json([
+                'success'=> true,
+                'data'=> 'up',
+            ],202);
+    	}
+        
+        
+    }
+
+    public function downVote(Request $request){
+        $checkDownVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'downVote'=>$request->downVote])->first();
+        $checkUpVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'upVote'=>$request->downVote])->first();
+        $post = Post::where('id',$request->id)->first();
+
+        \Log::info('$check');
+        \Log::info($checkDownVote);
+
+    	if ($checkDownVote) {
+    		$data = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'downVote'=>$request->downVote])->delete();
+            Notification::where(['data->user_id'=>Auth::user()->id,'data->post_id'=>$request->id, 'data->msg'=>'down voted your'])->delete();
+            $count = $post->count + 1;
+            \Log::info('count');
+            \Log::info($count);
+            Post::where('id', $post->id)->update([
+                'count' => $count,
+            ]);
+              
+    		return response()->json([
+                'success'=> true,
+                'data'=> 'del',
+            ],200);
+    	} else if($checkUpVote){
+    		Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id, 'upVote'=>$request->downVote])->delete();
+            Notification::where(['data->user_id'=>Auth::user()->id,'data->post_id'=>$request->id, 'data->msg'=>'up voted your'])->delete();
+            $count = $post->count - 2;
+            Post::where('id', $post->id)->update([
+                'count' => $count,
+            ]);
+            
+	    	$data = Vote::create([
+                'user_id' => Auth::user()->id,
+	    	    'post_id' => $request->id,
+                'downVote'=> $request->downVote,
+            ]);
+            $authUser = Auth::user();
+            $postUser = $post->user;
+            $msg = "down voted your";
+            $postUser->notify(new PostNotification($authUser, $post, $msg));
+            
+            return response()->json([
+                'success'=> true,
+                'data'=> 'del_up',
+            ],201);
+    	} else{
+            $count = $post->count - 1;
+            Post::where('id', $post->id)->update([
+                'count' => $count,
+            ]);
+            
+            $data = Vote::create([
+                'user_id' => Auth::user()->id,
+	    	    'post_id' => $request->id,
+                'downVote'=> $request->downVote,
+            ]);
+            $authUser = Auth::user();
+            $postUser = $post->user;
+            $msg = "down voted your";
+            $postUser->notify(new PostNotification($authUser, $post, $msg));
+            
+            return response()->json([
+                'success'=> true,
+                'data'=> 'up',
+            ],202);
+        }
+        
+        
+    }
+
+    public function read($id){
+        $check = Read::where(['user_id'=>Auth::user()->id,'post_id'=>$id])->first();
+        $post = Post::where('id', $id)->first();
+    	if (!$check) {
+            $count = $post->count + 1;
+            Post::where('id', $post->id)->update([
+                'count' => $count,
+            ]);
+    		return Read::create([
+                'user_id' => Auth::user()->id,
+	    	    'post_id' => $id,
+            ]);
+    	}
+    }
+
+    public function like(Request $request){
+        $checkLike = Like::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id])->first();
+
+        $post = Post::where('id',$request->id)->first();
+
+    	if ($checkLike) {
+    		Like::where(['user_id'=>Auth::user()->id,'post_id'=>$request->id])->delete();
+            Notification::where(['data->user_id'=>Auth::user()->id,'data->post_id'=>$request->id, 'data->msg'=>'liked your'])->delete();
+            $count = $post->count - 1;
+            Post::where('id', $post->id)->update([
+                'count' => $count,
+            ]);
+    		return 'deleted';
+    	} else{
+            $like =Like::create([
+                'user_id' => Auth::user()->id,
+	    	    'post_id' => $request->id,
+            ]);
+            
+            $count = $post->count + 1;
+            Post::where('id', $post->id)->update([
+                'count' => $count,
+            ]);
+                       
+
+            $notificationCount =  Notification::where([
+                'notifiable_id'=>Auth::user()->id,'seen_at'=>null
+                ])->count();
+                
+            \Log::info('notificationCount');
+            \Log::info($notificationCount);
+
+            $authUser = Auth::user();
+            $postUser = $post->user;
+            $msg = "liked your";
+            // $postUser->notify(new PostNotification($authUser, $post, $msg, $notificationCount));
+            $postUser->notify(new PostNotification($authUser, $post, $msg));
+                    
+            return $like;            
+        }        
+    }
+
+    public function getLikedUser(Request $request){
+        \Log::info($request);
+        $data = Like::where('post_id',$request->id)->with('user')->get();
+        
+        $formattedData = [];
+
+        foreach($data as $value){
+            $LikedUser = $value;
+
+            $LikedUser['image'] = $LikedUser->user->image;
+            $LikedUser['name'] = $LikedUser->user->name;
+            $LikedUser['user_slug'] = $LikedUser->user->slug;
+            unset($LikedUser['user']);
+            array_push($formattedData, $LikedUser);
+        }
+        return response()->json([
+            'success'=> true,
+            'data'=>$formattedData,
+        ],200);
+        
+    }
+    
+    public function downloadAttachment(Request $request, $url){
+        \Log::info('$url');
+
+        \Log::info($url);
+
+        return response()->download(public_path('attachments/'. $url));
+        
+        // return $download;
+    }
+
+    public function viewAttachment($id){
+        \Log::info($id);
+        $data = Post::find($id);
+        return redirect('/viewPost');
+
+        return view('welcome', compact('data')) ;
+
+    }
+
+    
 }

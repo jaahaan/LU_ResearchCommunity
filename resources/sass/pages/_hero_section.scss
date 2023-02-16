@@ -1,0 +1,196 @@
+// Add variables here
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+//----------------Hooper Carousel----------------\\
+
+.hero-section {
+  .hooper {
+    height: auto !important;
+    min-height: 200px;
+    &:not(.no-margin) {
+      height: 100% !important;
+      width: calc(100% + 2 * 10px) !important;
+      margin: 0 -10px;
+      .hooper-slide {
+        padding: 0 10px !important;
+      }
+    }
+  }
+}
+
+/*************** Home CSS ***************/
+
+//------------------Hero----------------\\
+
+.hero {
+  &-section {
+    opacity: 0.9;
+    height: calc(100vh - var(--nav-height));
+    display: flex;
+    .hooper {
+      flex: 1;
+    }
+    &__content {
+      max-width: 960px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-top: 60px;
+      padding-bottom: 90px;
+      text-align: center;
+
+      h4 {
+        color: #cdcdcd;
+        font-size: 1.5em;
+        margin-bottom: 0.5em;
+        line-height: 1.4;
+        font-weight: 400;
+      }
+      h1 {
+        color: #ffffff;
+        font-size: 5em;
+        margin-bottom: 25px;
+        line-height: 1.4;
+      }
+      .main-btn {
+        color: #ffffff;
+      }
+    }
+    &__bg {
+      background-size: cover;
+      display: flex;
+      align-items: center;
+    }
+  }
+}
+
+.header-info {
+  background-color: #f2f2f2;
+  &-content {
+    display: flex;
+    &-item {
+      padding-top: 15px;
+      padding-bottom: 15px;
+      font-size: 8px;
+      width: 33.33%;
+      text-align: center;
+      justify-content: space-between;
+      color: $primaryColor;
+      line-height: 1.3;
+    }
+
+    &-item:not(:last-child) {
+      border-right: 1px solid white;
+    }
+  }
+}
+
+//----------------Responsive----------------\\
+
+@include breakpoint-max(991px) {
+  // Hero
+  .hero {
+    &-section {
+      &__content {
+        max-width: 650px;
+        padding-top: 70px;
+        padding-bottom: 100px;
+        h4 {
+          font-size: 1.2em;
+          margin-bottom: 0.7em;
+        }
+        h1 {
+          font-size: 3em;
+        }
+      }
+    }
+  }
+}
+@include breakpoint-max(767px) {
+  //Hero
+  .hero {
+    &-section {
+      &__content {
+        h1 {
+          font-size: 2.5em;
+          margin-bottom: 20px;
+        }
+        h4 {
+          font-size: 1.1em;
+        }
+      }
+    }
+  }
+}
+@include breakpoint-max(575px) {
+  //Hero
+  .hero {
+    &-section {
+      &__content {
+        h1 {
+          font-size: 1.5em;
+          margin-bottom: 17px;
+        }
+        h4 {
+          font-size: 0.9em;
+        }
+        .main-btn {
+          padding: 0.6375em 0.9em;
+          font-size: 0.8em;
+        }
+      }
+    }
+  }
+
+  .bg {
+    /*background-image: linear-gradient(angle, color-stop1, color-stop2);*/
+    background: linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #ffffff 30%,
+      #a3babe 30%,
+      #a3babe 100%
+    );
+  }
+}
+
+@include breakpoint-min(1600px) {
+  .hero {
+    &-section {
+      height: 735px;
+    }
+  }
+}
+@include breakpoint-min(992px) {
+  // Header Info
+  .header {
+    &-info {
+      &-content {
+        &-item {
+          padding-top: 10px;
+          padding-bottom: 10px;
+          font-size: 14px;
+          width: 33.33%;
+          text-align: center;
+          justify-content: space-between;
+          color: $primaryColor;
+          line-height: 1.3;
+        }
+      }
+    }
+  }
+}
+// @include breakpoint-and-orientation-min(992px) {
+//   .hero {
+//     &-section {
+//       height: calc(100vh - var(--nav-height));
+//       display: flex;
+//       flex-direction: column;
+//       &__bg {
+//         height: 100%;
+//         display: flex;
+//         align-items: center;
+//       }
+//     }
+//   }
+// }

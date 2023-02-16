@@ -15,15 +15,16 @@ import register from "../pages/auth/register";
 import reset from "../pages/auth/reset";
 
 //Profile
-import profile from "../pages/profile/index";
-import followings from "../pages/profile/_id/following";
-import post from "../pages/profile/_id/post";
-import projects from "../pages/profile/_id/project";
-import publication from "../pages/profile/_id/publication";
+import connection from "../pages/profile/_slug/connection";
+import overview from "../pages/profile/_slug/overview";
+import projects from "../pages/profile/_slug/project";
+import userresearch from "../pages/profile/_slug/research";
 
 //description
-import post_description from "../pages/post_description";
-
+import department from "../pages/department/_slug/_id";
+import message from "../pages/message";
+import comments from "../pages/PostDescription/comments";
+import postOverview from "../pages/PostDescription/overview";
 import research from "../pages/research";
 
 //Admin
@@ -141,28 +142,28 @@ export default new Router({
             },
         },
         {
-            path: "/profile/:slug/:id",
-            name: "profile",
-            component: profile,
+            path: "/profile/:slug/overview",
+            name: "profile-slug-overview",
+            component: overview,
             meta: {
                 allowed: authRoute,
                 title: "Profile",
-                pageName: "profile",
+                pageName: "overview",
             },
         },
         {
-            path: "/profile/:slug/:id/publication",
-            name: "publication",
-            component: publication,
+            path: "/profile/:slug/research",
+            name: "profile-slug-research",
+            component: userresearch,
             meta: {
                 allowed: authRoute,
                 title: "Research",
-                pageName: "publication",
+                pageName: "research",
             },
         },
         {
-            path: "/profile/:slug/:id/projects",
-            name: "projects",
+            path: "/profile/:slug/project",
+            name: "profile-slug-project",
             component: projects,
             meta: {
                 allowed: authRoute,
@@ -170,24 +171,15 @@ export default new Router({
                 pageName: "projrcts",
             },
         },
+        
         {
-            path: "/profile/:slug/:id/posts",
-            name: "posts",
-            component: post,
+            path: "/profile/:slug/connection",
+            name: "profile-slug-connection",
+            component: connection,
             meta: {
                 allowed: authRoute,
-                title: "Posts",
-                pageName: "posts",
-            },
-        },
-        {
-            path: "/profile/:id/followings",
-            name: "followings",
-            component: followings,
-            meta: {
-                allowed: authRoute,
-                title: "Followings",
-                pageName: "followings",
+                title: "Connection",
+                pageName: "connection",
             },
         },
 
@@ -201,36 +193,27 @@ export default new Router({
                 pageName: "teachers",
             },
         },
+        
         {
-            path: "/description/:slug",
-            name: "post_description",
-            component: post_description,
+            path: "/description/:slug/overview",
+            name: "description-slug-overview",
+            component: postOverview,
             meta: {
-                allowed: publicRoute,
-                title: "Post details",
-                pageName: "post_description",
+                allowed: authRoute,
+                title: "Post overview",
+                pageName: "post_overview",
             },
         },
-        // {
-        //     path: "/description/:slug",
-        //     name: "overview",
-        //     component: overview,
-        //     meta: {
-        //         allowed: authRoute,
-        //         title: "Post overview",
-        //         pageName: "post_overview",
-        //     },
-        // },
-        // {
-        //     path: "/description/:slug/comments",
-        //     name: "comments",
-        //     component: comments,
-        //     meta: {
-        //         allowed: authRoute,
-        //         title: "Post comments",
-        //         pageName: "post_comments",
-        //     },
-        // },
+        {
+            path: "/description/:slug/comments",
+            name: "description-slug-comments",
+            component: comments,
+            meta: {
+                allowed: authRoute,
+                title: "Post comments",
+                pageName: "post_comments",
+            },
+        },
 
         {
             path: "/research",
@@ -240,6 +223,27 @@ export default new Router({
                 allowed: publicRoute,
                 title: "Research",
                 pageName: "research",
+            },
+        },
+
+        {
+            path: "/department/:slug/:id",
+            name: "department",
+            component: department,
+            meta: {
+                allowed: publicRoute,
+                title: "department",
+                pageName: "department",
+            },
+        },
+        {
+            path: "/message",
+            name: "message",
+            component: message,
+            meta: {
+                allowed: publicRoute,
+                title: "message",
+                pageName: "message",
             },
         },
     ],

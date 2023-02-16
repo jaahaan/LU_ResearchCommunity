@@ -1,0 +1,74 @@
+// Add variables here
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+._card {
+  display: flex;
+  margin: auto;
+  padding: 60px 50px;
+  justify-content: center;
+  background: $primaryColor;
+  /* offset-x | offset-y | blur-radius | spread-radius | color */
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.7);
+  border-radius: 5px;
+  color: #fbf7ff;
+}
+.rt-title {
+  background-color: $primaryColor;
+}
+.about {
+  background-color: #fbf7ff;
+  border-radius: 5px;
+  width: 100%;
+  color: #fbf7ff;
+  border: 1px solid #98978b;
+}
+.about-title {
+  font-size: 5rem;
+  font-weight: 600;
+  line-height: 1rem;
+  padding: 50px;
+  color: #474554;
+}
+
+.images {
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+}
+
+.hooper {
+  height: 100%;
+}
+
+.bg {
+  /*background-image: linear-gradient(angle, color-stop1, color-stop2);*/
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #ffffff 30%,
+    #a3babe 50%,
+    #a3babe 100%
+  );
+}
+@media (max-width: 768px) {
+  .login-logo {
+    width: 200px;
+    height: 200px;
+  }
+  .slider {
+    margin-bottom: 20px;
+  }
+  .bg {
+    /*background-image: linear-gradient(angle, color-stop1, color-stop2);*/
+    background: linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #ffffff 20%,
+      #a3babe 20%,
+      #a3babe 100%
+    );
+  }
+}

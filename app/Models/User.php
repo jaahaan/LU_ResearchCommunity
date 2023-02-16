@@ -98,35 +98,29 @@ class User extends Authenticatable
     ];
 
 
-    // public function post(): HasMany{
-    //     return $this->hasMany(Post::class, 'user_id');
+    public function department()
+    {
+       return $this->belongsTo('App\Models\Department','department_id','id');
+    }
+    // public function user_skills(){
+    //     return $this->belongsToMany('App\Models\Skill','user_skills');
     // }
-    // public function comment(): HasMany
-    // {
-    //     return $this->hasMany(Comment::class, 'user_id');
-    // }
-    // public function teams(): HasMany{
-    //     return $this->hasMany(Team::class, 'owner_id','id');
-    // }
-    // public function clubPlayers(): HasMany{
-    //     return $this->hasMany(ClubPlayer::class, 'club_owner_id');
-    // }
-    // public function tournaments(): HasMany
-    // {
-    //     return $this->hasMany(Tournament::class, 'organizer_id', 'id');
-    // }
-    // public function turnament_club(): HasMany
-    // {
-    //     return $this->hasMany(TournamentTeam::class, 'team_id', 'id');
-    // }
-    // public function memberOfTeams(): HasMany
-    // {
-    //     return $this->hasMany(TeamPlayer::class, 'player_id');
-    // }
-    // public function clubMembers(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(User::class, 'club_players', 'club_owner_id', 'player_id');
-    // }
+    public function user_skills(): BelongsToMany
+    {
+        return $this->belongsToMany(Skill::class, 'user_skills');
+    }
+    public function notification(){
+        return $this->belongsToMany('App\Models\Notify','post_user_id');
+    }
+    public function educations(): HasMany
+    {
+        return $this->hasMany(Education::class, 'user_id');
+    }
+    public function connections()
+    {
+        return $this->hasMany(Connection::class);
+    }
+
 
 
 }

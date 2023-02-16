@@ -1,7 +1,7 @@
 <template>
-    <div class="container-fluid rt col-10 p-5">
-        <div class="alert alert-dark" v-if="msg">{{ msg }}</div>
-        <h1 class="text-center p-3">Register As Teacher</h1>
+    <div class="container-fluid col-10 p-3">
+        <div class="alert alert-dark p-2" v-if="msg">{{ msg }}</div>
+        <h1 class="text-center mb-3">Register As Teacher</h1>
         <div class="mb-2">
             <input type="text" v-model="data.name" placeholder="Name" />
             <span class="text-danger" v-if="errors.name">{{
@@ -48,12 +48,12 @@
         </div>
         <div class="mb-2">
             <Select v-model="data.department" placeholder="Department">
-                <Option value="CSE">CSE</Option>
-                <Option value="EEE">EEE</Option>
-                <Option value="ARCH">ARCH</Option>
-                <Option value="CE">CE</Option>
-                <Option value="BuA">BuA</Option>
-                <Option value="ENG">ENG</Option>
+                <Option
+                    v-for="(department, index) in departmentInfo"
+                    :key="index"
+                    :value="department.id"
+                    >{{ department.department_name }}</Option
+                >
             </Select>
             <span class="text-danger" v-if="errors.department">{{
                 errors.department[0]
@@ -119,11 +119,20 @@ export default {
             // if (this.data.department.trim() == "")
             //     return this.e("Department is required");
             this.isLoading = true;
-            const res = await this.callApi("post", "/register_t", this.data);
+            const res = await this.callApi(
+                "post",
+                "/api/register_t",
+                this.data
+            );
 
             if (res.status === 201) {
                 this.msg = res.data.msg;
-                this.$router.push(`/emailVerifyOtp?email=${this.data.email}`);
+                let emailPassword = {
+                    email: this.data.email,
+                    password: this.data.password,
+                };
+                this.$store.commit("setUnauthorizedCredential", emailPassword);
+                this.$router.push(`/auth/account-activation`);
                 this.data.name = "";
                 this.data.email = "";
                 this.data.password = "";
@@ -135,6 +144,7 @@ export default {
                 if (res.status == 422) {
                     for (let i in res.data.errors) {
                         this.errors = res.data.errors;
+                        console.log(this.errors);
                         // this.e(res.data.errors[i][0]);
                     }
                 } else {
@@ -144,6 +154,7 @@ export default {
             this.isLoading = false;
         },
     },
+    async created() {},
 };
 </script>
 <style scoped>

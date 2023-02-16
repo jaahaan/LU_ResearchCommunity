@@ -6,28 +6,75 @@ use App\Models\User;
 use App\Models\Education;
 use App\Models\Project;
 use App\Models\Publication;
+use App\Models\Skill;
+use App\Models\UserSkill;
+use App\Models\Post;
+use App\Models\Vote;
+use App\Models\Read;
+use App\Models\Like;
 
 use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Validator;
+
+date_default_timezone_set('Asia/Dhaka');
 
 class ProfileController extends Controller
 {
-    public function getProfileInfo($id)
+    public function getUser(Request $request)
     {
-        return User::where('id', $id)->first();
+        return User::get();
     }
-    public function getEducation($id)
+    public function getProfileHeaderInfo($slug)
     {
-        return Education::where('user_id', $id)->get();
+
+        $user = User::where('slug', $slug)->with('department')->first();
+        unset($user['about']);
+        unset($user['interests']);
+        unset($user['isActive']);
+        unset($user['passwordToken']);
+        unset($user['token_expired_at']);
+        unset($user['honors_and_awards']);
+        unset($user['updated_at']);
+        unset($user['created_at']);
+        return response()->json([
+            'success'=> true,
+            'user'=>$user,
+        ],200);
+    }
+    public function getProfileInfo($slug)
+    {
+
+        $user = User::where('slug', $slug)->with('department', 'user_skills')->first();
+        $education = Education::where('user_id', $user->id)->orderBy('start_date', 'desc')->get();
+        $formattedData = [];
+        foreach($education as $value){
+            if($value['start_date'] != null){
+                $value['start_date'] = date('M Y', strtotime($value->start_date));
+                $value['edit_start_date'] = date('Y-m-d', strtotime($value->start_date));
+            }            
+            if($value['end_date'] != null){
+                $value['end_date'] = date('M Y', strtotime($value->end_date));
+                $value['edit_end_date'] = date('Y-m-d', strtotime($value->end_date));
+            }  
+            array_push($formattedData, $value);  
+        }
+        return response()->json([
+            'success'=> true,
+            'education'=>$formattedData,
+            'user'=>$user,
+        ],200);
+    }
+    public function getAuthUserInfo(){
+        return User::where('id', Auth::user()->id)->with('user_skills')->first();
     }
 
-    public function updateProfile(Request $request, $id)
+    public function updateProfile(Request $request)
     {
         //validate request
         $this->validate($request, [
-            'id' => 'required',
             'name' => 'required',
             'designation' => 'required',
             'department' => 'required'
@@ -36,89 +83,163 @@ class ProfileController extends Controller
         if(is_null($image)){
             return User::where('id', $id)->update([
                 'name' => $request->name,
-                'image' => '/profileImages/download.jpg',
+                'image' => 'http://localhost:8000/profileImages/download.jpg',
                 'designation' => $request->designation,
-                'department' => $request->department,
+                'department_id' => $request->department,
             ]);
         } else{
-            return User::where('id', $id)->update([
+            return User::where('id', Auth::user()->id)->update([
                 'name' => $request->name,
                 'image' => $request->image,
                 'designation' => $request->designation,
-                'department' => $request->department,
+                'department_id' => $request->department,
             ]);
         }
     }
 
-    public function about(Request $request, $id)
+    public function updateAbout(Request $request)
     {
         //validate request
         $this->validate($request, [
-            'id' => 'required',
             'about' => 'required',
         ]);
         
-        return User::where('id', $id)->update([
+        return User::where('id', Auth::user()->id)->update([
             'about' => $request->about,
         ]);
         
     }
 
-    public function deleteAbout(Request $request, $id)
+
+    public function deleteAbout(Request $request)
     {
-        //validate request
-        $this->validate($request, [
-            'id' => 'required',
-        ]);
-        
-        return User::where('id', $id)->update([
+        return User::where('id', Auth::user()->id)->update([
             'about' => null,
         ]);
-        
     }
 
-    public function education(Request $request, $id)
+    //Education
+    public function saveEducation(Request $request)
     {    
         //validate request
-        $this->validate($request, [
-            'id' => 'required',
+        
+        $validator = Validator::make($request->all(),
+        [
             'institute' => 'required',
             'degree' => 'required',
             'fieldOfStudy' => 'required',
-            'startMonth' => 'required',
-            'startYear' => 'required',
+            'start_date' => 'required',
         ]);
-        $data = $request->only('institute','degree','fieldOfStudy', 'startMonth', 'startYear','endMonth', 'endYear', 'grade', 'activities');
-        $test['education'] = json_encode($data);
-        $education = User::where('id', $id)->update($test);
 
-        // $education = Education::create([
-        //     'user_id' => $id,
-        //     'institute' => $request->institute,
-        //     'degree' => $request->degree,
-        //     'fieldOfStudy' => $request->fieldOfStudy,
-        //     'startDate' => $request->startMonth .' '. $request->startYear,
-        //     'endDate' => $request->endMonth .' '. $request->endYear,
-        //     'grade' => $request->grade,
-        //     'activities' => $request->activities,
-        // ]);    
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        }
+
+        $education = Education::create([
+            'user_id' => Auth::user()->id,
+            'institute' => $request->institute,
+            'degree' => $request->degree,
+            'fieldOfStudy' => $request->fieldOfStudy,
+            'start_date' => $request->start_date,
+            'end_date'=> $request->end_date,
+            'grade' => $request->grade,
+            'activities' => $request->activities,
+        ]);    
 
         return response()->json(['msg' => 'Education Added Successfully.', 'status' => $education], 201);
     }
+    public function updateEducation(Request $request){
+        $validator = Validator::make($request->all(),
+        [
+            'institute' => 'required',
+            'degree' => 'required',
+            'fieldOfStudy' => 'required',
+            'start_date' => 'required',
+        ]);
 
-    public function skills(Request $request, $id)
-    {
-        //validate request
-        $this->validate($request, [
-            'id' => 'required',
-            'skills' => 'required',
+        if($validator->fails()){
+            return response()->json($validator->errors(), 422);
+        }
+        return Education::where('id', $request->id)->update([
+            'institute' => $request->institute,
+            'degree' => $request->degree,
+            'fieldOfStudy' => $request->fieldOfStudy,
+            'start_date' => $request->start_date,
+            'end_date'=> $request->end_date,
+            'grade' => $request->grade,
+            'activities' => $request->activities,
         ]);
-        
-        return User::where('id', $id)->update([
-            'skills' => $request->skills,
-        ]);
-        
+        // $update = Education::where('id',$request->id)->first();
+        // return $update;
     }
+    public function deleteEducation(Request $request){
+        // return 'dine';
+        return Education::where('id',$request->id)->delete();
+    }
+
+    //Skills
+    public function searchSkills(Request $request){
+        $searchString= $request->keyword;
+        $limit = $request->limit? $request->limit : 5;
+
+        $skills = Skill::where('name', 'LIKE','%'.$searchString.'%')->limit($limit)->get();
+        return response()->json($skills);
+    }
+    public function getSkills(Request $request){
+        return Skill::get();
+    }
+    //create skills
+    public function saveSkills(Request $request)
+    {
+        $this->validate($request, [
+            'skill_id' => 'required',
+        ]);
+        $skills = $request->skill_id;
+        $skill_ids = [];
+
+        DB::beginTransaction();
+        try{
+        // insert authors
+        foreach ($skills as $s) {
+            array_push($skill_ids, ['user_id' =>  Auth::user()->id, 'skill_id' => $s]);
+        }
+        UserSkill::insert($skill_ids);
+        DB::commit();
+        return response()->json(['msg' => 'Added Successfully.'], 200);
+        } 
+
+        catch (\Throwable $e) {
+            DB::rollback();
+            return response()->json(['msg' => 'Unsuccessfull!!'], 401);
+        }   
+    }
+    
+    // update skills
+    public function updateSkills(Request $request)
+    {
+        $this->validate($request, [
+            'skill_id' => 'required',
+        ]);
+        $skills = $request->skill_id;
+        $skill_ids = [];
+        DB::beginTransaction();
+        try {
+            // insert 
+            foreach ($skills as $s) {
+                array_push($skill_ids, ['user_id' =>  Auth::user()->id, 'skill_id' => $s]);
+            }
+            // delete all previous authors
+            UserSkill::where('user_id', Auth::user()->id)->delete();
+            UserSkill::insert($skill_ids);
+            
+            DB::commit();
+            return response()->json(['msg' => 'Skills Updated Successfully.'], 200);
+        } catch (\Throwable $e) {
+            DB::rollback();
+            return response()->json(['msg' => 'Unsuccessfully.'], 401);
+        }
+    }
+
 
     public function interests(Request $request, $id)
     {
@@ -133,66 +254,6 @@ class ProfileController extends Controller
         ]);    
     }
 
-    public function saveProject(Request $request, $id)
-    {
-        
-        //validate request
-        $this->validate($request, [
-            'project_name' => 'required',
-            'project_type' => 'required',
-        ]);
-       
-        $project =  Project::create([
-            'user_id' => $id,
-            'project_name' => $request->project_name,
-            'project_type' => $request->project_type,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'project_url' => $request->project_url,
-            'project_description' => $request->project_description,
-        ]);   
-        return response()->json(['msg' => 'Project Added Successfully.', 'status' => $project], 200);
-
-    }
-    public function getProject($id)
-    {
-        return Project::where('user_id', $id)->get();
-    }
-    public function updateProject(Request $request)
-    {
-        //validate request
-        $this->validate($request, [
-            'user_id' => 'required',
-            'project_name' => 'required',
-            'project_type' => 'required',
-        ]);
-        $update_project = Project::where('id', $request->id)->update([
-            'user_id' => $request->user_id,
-            'project_name' => $request->project_name,
-            'project_type' => $request->project_type,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'project_url' => $request->project_url,
-            'project_description' => $request->project_description,
-        ]);
-        return response()->json(['msg' => 'Project Updateded Successfully.', 'status' => $update_project], 200);
-
-    }
-
-    public function deleteProject($id)
-    {
-        $delete_project = Project::where('id', $id)->delete();
-        return response()->json(['msg' => 'Project Deleted Successfully.', 'status' => $delete_project], 200);
-
-    }
-
-    public function getResearch($id)
-    {
-        return Publication::where('user_id', $id)->get();
-    }
-
-    
-    
     //image upload
     public function upload(Request $request)
     {
@@ -200,7 +261,7 @@ class ProfileController extends Controller
             'file' => 'required|mimes:jpeg,jpg,png',
         ]);
         $picName = time() . '.' . $request->file->extension();
-        $request->file->move(public_path('uploads'), $picName);
+        $request->file->move(public_path('profileImages'), $picName);
         return $picName;
     }
 
@@ -208,83 +269,174 @@ class ProfileController extends Controller
     {
         $fileName = $request->imageName;
         $filePath = public_path() . $fileName;
-        $default_image = '/profileImages/download.jpg';
+        \Log::info('$filePath');
+        \Log::info($filePath);
+        $default_image = 'http://localhost:8000/profileImages/download.jpg';
         if (file_exists($filePath)) {
-            if($fileName!='/profileImages/download.jpg'){
+            if($fileName!='http://localhost:8000/profileImages/download.jpg'){
                 @unlink($filePath);
             }
         }
         // return 'default' . $default_image; 
         return;
+        
     }
     
-    public function getTeacherInfo()
+    
+    //User Research Items
+    public function getUserResearch(Request $request)
     {
-        return Teacher::get()->all();
+        $user = User::where('slug', $request->slug)->first();
+        $limit = $request->limit? $request->limit : 3;
+        $data =  Post::where('user_id', $user->id)->where('type','!=', 'project')->with(['user', 'read', 'vote', 'like', 'authors', 'images'])->orderBy('id', 'desc')->limit($limit)->get();
+        $formattedData = [];
+        foreach($data as $value){
+            $post = $value;
+            $check = Read::where(['post_id'=>$post->id])->first();
+            $voteCheck = Vote::where(['post_id'=>$post->id])->first();
+            
+            $checkUpVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id, 'upVote'=>1])->first();
+            $checkDownVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id, 'downVote'=>1])->first();
+            $likecheck = Like::where(['post_id'=>$post->id])->first();
+            $AuthLikeCheck = Like::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id])->first();
+
+            if($checkUpVote){
+                $post['authUserVote']= "up";
+            } if($checkDownVote){
+                $post['authUserVote']= "down";
+            } if(!$checkUpVote && !$checkDownVote){
+                $post['authUserVote']= "none";
+            } if($likecheck){
+                $post['like_count'] =$post->like->like_count;
+            } if($AuthLikeCheck){
+                $post['authUserLike'] = 'yes';
+            } 
+            if(!$likecheck){
+                $post['like_count'] = 0;
+            } if(!$AuthLikeCheck){
+                $post['authUserLike'] = 'no';
+            } 
+            if(!$check){
+                $post['read_count'] = 0;
+            } 
+            if($check){
+                $post['read_count'] = $post->read->read_count;
+            } if(!$voteCheck){
+                $post['upVote'] = 0;
+                $post['downVote'] = 0;
+                $post['avgVote'] = 0;
+            }  if($voteCheck){
+                $post['upVote'] = $post->vote->upVote;
+                $post['avgVote'] = $post->vote->upVote - $post->vote->downVote;
+                $post['downVote'] = $post->vote->downVote;
+            }
+            $post['image'] = $post->user->image;
+            $post['name'] = $post->user->name;
+            $post['user_slug'] = $post->user->slug;
+            $post['department'] = $post->user->department;
+            $post['designation'] = $post->user->designation;
+            if($post['publication_date']!=null)
+            {
+                $post['publication_date'] = date('M Y', strtotime($post->publication_date));
+                $post['edit_publication_date'] = date('Y-m', strtotime($post->publication_date));
+            }
+            
+            // $post['start_date'] = date('M Y', strtotime($post->start_date));
+            // $post['end_date'] = date('M Y', strtotime($post->end_date));
+            $post['formatedDateTime'] = date('M Y', strtotime($post->created_at));
+
+            
+            unset($post['vote']);
+            unset($post['user']);
+            unset($post['read']);
+            unset($post['like']);
+
+            array_push($formattedData, $post);
+
+        }
+        return response()->json([
+            'success'=> true,
+            'data'=>$formattedData,
+        ],200);
     }
 
-    public function addTeacher(Request $request)
-    {    
-        //validate request
-        $this->validate($request, [
-            'email' => [
-                'required',
-                'max:50',
-                'email',
-                'unique:teachers,email',
-                'regex:/[a-z]+(_cse)?@lus\.ac\.bd/'
-            ],
-            'designation' => 'required',
-            'department' => 'required',
-        ],[
-            'email.regex' => 'Please provide Institutional email!!',
-        ]);
-        $teacher = Teacher::create([
-            'email' => $request->email,
-            'department' => $request->department,
-            'designation' => $request->designation,
-        ]);    
+    //User Projects
+    public function getUserProject(Request $request, $slug)
+    {
+        $user = User::where('slug',$slug)->first();
+        $limit = $request->limit? $request->limit : 5;
+        $data =  Post::where('user_id', $user->id)->where('type', 'project')->with(['user', 'read', 'vote', 'like', 'authors', 'images'])->orderBy('id', 'desc')->limit($limit)->get();
 
-        return response()->json(['msg' => 'Teacher Added Successfully.', 'status' => $teacher], 201);
+        $formattedData = [];
+        
+        foreach($data as $value){
+            $post = $value;
+            $check = Read::where(['post_id'=>$post->id])->first();
+            $voteCheck = Vote::where(['post_id'=>$post->id])->first();
+            
+            $checkUpVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id, 'upVote'=>1])->first();
+            $checkDownVote = Vote::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id, 'downVote'=>1])->first();
+            $likecheck = Like::where(['post_id'=>$post->id])->first();
+            $AuthLikeCheck = Like::where(['user_id'=>Auth::user()->id,'post_id'=>$post->id])->first();
+
+            if($checkUpVote){
+                $post['authUserVote']= "up";
+            } if($checkDownVote){
+                $post['authUserVote']= "down";
+            } if(!$checkUpVote && !$checkDownVote){
+                $post['authUserVote']= "none";
+            } if($likecheck){
+                $post['like_count'] =$post->like->like_count;
+            } if($AuthLikeCheck){
+                $post['authUserLike'] = 'yes';
+            } 
+            if(!$likecheck){
+                $post['like_count'] = 0;
+            } if(!$AuthLikeCheck){
+                $post['authUserLike'] = 'no';
+            } 
+            if(!$check){
+                $post['read_count'] = 0;
+            } 
+            if($check){
+                $post['read_count'] = $post->read->read_count;
+            } if(!$voteCheck){
+                $post['upVote'] = 0;
+                $post['downVote'] = 0;
+                $post['avgVote'] = 0;
+            }  if($voteCheck){
+                $post['upVote'] = $post->vote->upVote;
+                $post['avgVote'] = $post->vote->upVote - $post->vote->downVote;
+                $post['downVote'] = $post->vote->downVote;
+            }
+            $post['image'] = $post->user->image;
+            $post['name'] = $post->user->name;
+            $post['user_slug'] = $post->user->slug;
+            $post['department'] = $post->user->department;
+            $post['designation'] = $post->user->designation;
+            if($post['start_date']!=null){
+                $post['start_date'] = date('M Y', strtotime($post->start_date));
+                $post['edit_start_date'] = date('Y-m', strtotime($post->start_date));
+            }
+            if($post['end_date']!=null){
+                $post['end_date'] = date('M Y', strtotime($post->end_date));
+                $post['edit_end_date'] = date('Y-m', strtotime($post->end_date));
+            }
+            
+            // $post['edit_start_date'] = date('Y-m', strtotime($post->start_date));
+            // $post['edit_end_date'] = date('Y-m', strtotime($post->end_date));
+            $post['formatedDateTime'] = date('M Y', strtotime($post->created_at));
+            unset($post['vote']);
+            unset($post['user']);
+            unset($post['read']);
+            unset($post['like']);
+
+            array_push($formattedData, $post);
+
+        }
+        return response()->json([
+            'success'=> true,
+            'data'=>$formattedData,
+        ],200);
     }
-    public function editTeacher(Request $request)
-    {    
-        //validate request
-        $this->validate($request, [
-            'edit_id' => 'required',
-            'email' => [
-                'required',
-                'max:50',
-                'email',
-                'unique:teachers,email',
-                'regex:/[a-z]+(_cse)?@lus\.ac\.bd/'
-            ],
-            'designation' => 'required',
-            'department' => 'required',
-        ],[
-            'email.regex' => 'Please provide Institutional email!!',
-        ]);
-        $teacher = Teacher::where('id', $request->edit_id)->update([
-            'email' => $request->email,
-            'department' => $request->department,
-            'designation' => $request->designation,
-        ]);    
-
-        return response()->json(['msg' => 'Teacher updated Successfully.', 'status' => $teacher], 200);
-    }
-
-
-    // public function deleteFileFromServer($fileName)
-    // {
-    //     $filePath = public_path() . '/profileImages/' . $fileName;
-    //     // return $filePath;
-    //     // if (!$hasFullPath) {
-    //     //     $filePath = public_path() . '/profileImages/' . $fileName;
-    //     // }
-    //     if (file_exists($filePath)) {
-    //         @unlink($filePath);
-    //     }
-    //     return;
-    // }
-
 }

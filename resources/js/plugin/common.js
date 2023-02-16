@@ -11,7 +11,7 @@ export default {
     computed: {
         //The mapGetters helper simply maps store getters to local computed properties:
         ...mapGetters({
-
+            departmentInfo: "getDepartment",
             authUser:'authUser',
             isLoggedIn:'isLoggedIn',
 
@@ -20,6 +20,7 @@ export default {
 
     //a method invocation will always run the function whenever a re-render happens.
     methods: {
+        
         async callApi(method, url, dataObj ){
             try {
               return await axios({
@@ -68,5 +69,7 @@ export default {
                 desc: desc
             });
         },
+
+
     },
 }

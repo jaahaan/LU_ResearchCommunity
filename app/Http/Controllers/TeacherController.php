@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Teacher;
 
 use Illuminate\Http\Request;
+date_default_timezone_set('Asia/Dhaka');
 
 class TeacherController extends Controller
 {
@@ -12,32 +13,27 @@ class TeacherController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function GetTeachers()
     {
-        $data=Teacher::orderBy('id', 'asc')->get(); 
+        $data=Teacher::get(); 
         return response()->json([
             'success'=> true,
             'data'=>$data,
         ],200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request){
+    public function AddTeacher(Request $request){
+        $this->validate($request, [
+            'email' => [
+                'required',
+                'max:50',
+                'email',
+                'unique:teachers,email',
+                'regex:/[a-z]?@lus\.ac\.bd/'
+            ],
+            'designation' => 'required',
+            'department' => 'required',
+        ]);
         $data = $request->all();
         return Teacher::create($data);
     }
