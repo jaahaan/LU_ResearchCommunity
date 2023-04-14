@@ -28,7 +28,7 @@ import postOverview from "../pages/PostDescription/overview";
 import research from "../pages/research";
 
 //Admin
-import teachers from "../pages/Admin/teachers";
+import teachers from "../pages/admin/teachers";
 
 Vue.use(Router);
 
@@ -184,7 +184,7 @@ export default new Router({
         },
 
         {
-            path: "/teachers",
+            path: "/admin/teachers",
             name: "teachers",
             component: teachers,
             meta: {
